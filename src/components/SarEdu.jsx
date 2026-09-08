@@ -234,7 +234,7 @@ export default function SarEdu() {
               {nasaResources.map(resource => (
                 <Card key={resource.key} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 group hover:border-accent-green/30 transition-colors">
                   <div className="flex items-center space-x-4">
-                    <div className="p-4 rounded-xl" style={{ backgroundColor: `${resource.icon.color || '#07c06b'}20` }}>
+                    <div className="p-4 rounded-xl bg-accent-green/10">
                       <resource.icon className="w-6 h-6 text-accent-green" />
                     </div>
                     <div>
