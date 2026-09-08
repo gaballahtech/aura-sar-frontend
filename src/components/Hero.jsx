@@ -58,7 +58,7 @@ export default function Hero() {
             {t('hero.headline')}
           </h1>
 
-          <p className="section-subtext text-xl sm:text-2xl text-white/70 max-w-3xl mx-auto mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
+          <p className="section-subtitle text-xl sm:text-2xl text-white/70 max-w-3xl mx-auto mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
             {t('hero.subtitle')}
           </p>
 

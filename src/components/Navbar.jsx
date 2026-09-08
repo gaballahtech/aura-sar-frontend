@@ -66,7 +66,7 @@ export default function Navbar({ user }) {
               className="h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
             />
             <span className="hidden sm:block font-bold text-xl text-gradient">
-              AURA-SAR
+              AURA SAR
             </span>
           </a>
 

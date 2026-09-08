@@ -227,7 +227,7 @@ export default function SarEdu() {
         return (
           <div className="space-y-6">
             <p className="text-white/70 leading-relaxed max-w-3xl">
-              AURA-SAR leverages multiple NASA and commercial data sources for comprehensive wildfire monitoring. 
+              AURA SAR leverages multiple NASA and commercial data sources for comprehensive wildfire monitoring. 
               These platforms provide the SAR data foundation for our AI-driven analytics.
             </p>
             <div className="space-y-4">
@@ -265,7 +265,7 @@ export default function SarEdu() {
           <div className="space-y-6">
             <p className="text-white/70 leading-relaxed max-w-3xl">
               SAR technology enables diverse applications beyond wildfire monitoring. 
-              AURA-SAR's framework can be extended to these critical environmental and safety use cases.
+              AURA SAR's framework can be extended to these critical environmental and safety use cases.
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sarApplications.map((app, i) => (
@@ -336,7 +336,7 @@ export default function SarEdu() {
             },
             {
               icon: Zap,
-              title: 'AURA-SAR Pipeline',
+              title: 'AURA SAR Pipeline',
               desc: 'Our processing workflow for wildfire intelligence',
               items: ['GEE / ASF Data Ingestion', 'Pre-processing & Calibration', 'AI/ML Feature Extraction', 'Real-time Dashboard'],
             },

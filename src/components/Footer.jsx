@@ -60,7 +60,7 @@ export default function Footer() {
                 alt={t('footer.brand')}
                 className="h-10 w-auto"
               />
-              <span className="font-bold text-xl text-gradient">AURA-SAR</span>
+              <span className="font-bold text-xl text-gradient">AURA SAR</span>
             </div>
             <p className="text-white/60 mb-6 max-w-xs">{t('footer.tagline')}</p>
             <div className="flex flex-wrap gap-2 mb-6">

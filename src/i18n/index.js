@@ -164,7 +164,7 @@ const en = {
     }
   },
   "footer": {
-    "brand": "AURA-SAR",
+    "brand": "AURA SAR",
     "tagline": "AI & Ultra-Radar Analytics for Wildfire Safety",
     "nasaChallenge": "NASA Space Apps Challenge 2025",
     "challengeTheme": "\"Through the Radar Looking Glass\"",
@@ -174,7 +174,7 @@ const en = {
       "api": "API Reference",
       "contact": "Contact"
     },
-    "copyright": "© 2025 AURA-SAR Team. Built for NASA Space Apps Challenge.",
+    "copyright": "© 2025 AURA SAR Team. Built for NASA Space Apps Challenge.",
     "disclaimer": "Not for operational emergency use. Official alerts via local authorities."
   },
   "common": {
@@ -363,7 +363,7 @@ const ar = {
     }
   },
   "footer": {
-    "brand": "أورا-سار",
+    "brand": "أورا سار",
     "tagline": "الذكاء الاصطناعي والتحليلات فائقة الرادار لسلامة حرائق الغابات",
     "nasaChallenge": "تحدي ناسا لتطبيقات الفضاء 2025",
     "challengeTheme": "\"من خلال مرآة الرادار\"",
@@ -373,7 +373,7 @@ const ar = {
       "api": "مرجع واجهة البرمجة",
       "contact": "تواصل معنا"
     },
-    "copyright": "© 2025 فريق أورا-سار. تم تطويره لتحدي ناسا لتطبيقات الفضاء.",
+    "copyright": "© 2025 فريق أورا سار. تم تطويره لتحدي ناسا لتطبيقات الفضاء.",
     "disclaimer": "غير مخصص للاستخدام التشغيلي في الطوارئ. التنبيهات الرسمية عبر السلطات المحلية."
   },
   "common": {
