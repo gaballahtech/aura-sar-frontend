@@ -1,4 +1,5 @@
 import { useEffect, Suspense } from 'react';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
@@ -52,7 +53,9 @@ function AppContent() {
 function AppWithAuth() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ErrorBoundary>
+        <AppContent />
+      </ErrorBoundary>
     </AuthProvider>
   );
 }
@@ -62,9 +65,11 @@ function App() {
     <BrowserRouter>
       <ThemeProvider>
         <LanguageProvider>
-          <Suspense fallback={<LoadingFallback />}>
-            <AppWithAuth />
-          </Suspense>
+          <ErrorBoundary>
+            <Suspense fallback={<LoadingFallback />}>
+              <AppWithAuth />
+            </Suspense>
+          </ErrorBoundary>
         </LanguageProvider>
       </ThemeProvider>
     </BrowserRouter>
