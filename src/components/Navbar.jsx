@@ -1,0 +1,218 @@
+import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
+import { Menu, X, Sun, Moon, Globe, Bell, ChevronDown } from 'lucide-react';
+const logoLight = '/images/Logo.png';
+const logoDark = '/images/Logo-Dark.png';
+
+const navLinks = [
+  { id: 'home', label: 'navbar.home' },
+  { id: 'dashboard', label: 'navbar.dashboard' },
+  { id: 'analytics', label: 'navbar.analytics' },
+  { id: 'report', label: 'navbar.report' },
+  { id: 'about', label: 'navbar.about' },
+];
+
+export default function Navbar() {
+  const { t } = useTranslation();
+  const { theme, toggleTheme } = useTheme();
+  const { language, toggleLanguage } = useLanguage();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [showAlerts, setShowAlerts] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMenuOpen(false);
+  };
+
+  const currentLogo = theme === 'dark' ? logoDark : logoLight;
+
+  return (
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-primary-dark/90 backdrop-blur-md border-b border-white/10' : 'bg-transparent'
+      }`}
+      role="banner"
+    >
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          <a
+            href="#home"
+            onClick={(e) => { e.preventDefault(); scrollToSection('home'); }}
+            className="flex items-center space-x-3 group"
+            aria-label={t('footer.brand')}
+          >
+            <img
+              src={currentLogo}
+              alt={t('footer.brand')}
+              className="h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+            />
+            <span className="hidden sm:block font-bold text-xl text-gradient">
+              AURA-SAR
+            </span>
+          </a>
+
+          <div className="hidden lg:flex items-center space-x-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
+                className="text-white/80 hover:text-accent-green transition-colors duration-200 font-medium text-sm relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent-green after:transition-all hover:after:w-full"
+              >
+                {t(link.label)}
+              </a>
+            ))}
+          </div>
+
+          <div className="hidden lg:flex items-center space-x-4">
+            <div className="relative" role="group" aria-label={t('navbar.language')}>
+              <button
+                onClick={toggleLanguage}
+                className={`lang-toggle ${language === 'en' ? 'active' : ''}`}
+                aria-pressed={language === 'en'}
+                aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+              >
+                <span className="text-xs font-bold">EN</span>
+              </button>
+              <button
+                onClick={toggleLanguage}
+                className={`lang-toggle ${language === 'ar' ? 'active' : ''}`}
+                aria-pressed={language === 'ar'}
+                aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
+              >
+                <span className="text-xs font-bold">AR</span>
+              </button>
+            </div>
+
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 transition-colors"
+              aria-label={theme === 'dark' ? t('navbar.lightMode') : t('navbar.darkMode')}
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+
+            <div className="relative">
+              <button
+                onClick={() => setShowAlerts(!showAlerts)}
+                className="btn-primary relative flex items-center space-x-2 glow-border"
+                aria-expanded={showAlerts}
+                aria-haspopup="true"
+              >
+                <Bell className="w-4 h-4" />
+                <span>{t('navbar.alerts')}</span>
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-red rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
+              </button>
+              {showAlerts && (
+                <div className="absolute right-0 top-full mt-2 w-80 glass-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in">
+                  <div className="px-4 py-2 border-b border-white/10">
+                    <h3 className="font-semibold">{t('navbar.alerts')}</h3>
+                  </div>
+                  <div className="max-h-60 overflow-y-auto">
+                    {[
+                      { id: 1, msg: 'Critical fire risk detected in Zone 7', severity: 'critical', time: '2 min ago' },
+                      { id: 2, msg: 'New thermal anomaly near Highway 101', severity: 'high', time: '15 min ago' },
+                      { id: 3, msg: 'Air quality dropping in Santa Clara County', severity: 'medium', time: '1 hour ago' },
+                    ].map(alert => (
+                      <div key={alert.id} className="px-4 py-3 hover:bg-white/5 border-b border-white/5 last:border-0">
+                        <div className="flex items-start justify-between">
+                          <p className="text-sm text-white/90">{alert.msg}</p>
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            alert.severity === 'critical' ? 'bg-accent-red/20 text-accent-red' :
+                            alert.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
+                            'bg-yellow-500/20 text-yellow-400'
+                          }`}>
+                            {alert.severity}
+                          </span>
+                        </div>
+                        <p className="text-xs text-white/50 mt-1">{alert.time}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="lg:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 text-white"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label="Toggle menu"
+          >
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
+
+        <div
+          id="mobile-menu"
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+        >
+          <div className="py-4 space-y-2 border-t border-white/10">
+            {navLinks.map((link) => (
+              <a
+                key={link.id}
+                href={`#${link.id}`}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
+                className="block px-4 py-3 rounded-xl text-white/80 hover:text-accent-green hover:bg-white/5 transition-colors"
+              >
+                {t(link.label)}
+              </a>
+            ))}
+            <div className="pt-4 border-t border-white/10 flex flex-wrap items-center justify-center gap-4">
+              <div className="flex items-center space-x-2">
+                <button
+                  onClick={toggleLanguage}
+                  className={`lang-toggle ${language === 'en' ? 'active' : ''} w-12 h-10`}
+                >
+                  EN
+                </button>
+                <button
+                  onClick={toggleLanguage}
+                  className={`lang-toggle ${language === 'ar' ? 'active' : ''} w-12 h-10`}
+                >
+                  AR
+                </button>
+              </div>
+              <button
+                onClick={toggleTheme}
+                className="btn-secondary w-full sm:w-auto"
+              >
+                {theme === 'dark' ? (
+                  <>
+                    <Sun className="w-4 h-4 mr-2" />
+                    {t('navbar.lightMode')}
+                  </>
+                ) : (
+                  <>
+                    <Moon className="w-4 h-4 mr-2" />
+                    {t('navbar.darkMode')}
+                  </>
+                )}
+              </button>
+              <button className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
+                <Bell className="w-4 h-4" />
+                {t('navbar.alerts')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+  );
+}
