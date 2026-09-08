@@ -185,25 +185,25 @@ export default function Report() {
                   <Camera className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.photo')}</span>
                 </label>
-                <div
-                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                    formData.photoPreview
-                      ? 'border-transparent'
-                      : `${theme === 'dark' ? 'border-white/20 hover:border-accent-green/50' : 'border-gray-300 hover:border-accent-green/50'}`
-                  }`}
-                  onDragOver={handleDragOver}
-                  onDragLeave={handleDragLeave}
-                  onDrop={handleDrop}
-                >
-                  <input
-                    ref={fileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => e.target.files[0] && handlePhotoUpload(e.target.files[0])}
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    id="photo-upload"
-                    disabled={isSubmitting}
-                  />
+<div
+                    className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
+                      formData.photoPreview
+                        ? 'border-transparent'
+                        : `${theme === 'dark' ? 'border-white/20 hover:border-accent-green/50' : 'border-gray-300 hover:border-accent-green/50'}`
+                    } file-input relative`}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => e.target.files[0] && handlePhotoUpload(e.target.files[0])}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      id="photo-upload"
+                      disabled={isSubmitting}
+                    />
                   {formData.photoPreview ? (
                     <div className="relative max-w-md mx-auto">
                       <img
@@ -294,15 +294,15 @@ export default function Report() {
                 <label className="block text-sm font-medium text-white/80 mb-3">
                   {t('report.form.description')}
                 </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder={t('report.form.descriptionPlaceholder')}
-                  rows={4}
-                  className={`${theme === 'dark' ? 'input-field' : 'input-field-light'} resize-none`}
-                  disabled={isSubmitting}
-                  required
-                />
+<textarea
+                    value={formData.description}
+                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                    placeholder={t('report.form.descriptionPlaceholder')}
+                    rows={4}
+                    className={`${theme === 'dark' ? 'textarea-field' : 'textarea-field-light'} resize-none`}
+                    disabled={isSubmitting}
+                    required
+                  />
               </div>
 
               {submitStatus && (

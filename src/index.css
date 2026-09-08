@@ -59,6 +59,121 @@
     background-color: white;
     color: #111827;
   }
+
+  /* Custom Scrollbar - Dark Theme */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(7, 192, 107, 0.5) transparent;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+    border-radius: 4px;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(7, 192, 107, 0.6), rgba(7, 192, 107, 0.3));
+    border-radius: 4px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(7, 192, 107, 0.8), rgba(7, 192, 107, 0.5));
+    background-clip: content-box;
+  }
+
+  *::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+
+  /* Light theme scrollbar */
+  .light * {
+    scrollbar-color: rgba(7, 192, 107, 0.4) rgba(0, 0, 0, 0.05);
+  }
+
+  .light *::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(7, 192, 107, 0.5), rgba(7, 192, 107, 0.2));
+    background-clip: content-box;
+  }
+
+  .light *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(7, 192, 107, 0.7), rgba(7, 192, 107, 0.4));
+    background-clip: content-box;
+  }
+
+  .light *::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+  }
+
+  /* Selection styling */
+  ::selection {
+    background: rgba(7, 192, 107, 0.3);
+    color: white;
+  }
+
+  .light ::selection {
+    background: rgba(7, 192, 107, 0.2);
+    color: #111827;
+  }
+
+  /* Focus visible for keyboard navigation */
+  :focus-visible {
+    outline: none;
+    ring: 2px solid var(--color-accent-green);
+    ring-offset: 2px;
+    ring-offset-color: var(--color-primary-dark);
+  }
+
+  .light :focus-visible {
+    ring-offset-color: white;
+  }
+
+  /* Disable default button styles */
+  button {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  /* Remove default input styles */
+  input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+  }
+
+  /* Remove number input arrows */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+
+  /* Remove search input cancel button */
+  input[type="search"]::-webkit-search-cancel-button,
+  input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+  }
+
+  /* Remove date/time input native UI */
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator,
+  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    -webkit-appearance: none;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
 }
 
 @utility glass {
@@ -98,6 +213,8 @@
   color: white;
   background-color: var(--color-accent-green);
   transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
 }
 
 @utility btn-secondary {
@@ -108,6 +225,7 @@
   background-color: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 @utility btn-secondary-light {
@@ -118,6 +236,7 @@
   background-color: #f3f4f6;
   border: 1px solid #d1d5db;
   transition: all 0.2s ease;
+  cursor: pointer;
 }
 
 @utility btn-danger {
@@ -127,6 +246,8 @@
   color: white;
   background-color: var(--color-accent-red);
   transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
 }
 
 @utility input-field {
@@ -137,6 +258,8 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
   transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 @utility input-field-light {
@@ -147,6 +270,181 @@
   border: 1px solid #d1d5db;
   color: #111827;
   transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+@utility select-field {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2307c06b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem 1.25rem;
+  padding-right: 2.5rem;
+}
+
+@utility select-field-light {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  transition: all 0.2s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2307c06b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem 1.25rem;
+  padding-right: 2.5rem;
+}
+
+@utility checkbox-field {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.05);
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+@utility checkbox-field-light {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 0.375rem;
+  border: 2px solid #d1d5db;
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+@utility radio-field {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.05);
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+@utility radio-field-light {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 50%;
+  border: 2px solid #d1d5db;
+  background-color: white;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+@utility file-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 2px dashed rgba(255, 255, 255, 0.2);
+  color: white;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+@utility file-input-light {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  color: #111827;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+@utility range-field {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  cursor: pointer;
+}
+
+@utility range-field-light {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 3px;
+  background: #e5e7eb;
+  outline: none;
+  cursor: pointer;
+}
+
+@utility textarea-field {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.2s ease;
+  resize: vertical;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+@utility textarea-field-light {
+  width: 100%;
+  min-height: 120px;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background-color: white;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  transition: all 0.2s ease;
+  resize: vertical;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+@utility label-field {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 0.5rem;
+}
+
+@utility label-field-light {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
 }
 
 @utility section-container {
@@ -262,7 +560,42 @@
   animation: markerPulse 2s ease-in-out infinite;
 }
 
-/* Custom hover states using standard CSS */
+@utility badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+@utility badge-success {
+  background-color: rgba(7, 192, 107, 0.2);
+  color: var(--color-accent-green);
+  border-color: rgba(7, 192, 107, 0.3);
+}
+
+@utility badge-warning {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+@utility badge-danger {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: var(--color-accent-red);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+@utility badge-info {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* === Regular CSS for pseudo-classes and complex selectors === */
+
 .btn-primary:hover {
   background-color: #22c55e;
 }
@@ -271,7 +604,7 @@
   background-color: #15803d;
 }
 
-.btn-primary:focus {
+.btn-primary:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px var(--color-primary-dark);
 }
@@ -295,6 +628,162 @@
 }
 
 .input-field-light:focus {
+  outline: none;
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 2px rgba(7, 192, 107, 0.2);
+}
+
+.select-field:focus {
+  outline: none;
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 2px rgba(7, 192, 107, 0.2);
+}
+
+.select-field-light:focus {
+  outline: none;
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 2px rgba(7, 192, 107, 0.2);
+}
+
+.checkbox-field:checked {
+  background-color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='%23111342' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  background-size: 1.25rem 1.25rem;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.checkbox-field:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px var(--color-primary-dark);
+}
+
+.checkbox-field-light:checked {
+  background-color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='%23ffffff' d='M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+  background-size: 1.25rem 1.25rem;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.checkbox-field-light:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px white;
+}
+
+.radio-field:checked {
+  border-color: var(--color-accent-green);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.radio-field:checked::after {
+  content: '';
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--color-accent-green);
+  margin: 0.125rem auto 0;
+}
+
+.radio-field:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px var(--color-primary-dark);
+}
+
+.radio-field-light:checked {
+  border-color: var(--color-accent-green);
+}
+
+.radio-field-light:checked::after {
+  content: '';
+  display: block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--color-accent-green);
+  margin: 0.125rem auto 0;
+}
+
+.radio-field-light:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px white;
+}
+
+.file-input:hover {
+  border-color: var(--color-accent-green);
+  background-color: rgba(7, 192, 107, 0.1);
+}
+
+.file-input:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px var(--color-primary-dark);
+  border-color: var(--color-accent-green);
+}
+
+.file-input-light:hover {
+  border-color: var(--color-accent-green);
+  background-color: rgba(7, 192, 107, 0.05);
+}
+
+.file-input-light:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px white;
+  border-color: var(--color-accent-green);
+}
+
+.range-field::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-green);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(7, 192, 107, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.range-field::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(7, 192, 107, 0.6);
+}
+
+.range-field::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-green);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 6px rgba(7, 192, 107, 0.4);
+}
+
+.range-field-light::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--color-accent-green);
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(7, 192, 107, 0.4);
+}
+
+.range-field-light::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(7, 192, 107, 0.6);
+}
+
+.textarea-field:focus {
+  outline: none;
+  border-color: var(--color-accent-green);
+  box-shadow: 0 0 0 2px rgba(7, 192, 107, 0.2);
+}
+
+.textarea-field-light:focus {
   outline: none;
   border-color: var(--color-accent-green);
   box-shadow: 0 0 0 2px rgba(7, 192, 107, 0.2);
@@ -336,6 +825,21 @@
 
 .glow-border:hover::before {
   opacity: 1;
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  border-color: rgba(7, 192, 107, 0.3);
+}
+
+.light .card-hover:hover {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border-color: rgba(7, 192, 107, 0.2);
 }
 
 /* Leaflet Map Styles */
@@ -395,4 +899,46 @@
 
 .light .leaflet-control-layers-label {
   color: #111827 !important;
+}
+
+/* Recharts custom tooltip */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-default-tooltip {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
+  padding: 1rem !important;
+}
+
+.light .recharts-default-tooltip {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(229, 229, 229, 0.5) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+}
+
+/* Loading skeleton */
+.skeleton {
+  @apply bg-white/10 rounded animate-pulse;
+}
+
+.light .skeleton {
+  @apply bg-gray-200;
+}
+
+/* Progress bar */
+.progress-bar {
+  @apply h-2 bg-white/10 rounded-full overflow-hidden;
+}
+
+.light .progress-bar {
+  @apply bg-gray-200;
+}
+
+.progress-fill {
+  @apply h-full bg-accent-green rounded-full transition-all duration-500 ease-out;
 }
