@@ -126,7 +126,7 @@ export default function Report() {
     const hazard = hazardTypes.find(h => h.value === type);
     return (
       <span className="flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium bg-white/10">
-        <span>{hazard?.icon}</span>
+        {hazard?.icon && <hazard.icon className="w-4 h-4" />}
         <span>{t(hazard?.labelKey || type)}</span>
         {verified && (
           <span className="flex items-center space-x-0.5 text-accent-green">
