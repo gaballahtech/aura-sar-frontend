@@ -50,7 +50,7 @@ export default function Footer() {
   ];
 
   return (
-    <footer className={`${theme === 'dark' ? 'bg-primary-navy/50' : 'bg-gray-50'} border-t ${theme === 'dark' ? 'border-white/10' : 'border-gray-200'}`} role="contentinfo">
+    <footer className="bg-card border-subtle" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid lg:grid-cols-5 gap-8 mb-12">
           <div className="lg:col-span-2">
@@ -62,22 +62,22 @@ export default function Footer() {
               />
               <span className="font-bold text-xl text-gradient">AURA SAR</span>
             </div>
-            <p className="text-white/60 mb-6 max-w-xs">{t('footer.tagline')}</p>
+            <p className="text-secondary mb-6 max-w-xs">{t('footer.tagline')}</p>
             <div className="flex flex-wrap gap-2 mb-6">
               {badges.map((badge, i) => (
-                <span key={i} className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-white/5 border border-white/10">
+                <span key={i} className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-glass border border-subtle">
                   <badge.icon className={`w-3 h-3 ${badge.color}`} />
                   <span className={badge.color}>{badge.text}</span>
                 </span>
               ))}
             </div>
-            <p className="text-white/50 text-sm max-w-xs">
+            <p className="text-muted text-sm max-w-xs">
               {t('footer.nasaChallenge')} — {t('footer.challengeTheme')}
             </p>
           </div>
 
           <nav aria-label="Product links">
-            <h4 className="font-semibold text-white mb-4">Product</h4>
+            <h4 className="font-semibold text-primary mb-4">Product</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link, i) => (
                 <li key={i}>
@@ -89,7 +89,7 @@ export default function Footer() {
                         document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="text-white/70 hover:text-accent-green transition-colors text-sm"
+                    className="text-secondary hover:text-accent-green transition-colors text-sm"
                   >
                     {link.label}
                   </a>
@@ -99,7 +99,7 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="Resources links">
-            <h4 className="font-semibold text-white mb-4">Resources</h4>
+            <h4 className="font-semibold text-primary mb-4">Resources</h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link, i) => (
                 <li key={i}>
@@ -107,7 +107,7 @@ export default function Footer() {
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-white/70 hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
+                    className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{link.label}</span>
                     {link.external && <Globe className="w-3 h-3" />}
@@ -118,7 +118,7 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="Community links">
-            <h4 className="font-semibold text-white mb-4">Community</h4>
+            <h4 className="font-semibold text-primary mb-4">Community</h4>
             <ul className="space-y-3">
               {footerLinks.community.map((link, i) => (
                 <li key={i}>
@@ -126,7 +126,7 @@ export default function Footer() {
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-white/70 hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
+                    className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{link.label}</span>
                     {link.external && <Globe className="w-3 h-3" />}
@@ -135,9 +135,25 @@ export default function Footer() {
               ))}
             </ul>
           </nav>
+
+          <nav aria-label="Legal links">
+            <h4 className="font-semibold text-primary mb-4">Legal</h4>
+            <ul className="space-y-3">
+              {footerLinks.legal.map((link, i) => (
+                <li key={i}>
+                  <a
+                    href={link.href}
+                    className="text-secondary hover:text-accent-green transition-colors text-sm"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
 
-        <div className="pt-8 border-t border-white/10">
+        <div className="pt-8 border-t border-subtle">
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
             <div className="flex items-center justify-center lg:justify-start space-x-6">
               {socialLinks.map((social, i) => (
@@ -146,7 +162,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-xl bg-white/5 hover:bg-accent-green/10 text-white/60 hover:text-accent-green transition-colors"
+                  className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary hover:text-accent-green transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -154,7 +170,7 @@ export default function Footer() {
               ))}
             </div>
 
-            <div className="flex flex-col items-center lg:items-end space-y-2 text-sm text-white/50">
+            <div className="flex flex-col items-center lg:items-end space-y-2 text-sm text-muted">
               <p>{t('footer.copyright')}</p>
               <p className="text-xs">{t('footer.disclaimer')}</p>
             </div>
@@ -162,10 +178,10 @@ export default function Footer() {
         </div>
 
         <div className="mt-8 text-center">
-          <p className="text-white/40 text-sm">
+          <p className="text-muted text-sm">
             Built with {'\u2764\uFE0F'} for NASA Space Apps Challenge 2025 — "Through the Radar Looking Glass"
           </p>
-          <p className="text-white/30 text-xs mt-1">
+          <p className="text-subtle text-xs mt-1">
             Not for operational emergency use. Official alerts via local authorities.
           </p>
         </div>

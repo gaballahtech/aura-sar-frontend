@@ -82,19 +82,19 @@ export default function Navbar() {
             <div className="relative" role="group" aria-label={t('navbar.language')}>
               <button
                 onClick={toggleLanguage}
-                className={`lang-toggle ${language === 'en' ? 'active' : ''}`}
+                className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'en'}
                 aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
               >
-                <span className="text-xs font-bold">EN</span>
+                <span>EN</span>
               </button>
               <button
                 onClick={toggleLanguage}
-                className={`lang-toggle ${language === 'ar' ? 'active' : ''}`}
+                className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'ar'}
                 aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
               >
-                <span className="text-xs font-bold">AR</span>
+                <span>AR</span>
               </button>
             </div>
 
@@ -178,13 +178,13 @@ export default function Navbar() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={toggleLanguage}
-                  className={`lang-toggle ${language === 'en' ? 'active' : ''} w-12 h-10`}
+                  className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'} w-12 h-10`}
                 >
                   EN
                 </button>
                 <button
                   onClick={toggleLanguage}
-                  className={`lang-toggle ${language === 'ar' ? 'active' : ''} w-12 h-10`}
+                  className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'} w-12 h-10`}
                 >
                   AR
                 </button>
