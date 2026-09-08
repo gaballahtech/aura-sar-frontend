@@ -279,7 +279,7 @@ export default function Report() {
                       aria-checked={formData.hazardType === hazard.value}
                     >
                       <div className="flex items-center space-x-3">
-                        <span className="text-2xl">{hazard.icon}</span>
+                        {hazard.icon && <hazard.icon className="w-8 h-8 text-accent-green" />}
                         <span className="font-medium">{t(hazard.labelKey)}</span>
                       </div>
                       {formData.hazardType === hazard.value && (
