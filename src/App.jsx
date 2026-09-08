@@ -1,9 +1,8 @@
 import { useEffect, Suspense } from 'react';
-import { ErrorBoundary } from './components/ErrorBoundary';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -29,7 +28,6 @@ function AppContent() {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const { t } = useTranslation();
-  const { authState } = useAuth();
 
   useEffect(() => {
     document.title = `${t('footer.brand')} | ${t('footer.nasaChallenge')}`;
@@ -37,7 +35,7 @@ function AppContent() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'dark' : 'light'}`}>
-      <Navbar user={authState.user} />
+      <Navbar />
       <main id="main-content">
         <Hero />
         <Dashboard />
@@ -50,16 +48,6 @@ function AppContent() {
   );
 }
 
-function AppWithAuth() {
-  return (
-    <AuthProvider>
-      <ErrorBoundary>
-        <AppContent />
-      </ErrorBoundary>
-    </AuthProvider>
-  );
-}
-
 function App() {
   return (
     <BrowserRouter>
@@ -67,7 +55,7 @@ function App() {
         <LanguageProvider>
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
-              <AppWithAuth />
+              <AppContent />
             </Suspense>
           </ErrorBoundary>
         </LanguageProvider>
