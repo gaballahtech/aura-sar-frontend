@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -12,10 +13,22 @@ import SarEdu from './components/SarEdu';
 import Footer from './components/Footer';
 import './index.css';
 
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-primary-dark">
+      <div className="flex flex-col items-center space-y-4 text-white">
+        <div className="w-12 h-12 border-4 border-accent-green border-t-transparent rounded-full animate-spin" />
+        <p className="text-white/70">Loading AURA-SAR...</p>
+      </div>
+    </div>
+  );
+}
+
 function AppContent() {
   const { theme } = useTheme();
   const { language } = useLanguage();
   const { t } = useTranslation();
+  const { authState } = useAuth();
 
   useEffect(() => {
     document.title = `${t('footer.brand')} | ${t('footer.nasaChallenge')}`;
@@ -23,7 +36,7 @@ function AppContent() {
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'dark' : 'light'}`}>
-      <Navbar />
+      <Navbar user={authState.user} />
       <main id="main-content">
         <Hero />
         <Dashboard />
@@ -36,12 +49,22 @@ function AppContent() {
   );
 }
 
+function AppWithAuth() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <LanguageProvider>
-          <AppContent />
+          <Suspense fallback={<LoadingFallback />}>
+            <AppWithAuth />
+          </Suspense>
         </LanguageProvider>
       </ThemeProvider>
     </BrowserRouter>

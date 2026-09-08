@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Menu, X, Sun, Moon, Globe, Bell, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, Globe, Bell, ChevronDown, User, LogOut, Settings, Shield } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 const logoLight = '/images/Logo.png';
 const logoDark = '/images/Logo-Dark.png';
 
@@ -14,13 +15,17 @@ const navLinks = [
   { id: 'about', label: 'navbar.about' },
 ];
 
-export default function Navbar() {
+export default function Navbar({ user }) {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage } = useLanguage();
+  const { authState, logout } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+
+  const currentUser = user || authState.user;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -146,6 +151,64 @@ export default function Navbar() {
                 </div>
               )}
             </div>
+
+            {currentUser ? (
+              <div className="relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 transition-colors"
+                  aria-expanded={showUserMenu}
+                  aria-haspopup="true"
+                >
+                  <div className="w-8 h-8 rounded-full bg-accent-green/20 flex items-center justify-center">
+                    {currentUser.role === 'firefighter' ? (
+                      <Shield className="w-5 h-5 text-accent-green" />
+                    ) : currentUser.role === 'admin' ? (
+                      <Settings className="w-5 h-5 text-accent-green" />
+                    ) : (
+                      <User className="w-5 h-5 text-accent-green" />
+                    )}
+                  </div>
+                  <span className="hidden sm:block text-sm font-medium text-white/90">
+                    {currentUser.name}
+                  </span>
+                  <ChevronDown className="w-4 h-4 text-white/60" />
+                </button>
+                {showUserMenu && (
+                  <div className="absolute right-0 top-full mt-2 w-48 glass-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in">
+                    <div className="px-4 py-2 border-b border-white/10">
+                      <p className="font-semibold text-white">{currentUser.name}</p>
+                      <p className="text-xs text-white/50 capitalize">{currentUser.role}</p>
+                    </div>
+                    <div className="py-1">
+                      <button className="w-full px-4 py-2 text-left hover:bg-white/5 transition-colors flex items-center space-x-2 text-sm text-white/90">
+                        <User className="w-4 h-4" />
+                        <span>Profile</span>
+                      </button>
+                      <button className="w-full px-4 py-2 text-left hover:bg-white/5 transition-colors flex items-center space-x-2 text-sm text-white/90">
+                        <Settings className="w-4 h-4" />
+                        <span>Settings</span>
+                      </button>
+                      <hr className="border-white/10 my-1" />
+                      <button
+                        onClick={logout}
+                        className="w-full px-4 py-2 text-left hover:bg-white/5 transition-colors flex items-center space-x-2 text-sm text-accent-red"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        <span>Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => { /* TODO: Open login modal */ }}
+                className="btn-primary"
+              >
+                Login
+              </button>
+            )}
           </div>
 
           <button
@@ -209,6 +272,45 @@ export default function Navbar() {
                 <Bell className="w-4 h-4" />
                 {t('navbar.alerts')}
               </button>
+              {currentUser ? (
+                <div className="w-full sm:w-auto flex flex-col space-y-2">
+                  <div className="flex items-center space-x-3 px-3 py-2 rounded-xl bg-white/5">
+                    <div className="w-8 h-8 rounded-full bg-accent-green/20 flex items-center justify-center">
+                      {currentUser.role === 'firefighter' ? (
+                        <Shield className="w-5 h-5 text-accent-green" />
+                      ) : currentUser.role === 'admin' ? (
+                        <Settings className="w-5 h-5 text-accent-green" />
+                      ) : (
+                        <User className="w-5 h-5 text-accent-green" />
+                      )}
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium text-white text-sm">{currentUser.name}</p>
+                      <p className="text-xs text-white/50 capitalize">{currentUser.role}</p>
+                    </div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <button className="btn-secondary w-full text-sm">
+                      <Settings className="w-4 h-4 mr-1" />
+                      Settings
+                    </button>
+                    <button
+                      onClick={logout}
+                      className="btn-danger w-full text-sm"
+                    >
+                      <LogOut className="w-4 h-4 mr-1" />
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  onClick={() => { /* TODO: Open login modal */ }}
+                  className="btn-primary w-full sm:w-auto"
+                >
+                  Login
+                </button>
+              )}
             </div>
           </div>
         </div>
