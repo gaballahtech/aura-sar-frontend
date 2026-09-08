@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
-import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalLink, ChevronRight, BookOpen, Flame } from 'lucide-react';
+import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalLink, ChevronRight, BookOpen, Flame, Ruler, Building2, Mountain, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
 
 const frequencyBands = [
   {
@@ -34,16 +34,16 @@ const frequencyBands = [
 ];
 
 const polarizations = [
-  { key: 'hh', label: 'HH', desc: 'Horizontal transmit, Horizontal receive', icon: '↔️↔️', detail: 'Strong for surface scattering, urban areas' },
-  { key: 'vv', label: 'VV', desc: 'Vertical transmit, Vertical receive', icon: '↕️↕️', detail: 'Strong for surface scattering, water detection' },
-  { key: 'hv', label: 'HV', desc: 'Horizontal transmit, Vertical receive', icon: '↔️↕️', detail: 'Cross-pol, volume scattering, vegetation' },
-  { key: 'vh', label: 'VH', desc: 'Vertical transmit, Horizontal receive', icon: '↕️↔️', detail: 'Cross-pol, volume scattering, vegetation' },
+  { key: 'hh', label: 'HH', desc: 'Horizontal transmit, Horizontal receive', icon: ArrowLeftRight, detail: 'Strong for surface scattering, urban areas' },
+  { key: 'vv', label: 'VV', desc: 'Vertical transmit, Vertical receive', icon: ArrowUpDown, detail: 'Strong for surface scattering, water detection' },
+  { key: 'hv', label: 'HV', desc: 'Horizontal transmit, Vertical receive', icon: ArrowUpDown, detail: 'Cross-pol, volume scattering, vegetation' },
+  { key: 'vh', label: 'VH', desc: 'Vertical transmit, Horizontal receive', icon: ArrowLeftRight, detail: 'Cross-pol, volume scattering, vegetation' },
 ];
 
 const scatteringMechanisms = [
-  { key: 'surface', icon: '📐', title: 'Surface Scattering', desc: 'Smooth surfaces (water, roads, bare soil)', sarSignature: 'Low backscatter, specular reflection', color: '#3b82f6' },
-  { key: 'doubleBounce', icon: '🏢', title: 'Double Bounce', desc: 'Vertical structures (buildings, tree trunks)', sarSignature: 'High backscatter, dihedral corner reflector', color: '#f59e0b' },
-  { key: 'volume', icon: '🌲', title: 'Volume Scattering', desc: 'Vegetation canopy, forest biomass', sarSignature: 'Moderate backscatter, random scattering', color: '#07c06b' },
+  { key: 'surface', icon: Ruler, title: 'Surface Scattering', desc: 'Smooth surfaces (water, roads, bare soil)', sarSignature: 'Low backscatter, specular reflection', color: '#3b82f6' },
+  { key: 'doubleBounce', icon: Building2, title: 'Double Bounce', desc: 'Vertical structures (buildings, tree trunks)', sarSignature: 'High backscatter, dihedral corner reflector', color: '#f59e0b' },
+  { key: 'volume', icon: TreePine, title: 'Volume Scattering', desc: 'Vegetation canopy, forest biomass', sarSignature: 'Moderate backscatter, random scattering', color: '#07c06b' },
 ];
 
 const nasaResources = [

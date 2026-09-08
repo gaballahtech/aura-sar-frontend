@@ -6,7 +6,7 @@ import {
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar, Cell, ComposedChart
 } from 'recharts';
-import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2 } from 'lucide-react';
+import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, Satellite, MapPin, Ruler } from 'lucide-react';
 
 const generateBackscatterData = () => {
   const data = [];
@@ -152,9 +152,18 @@ export default function Analytics() {
                     <p className="text-white/60 text-lg">{comparisonImages[activeComparison].label} SAR Snapshot</p>
                     <p className="text-white/40 text-sm mt-2">{comparisonImages[activeComparison].description}</p>
                     <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-white/40">
-                      <span>🛰️ Sentinel-1 C-Band VV/VH</span>
-                      <span>📍 37.5°N, 119.5°W</span>
-                      <span>📐 10m resolution</span>
+                      <span className="flex items-center space-x-1">
+                        <Satellite className="w-3 h-3" />
+                        <span>Sentinel-1 C-Band VV/VH</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <MapPin className="w-3 h-3" />
+                        <span>37.5°N, 119.5°W</span>
+                      </span>
+                      <span className="flex items-center space-x-1">
+                        <Ruler className="w-3 h-3" />
+                        <span>10m resolution</span>
+                      </span>
                     </div>
                   </div>
                 </div>

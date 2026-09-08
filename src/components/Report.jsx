@@ -1,13 +1,13 @@
 import { useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
-import { Camera, MapPin, Send, CheckCircle, AlertCircle, Loader2, Image, X, Map, Users, Shield } from 'lucide-react';
+import { Camera, MapPin, Send, CheckCircle, AlertCircle, Loader2, Image, X, Map, Users, Shield, Wind, Flame, TreePine, Mountain, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const hazardTypes = [
-  { value: 'smoke', icon: '💨', labelKey: 'report.form.hazardTypes.smoke' },
-  { value: 'activeFire', icon: '🔥', labelKey: 'report.form.hazardTypes.activeFire' },
-  { value: 'fallenTrees', icon: '🌲', labelKey: 'report.form.hazardTypes.fallenTrees' },
-  { value: 'landslide', icon: '🏔️', labelKey: 'report.form.hazardTypes.landslide' },
+  { value: 'smoke', icon: Wind, labelKey: 'report.form.hazardTypes.smoke' },
+  { value: 'activeFire', icon: Flame, labelKey: 'report.form.hazardTypes.activeFire' },
+  { value: 'fallenTrees', icon: TreePine, labelKey: 'report.form.hazardTypes.fallenTrees' },
+  { value: 'landslide', icon: Mountain, labelKey: 'report.form.hazardTypes.landslide' },
 ];
 
 const mockReports = [
@@ -394,11 +394,11 @@ export default function Report() {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm">
                           <button className="flex items-center space-x-1 text-white/60 hover:text-accent-green transition-colors">
-                            <span className="w-5 h-5">👍</span>
+                            <ThumbsUp className="w-5 h-5" />
                             <span>{report.votes}</span>
                           </button>
                           <button className="flex items-center space-x-1 text-white/60 hover:text-red-400 transition-colors">
-                            <span className="w-5 h-5">👎</span>
+                            <ThumbsDown className="w-5 h-5" />
                             <span>2</span>
                           </button>
                         </div>
