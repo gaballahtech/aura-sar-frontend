@@ -27,10 +27,5 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_API_BASE_URL": "@api_base_url",
-    "VITE_MAP_TILE_URL": "@map_tile_url",
-    "VITE_WEBSOCKET_URL": "@websocket_url"
-  }
+  ]
 }
