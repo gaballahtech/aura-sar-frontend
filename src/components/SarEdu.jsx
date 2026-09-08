@@ -140,7 +140,7 @@ export default function SarEdu() {
                 <Card key={pol.key} className="hover:border-accent-green/30 transition-colors">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <span className="text-3xl">{pol.icon}</span>
+                      <pol.icon className="w-8 h-8 text-accent-green" />
                       <div>
                         <h4 className="font-bold text-xl text-accent-green">{pol.label} Polarization</h4>
                         <p className="text-sm text-white/60">{pol.desc}</p>
@@ -186,7 +186,7 @@ export default function SarEdu() {
                 <Card key={mech.key} className="relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${mech.color}80, ${mech.color})` }} />
                   <div className="text-center mb-4">
-                    <span className="text-5xl">{mech.icon}</span>
+                    <mech.icon className="w-12 h-12 mx-auto" style={{ color: mech.color }} />
                     <h4 className="font-bold text-xl mt-2" style={{ color: mech.color }}>{mech.title}</h4>
                   </div>
                   <p className="text-white/70 text-sm mb-4">{mech.desc}</p>
