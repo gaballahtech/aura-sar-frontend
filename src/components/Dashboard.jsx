@@ -265,10 +265,10 @@ export default function Dashboard() {
             >
               <TileLayer
                 url={theme === 'dark'
-                  ? 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
-                  : 'https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'
+                  ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                  : 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
                 }
-                attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+                attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
               />
 
               {activeRole === 'firefighter' && mapLayers.thermalPoints && (
