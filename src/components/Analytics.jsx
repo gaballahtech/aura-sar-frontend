@@ -42,8 +42,8 @@ const comparisonImages = [
 ];
 
 const trendColors = {
-  up: { bg: 'bg-green-500/20', text: 'text-green-400' },
-  down: { bg: 'bg-red-500/20', text: 'text-red-400' },
+  up: { bg: 'bg-success', text: 'text-success' },
+  down: { bg: 'bg-danger', text: 'text-danger' },
 };
 
 export default function Analytics() {

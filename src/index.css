@@ -694,6 +694,89 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+/* === Status color utilities (work in both themes) === */
+
+@utility text-success {
+  color: var(--color-accent-green);
+}
+
+@utility text-warning {
+  color: #f59e0b;
+}
+
+@utility text-danger {
+  color: var(--color-accent-red);
+}
+
+@utility text-info {
+  color: #3b82f6;
+}
+
+@utility bg-success {
+  background-color: rgba(7, 192, 107, 0.15);
+}
+
+@utility bg-warning {
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+@utility bg-danger {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+@utility bg-info {
+  background-color: rgba(59, 130, 246, 0.15);
+}
+
+@utility border-success {
+  border-color: var(--color-accent-green);
+}
+
+@utility border-warning {
+  border-color: #f59e0b;
+}
+
+@utility border-danger {
+  border-color: var(--color-accent-red);
+}
+
+@utility border-info {
+  border-color: #3b82f6;
+}
+
+/* Light theme overrides for status colors */
+.light .text-success {
+  color: #16a34a;
+}
+
+.light .text-warning {
+  color: #ca8a04;
+}
+
+.light .text-danger {
+  color: #dc2626;
+}
+
+.light .text-info {
+  color: #2563eb;
+}
+
+.light .bg-success {
+  background-color: rgba(22, 163, 74, 0.1);
+}
+
+.light .bg-warning {
+  background-color: rgba(202, 138, 4, 0.1);
+}
+
+.light .bg-danger {
+  background-color: rgba(220, 38, 38, 0.1);
+}
+
+.light .bg-info {
+  background-color: rgba(37, 99, 235, 0.1);
+}
+
 /* === Regular CSS for pseudo-classes and complex selectors === */
 
 .btn-primary:hover {

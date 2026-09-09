@@ -43,10 +43,10 @@ export default function Footer() {
   ];
 
   const badges = [
-    { icon: Award, text: 'NASA Space Apps 2025', color: 'text-yellow-400' },
-    { icon: Zap, text: 'SAR Technology', color: 'text-blue-400' },
-    { icon: Shield, text: 'Wildfire Safety', color: 'text-green-400' },
-    { icon: Heart, text: 'Open Source', color: 'text-red-400' },
+    { icon: Award, text: 'NASA Space Apps 2025', color: 'text-warning' },
+    { icon: Zap, text: 'SAR Technology', color: 'text-info' },
+    { icon: Shield, text: 'Wildfire Safety', color: 'text-success' },
+    { icon: Heart, text: 'Open Source', color: 'text-danger' },
   ];
 
   return (

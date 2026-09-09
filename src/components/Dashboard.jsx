@@ -47,23 +47,23 @@ const aqiData = [
 ];
 
 const severityColors = {
-  critical: { bg: 'bg-accent-red/20', text: 'text-accent-red' },
-  high: { bg: 'bg-orange-500/20', text: 'text-orange-400' },
-  medium: { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
-  low: { bg: 'bg-accent-green/20', text: 'text-accent-green' },
+  critical: { bg: 'bg-danger', text: 'text-danger' },
+  high: { bg: 'bg-warning', text: 'text-warning' },
+  medium: { bg: 'bg-warning', text: 'text-warning' },
+  low: { bg: 'bg-success', text: 'text-success' },
 };
 
 const aqiColors = {
-  good: { text: 'text-green-400', bg: 'bg-green-500/20' },
-  moderate: { text: 'text-yellow-400', bg: 'bg-yellow-500/20' },
-  unhealthy: { text: 'text-orange-400', bg: 'bg-orange-500/20' },
-  hazardous: { text: 'text-red-400', bg: 'bg-red-500/20' },
+  good: { text: 'text-success', bg: 'bg-success' },
+  moderate: { text: 'text-warning', bg: 'bg-warning' },
+  unhealthy: { text: 'text-warning', bg: 'bg-warning' },
+  hazardous: { text: 'text-danger', bg: 'bg-danger' },
 };
 
 const routeColors = {
-  'open-low': { bg: 'bg-green-500/20', text: 'text-green-400' },
-  'open-moderate': { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
-  'advisory-high': { bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  'open-low': { bg: 'bg-success', text: 'text-success' },
+  'open-moderate': { bg: 'bg-warning', text: 'text-warning' },
+  'advisory-high': { bg: 'bg-warning', text: 'text-warning' },
 };
 
 const SeverityLegend = ({ theme, t }) => {

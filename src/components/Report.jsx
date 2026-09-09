@@ -212,7 +212,7 @@ export default function Report() {
                       <button
                         type="button"
                         onClick={removePhoto}
-                        className="absolute top-2 right-2 p-2 bg-accent-red/90 text-white rounded-full hover:bg-accent-red transition-colors"
+                        className="absolute top-2 right-2 p-2 bg-danger text-white rounded-full hover:bg-danger/80 transition-colors"
                         aria-label="Remove photo"
                       >
                         <X className="w-4 h-4" />
@@ -304,15 +304,15 @@ export default function Report() {
               </div>
 
               {submitStatus && (
-                <div className={`mb-6 p-4 rounded-xl flex items-center space-x-3 ${
+                <div className={`mb-6 p-4 rounded-xl flex items-center space-x-3 border ${
                   submitStatus.type === 'success'
-                    ? 'bg-green-500/20 border border-green-500/30'
-                    : 'bg-red-500/20 border border-red-500/30'
+                    ? 'bg-success border-success'
+                    : 'bg-danger border-danger'
                 }`}>
                   {submitStatus.type === 'success' ? (
-                    <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
                   ) : (
-                    <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
+                    <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
                   )}
                   <span className="text-sm text-primary">{submitStatus.message}</span>
                 </div>
@@ -352,7 +352,7 @@ export default function Report() {
                     <Shield className="w-4 h-4 text-accent-green" />
                     <span>{mockReports.filter(r => r.verified).length} {t('report.communityFeed.verified')}</span>
                   </span>
-                  <span className="flex items-center space-x-1 text-orange-400">
+                  <span className="flex items-center space-x-1 text-warning">
                     <AlertCircle className="w-4 h-4" />
                     <span>{mockReports.filter(r => !r.verified).length} {t('report.communityFeed.pending')}</span>
                   </span>
@@ -393,7 +393,7 @@ export default function Report() {
                             <ThumbsUp className="w-5 h-5" />
                             <span>{report.votes}</span>
                           </button>
-                          <button className="flex items-center space-x-1 text-secondary hover:text-red-400 transition-colors">
+                          <button className="flex items-center space-x-1 text-secondary hover:text-danger transition-colors">
                             <ThumbsDown className="w-5 h-5" />
                             <span>2</span>
                           </button>
