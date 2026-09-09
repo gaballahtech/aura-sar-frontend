@@ -123,7 +123,7 @@ const LayerControl = ({ theme, t, mapLayers, toggleLayer }) => {
   );
 };
 
-const FirePoint = ({ fire, theme }) => (
+const FirePoint = ({ fire, theme, t }) => (
   <CircleMarker
     center={[fire.lat, fire.lng]}
     radius={12 + fire.intensity * 10}
@@ -139,17 +139,17 @@ const FirePoint = ({ fire, theme }) => (
       <div className="p-2 min-w-[200px]">
         <h4 className="font-bold text-primary-dark mb-1">{fire.name}</h4>
         <div className="text-sm text-secondary space-y-1">
-          <p><strong>AI Confidence:</strong> {fire.confidence}%</p>
-          <p><strong>Intensity:</strong> {(fire.intensity * 100).toFixed(0)}%</p>
-          <p><strong>Type:</strong> {fire.type.replace('-', ' ')}</p>
-          <p><strong>Coords:</strong> {fire.lat.toFixed(4)}, {fire.lng.toFixed(4)}</p>
+          <p><strong>{t('dashboard.mapPopup.confidence')}:</strong> {fire.confidence}%</p>
+          <p><strong>{t('dashboard.mapPopup.intensity')}:</strong> {(fire.intensity * 100).toFixed(0)}%</p>
+          <p><strong>{t('dashboard.mapPopup.type')}:</strong> {t(`dashboard.mapPopup.types.${fire.type}`)}</p>
+          <p><strong>{t('dashboard.mapPopup.coords')}:</strong> {fire.lat.toFixed(4)}, {fire.lng.toFixed(4)}</p>
         </div>
       </div>
     </Popup>
   </CircleMarker>
 );
 
-const SafeZoneMarker = ({ zone }) => (
+const SafeZoneMarker = ({ zone, t }) => (
   <CircleMarker
     center={[zone.lat, zone.lng]}
     radius={15}
@@ -167,10 +167,10 @@ const SafeZoneMarker = ({ zone }) => (
           <span>{zone.name}</span>
         </h4>
         <div className="text-sm text-secondary space-y-1">
-          <p><strong>Capacity:</strong> {zone.capacity.toLocaleString()}</p>
-          <p><strong>Current:</strong> {zone.current.toLocaleString()}</p>
-          <p><strong>Available:</strong> {(zone.capacity - zone.current).toLocaleString()}</p>
-          <p><strong>Occupancy:</strong> {((zone.current / zone.capacity) * 100).toFixed(0)}%</p>
+          <p><strong>{t('dashboard.mapPopup.capacity')}:</strong> {zone.capacity.toLocaleString()}</p>
+          <p><strong>{t('dashboard.mapPopup.current')}:</strong> {zone.current.toLocaleString()}</p>
+          <p><strong>{t('dashboard.mapPopup.available')}:</strong> {(zone.capacity - zone.current).toLocaleString()}</p>
+          <p><strong>{t('dashboard.mapPopup.occupancy')}:</strong> {((zone.current / zone.capacity) * 100).toFixed(0)}%</p>
         </div>
       </div>
     </Popup>
@@ -280,7 +280,7 @@ export default function Dashboard() {
               {activeRole === 'firefighter' && mapLayers.thermalPoints && (
                 <LayerGroup>
                   {mockFireData.map(fire => (
-                    <FirePoint key={fire.id} fire={fire} theme={theme} />
+                    <FirePoint key={fire.id} fire={fire} theme={theme} t={t} />
                   ))}
                 </LayerGroup>
               )}
@@ -288,7 +288,7 @@ export default function Dashboard() {
               {activeRole === 'public' && (
                 <LayerGroup>
                   {safeZones.map(zone => (
-                    <SafeZoneMarker key={zone.id} zone={zone} />
+                    <SafeZoneMarker key={zone.id} zone={zone} t={t} />
                   ))}
                 </LayerGroup>
               )}
@@ -296,7 +296,7 @@ export default function Dashboard() {
           </div>
 
           {activeRole === 'firefighter' && showControls && (
-            <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+            <div className="absolute top-4 end-4 z-10 flex flex-col gap-2">
               <LayerControl theme={theme} t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />
               <SeverityLegend theme={theme} t={t} />
             </div>
@@ -311,13 +311,13 @@ export default function Dashboard() {
                   <AlertTriangle className="w-5 h-5 text-accent-red" />
                   <span>{t('dashboard.firefighterView.earlyWarnings')}</span>
                 </h3>
-                <span className="text-xs px-2 py-1 bg-accent-green/20 text-accent-green rounded-full">LIVE</span>
+                <span className="text-xs px-2 py-1 bg-accent-green/20 text-accent-green rounded-full">{t('dashboard.firefighterView.liveBadge')}</span>
               </div>
               <div className="space-y-3 max-h-[300px] overflow-y-auto">
                 {alerts.map(alert => (
                   <div
                     key={alert.id}
-                    className={`p-4 rounded-xl border-l-4 transition-all bg-card-hover ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}
+                    className={`p-4 rounded-xl border-s-4 transition-all ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}
                   >
                     <div className="flex items-start justify-between mb-2">
                       <h4 className="font-semibold text-primary">{t(`dashboard.alertsFeed.types.${alert.typeKey}`)}</h4>

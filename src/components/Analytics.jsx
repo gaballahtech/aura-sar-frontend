@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import {
@@ -8,7 +8,7 @@ import {
 } from 'recharts';
 import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, Satellite, MapPin, Ruler } from 'lucide-react';
 
-const generateBackscatterData = () => {
+const generateBackscatterData = (locale) => {
   const data = [];
   const startDate = new Date();
   startDate.setMonth(startDate.getMonth() - 12);
@@ -21,7 +21,7 @@ const generateBackscatterData = () => {
     const fireEvent = i > 180 && i < 220 ? -8 * Math.exp(-((i - 200) ** 2) / 200) : 0;
     const recovery = i > 220 ? 2 * (1 - Math.exp(-(i - 220) / 100)) : 0;
     data.push({
-      date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+      date: date.toLocaleDateString(locale, { month: 'short', day: 'numeric' }),
       timestamp: date.getTime(),
       backscatter: -12 + seasonal + noise + trend + fireEvent + recovery,
       soilMoisture: 0.4 + Math.sin(i / 365 * Math.PI * 2) * 0.15 + (Math.random() - 0.5) * 0.1 + (i > 220 ? 0.15 * (1 - Math.exp(-(i - 220) / 100)) : 0),
@@ -31,9 +31,6 @@ const generateBackscatterData = () => {
   }
   return data;
 };
-
-const backscatterData = generateBackscatterData();
-const fireEventIndex = backscatterData.findIndex(d => d.backscatter < -18);
 
 const comparisonImages = [
   { key: 'preFire', date: 'June 2024' },
@@ -47,12 +44,17 @@ const trendColors = {
 };
 
 export default function Analytics() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { theme } = useTheme();
   const [timeRange, setTimeRange] = useState('1year');
   const [activeComparison, setActiveComparison] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(null);
   const chartRefs = useRef({});
+
+  const backscatterData = useMemo(
+    () => generateBackscatterData(i18n.language === 'ar' ? 'ar-EG' : 'en-US'),
+    [i18n.language]
+  );
 
   const filteredData = backscatterData.filter(d => {
     const now = Date.now();
@@ -92,8 +94,42 @@ export default function Analytics() {
     return null;
   };
 
+  useEffect(() => {
+    const handler = () => {
+      if (!document.fullscreenElement) setShowFullscreen(null);
+    };
+    document.addEventListener('fullscreenchange', handler);
+    return () => document.removeEventListener('fullscreenchange', handler);
+  }, []);
+
+  const toggleFullscreen = (id) => {
+    const el = chartRefs.current[id];
+    if (!el) return;
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.();
+    } else {
+      el.requestFullscreen?.();
+    }
+  };
+
+  const downloadChartData = (id) => {
+    const rows = id === 'recovery' ? filteredData.slice(-52) : filteredData;
+    const headers = ['date', 'backscatter', 'soilMoisture', 'fuelLoad', 'recovery'];
+    const csv = [
+      headers.join(','),
+      ...rows.map(d => headers.map(h => d[h]).join(',')),
+    ].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `aura-sar-${id}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   const ChartCard = ({ title, icon: Icon, children, id, className = '' }) => (
-    <div className={`bg-card ${className} relative`}>
+    <div ref={el => (chartRefs.current[id] = el)} className={`bg-card ${className} relative fullscreen-card`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center space-x-2">
           <Icon className="w-5 h-5 text-accent-green" />
@@ -101,18 +137,22 @@ export default function Analytics() {
         </h3>
         <div className="flex items-center space-x-1">
           <button
-            onClick={() => setShowFullscreen(id)}
+            onClick={() => toggleFullscreen(id)}
             className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors"
-            aria-label="Fullscreen"
+            aria-label={t('analytics.controls.fullscreen')}
           >
             {showFullscreen === id ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
-          <button className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors" aria-label="Download">
+          <button
+            onClick={() => downloadChartData(id)}
+            className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors"
+            aria-label={t('analytics.controls.download')}
+          >
             <Download className="w-4 h-4" />
           </button>
         </div>
       </div>
-      <div className="h-[350px]" ref={el => chartRefs.current[id] = el}>
+      <div className="h-[350px] chart-body">
         {children}
       </div>
     </div>
@@ -172,16 +212,16 @@ export default function Analytics() {
                     </div>
                   </div>
                 </div>
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between">
-                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>{t('analytics.comparisonInfo.preFireLabel')}:</strong> {t('analytics.comparisonInfo.preFireDesc')}
-                  </div>
-                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>{t('analytics.comparisonInfo.duringLabel')}:</strong> {t('analytics.comparisonInfo.duringDesc')}
-                  </div>
-                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>{t('analytics.comparisonInfo.recoveryLabel')}:</strong> {t('analytics.comparisonInfo.recoveryDesc')}
-                  </div>
+              </div>
+              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-card px-4 py-2 rounded-lg text-sm">
+                  <strong>{t('analytics.comparisonInfo.preFireLabel')}:</strong> {t('analytics.comparisonInfo.preFireDesc')}
+                </div>
+                <div className="bg-card px-4 py-2 rounded-lg text-sm">
+                  <strong>{t('analytics.comparisonInfo.duringLabel')}:</strong> {t('analytics.comparisonInfo.duringDesc')}
+                </div>
+                <div className="bg-card px-4 py-2 rounded-lg text-sm">
+                  <strong>{t('analytics.comparisonInfo.recoveryLabel')}:</strong> {t('analytics.comparisonInfo.recoveryDesc')}
                 </div>
               </div>
             </div>
@@ -189,7 +229,7 @@ export default function Analytics() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div className="flex items-center space-x-2" role="radiogroup" aria-label="Time range">
+          <div className="flex items-center space-x-2" role="radiogroup" aria-label={t('analytics.timeRange.label')}>
             {[
               { value: '6months', label: t('analytics.timeRange.6months') },
               { value: '1year', label: t('analytics.timeRange.1year') },
@@ -234,7 +274,7 @@ export default function Analytics() {
                   tick={{ fill: chartColors.text, fontSize: 11 }}
                   axisLine={{ stroke: chartColors.axis }}
                   tickLine={{ stroke: chartColors.axis }}
-                  label={{ value: 'Backscatter (dB)', angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
+                  label={{ value: t('analytics.axisLabels.backscatter'), angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ color: chartColors.text }} />
@@ -245,22 +285,8 @@ export default function Analytics() {
                   fill={chartColors.backscatter}
                   fillOpacity={0.1}
                   strokeWidth={2}
-                  name="VV Polarization"
+                  name={t('analytics.series.backscatter')}
                 />
-                <Line
-                  type="monotone"
-                  dataKey="backscatter"
-                  stroke={chartColors.backscatter}
-                  strokeWidth={2}
-                  dot={false}
-                  name="VV Polarization"
-                />
-                {fireEventIndex >= 0 && filteredData[fireEventIndex] && (
-                  <>
-                    <XAxis dataKey="date" hide={true} />
-                    <YAxis hide={true} />
-                  </>
-                )}
               </ComposedChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -283,7 +309,7 @@ export default function Analytics() {
                   axisLine={{ stroke: chartColors.axis }}
                   tickLine={{ stroke: chartColors.axis }}
                   domain={[0, 1]}
-                  label={{ value: 'Normalized Index', angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
+                  label={{ value: t('analytics.axisLabels.normalized'), angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ color: chartColors.text }} />
@@ -294,7 +320,7 @@ export default function Analytics() {
                   fill={chartColors.soilMoisture}
                   fillOpacity={0.1}
                   strokeWidth={2}
-                  name={t('analytics.charts.soilMoisture').split(' vs ')[0]}
+                  name={t('analytics.series.soilMoisture')}
                 />
                 <Line
                   type="monotone"
@@ -302,7 +328,7 @@ export default function Analytics() {
                   stroke={chartColors.fuelLoad}
                   strokeWidth={2}
                   dot={false}
-                  name={t('analytics.charts.soilMoisture').split(' vs ')[1]}
+                  name={t('analytics.series.fuelLoad')}
                 />
               </ComposedChart>
             </ResponsiveContainer>
@@ -324,7 +350,7 @@ export default function Analytics() {
                   axisLine={{ stroke: chartColors.axis }}
                   tickLine={{ stroke: chartColors.axis }}
                   domain={[0, 100]}
-                  label={{ value: 'Recovery %', angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
+                  label={{ value: t('analytics.axisLabels.recovery'), angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
                 <Bar dataKey="recovery" radius={[4, 4, 0, 0]}>

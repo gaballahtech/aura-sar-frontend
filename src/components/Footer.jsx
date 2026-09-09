@@ -181,9 +181,6 @@ export default function Footer() {
           <p className="text-muted text-sm">
             {'\u2764\uFE0F'} {t('footer.builtWith')} — "Through the Radar Looking Glass"
           </p>
-          <p className="text-subtle text-xs mt-1">
-            {t('footer.disclaimer')}
-          </p>
         </div>
       </div>
     </footer>

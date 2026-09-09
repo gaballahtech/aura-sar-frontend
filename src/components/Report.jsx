@@ -43,7 +43,7 @@ export default function Report() {
   const handlePhotoUpload = (file) => {
     if (file && file.type.startsWith('image/')) {
       if (file.size > 10 * 1024 * 1024) {
-        alert(t('report.form.photoTooLarge'));
+        setSubmitStatus({ type: 'error', message: t('report.form.photoTooLarge') });
         return;
       }
       const reader = new FileReader();
@@ -77,7 +77,7 @@ export default function Report() {
 
   const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      alert(t('report.form.geolocationUnsupported'));
+      setSubmitStatus({ type: 'error', message: t('report.form.geolocationUnsupported') });
       return;
     }
 
@@ -92,7 +92,7 @@ export default function Report() {
       },
       (error) => {
         setFormData(prev => ({ ...prev, location: '' }));
-        alert(t('report.form.geolocationFailed'));
+        setSubmitStatus({ type: 'error', message: t('report.form.geolocationFailed') });
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
@@ -160,17 +160,17 @@ export default function Report() {
             aria-selected={activeTab === 'submit'}
             aria-controls="submit-panel"
           >
-            <Send className="w-4 h-4 mr-2 inline" />
+            <Send className="w-4 h-4 me-2 inline" />
             {t('report.form.title')}
           </button>
           <button
             onClick={() => setActiveTab('feed')}
-            className={tabButtonClass(activeTab === 'feed', theme) + ' ml-2'}
+            className={tabButtonClass(activeTab === 'feed', theme) + ' ms-2'}
             role="tab"
             aria-selected={activeTab === 'feed'}
             aria-controls="feed-panel"
           >
-            <Users className="w-4 h-4 mr-2 inline" />
+            <Users className="w-4 h-4 me-2 inline" />
             {t('report.communityFeed.title')}
           </button>
         </div>
@@ -178,16 +178,33 @@ export default function Report() {
         {activeTab === 'submit' && (
           <div id="submit-panel" role="tabpanel" className="animate-slide-up">
             <form onSubmit={handleSubmit} className="bg-card max-w-2xl mx-auto" noValidate>
+              {submitStatus && (
+                <div
+                  role="alert"
+                  className={`mb-6 p-4 rounded-xl flex items-center space-x-3 border ${
+                    submitStatus.type === 'success'
+                      ? 'bg-success border-success'
+                      : 'bg-danger border-danger'
+                  }`}
+                >
+                  {submitStatus.type === 'success' ? (
+                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
+                  ) : (
+                    <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
+                  )}
+                  <span className="text-sm text-primary">{submitStatus.message}</span>
+                </div>
+              )}
               <div className="mb-6">
                 <label id="photo-upload-label" className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <Camera className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.photo')}</span>
                 </label>
                 <div
-                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all file-input relative ${
+                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
                     formData.photoPreview
                       ? 'border-transparent'
-                      : 'border-subtle hover:border-accent-green/50'
+                      : 'border-subtle hover:border-accent-green/50 hover:bg-accent-green/5'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -215,8 +232,8 @@ export default function Report() {
                       <button
                         type="button"
                         onClick={removePhoto}
-                        className="absolute top-2 right-2 p-2 bg-danger text-white rounded-full hover:bg-danger/80 transition-colors"
-                        aria-label="Remove photo"
+                        className="absolute top-2 end-2 p-2 bg-danger text-white rounded-full hover:bg-danger/80 transition-colors"
+                        aria-label={t('report.form.removePhoto')}
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -245,16 +262,16 @@ export default function Report() {
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     placeholder={t('report.form.locationHint')}
-                    className="input-field pr-32"
+                    className="input-field pe-32"
                     disabled={isSubmitting}
                   />
                   <button
                     type="button"
                     onClick={getCurrentLocation}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-accent-green/20 text-accent-green rounded-xl text-sm font-medium hover:bg-accent-green/30 transition-colors disabled:opacity-50"
+                    className="absolute end-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-accent-green/20 text-accent-green rounded-xl text-sm font-medium hover:bg-accent-green/30 transition-colors disabled:opacity-50"
                     disabled={isSubmitting}
                   >
-                    <MapPin className="w-4 h-4 mr-1 inline" />
+                    <MapPin className="w-4 h-4 me-1 inline" />
                     {t('report.form.getLocation')}
                   </button>
                 </div>
@@ -271,7 +288,7 @@ export default function Report() {
                       key={hazard.value}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, hazardType: hazard.value }))}
-                      className={`relative p-4 rounded-xl text-left transition-all ${
+                      className={`relative p-4 rounded-xl text-start transition-all ${
                         formData.hazardType === hazard.value
                           ? 'ring-2 ring-accent-green bg-accent-green/10'
                           : 'bg-card hover:bg-card-hover'
@@ -284,7 +301,7 @@ export default function Report() {
                         <span className="font-medium text-primary">{t(hazard.labelKey)}</span>
                       </div>
                       {formData.hazardType === hazard.value && (
-                        <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-accent-green" />
+                        <CheckCircle className="absolute top-2 end-2 w-5 h-5 text-accent-green" />
                       )}
                     </button>
                   ))}
@@ -306,21 +323,6 @@ export default function Report() {
                 />
               </div>
 
-              {submitStatus && (
-                <div className={`mb-6 p-4 rounded-xl flex items-center space-x-3 border ${
-                  submitStatus.type === 'success'
-                    ? 'bg-success border-success'
-                    : 'bg-danger border-danger'
-                }`}>
-                  {submitStatus.type === 'success' ? (
-                    <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
-                  ) : (
-                    <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
-                  )}
-                  <span className="text-sm text-primary">{submitStatus.message}</span>
-                </div>
-              )}
-
               <button
                 type="submit"
                 disabled={isSubmitting || !formData.photo || !formData.location || !formData.description.trim()}
@@ -328,12 +330,12 @@ export default function Report() {
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 me-2 animate-spin" />
                     {t('report.form.submitting')}
                   </>
                 ) : (
                   <>
-                    <Send className="w-5 h-5 mr-2" />
+                    <Send className="w-5 h-5 me-2" />
                     {t('report.form.submit')}
                   </>
                 )}

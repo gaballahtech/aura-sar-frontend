@@ -126,10 +126,10 @@ export default function Navbar() {
               >
                 <Bell className="w-4 h-4" />
                 <span>{t('navbar.alerts')}</span>
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
+                <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
               </button>
               {showAlerts && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
+                <div className="absolute end-0 top-full mt-2 w-80 bg-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
                   <div className="px-4 py-2 border-b border-subtle">
                     <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
                   </div>
@@ -169,7 +169,7 @@ export default function Navbar() {
             className="lg:hidden p-2 rounded-xl bg-glass hover:bg-glass-subtle text-primary"
             aria-expanded={isMenuOpen}
             aria-controls="mobile-menu"
-            aria-label="Toggle menu"
+            aria-label={t('navbar.menuToggle')}
           >
             {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -177,7 +177,7 @@ export default function Navbar() {
 
         <div
           id="mobile-menu"
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-[34rem] opacity-100' : 'max-h-0 opacity-0'}`}
         >
           <div className="py-4 space-y-2 border-t border-subtle">
             {navLinks.map((link) => (
@@ -211,12 +211,12 @@ export default function Navbar() {
               >
                 {theme === 'dark' ? (
                   <>
-                    <Sun className="w-4 h-4 mr-2" />
+                    <Sun className="w-4 h-4 me-2" />
                     {t('navbar.lightMode')}
                   </>
                 ) : (
                   <>
-                    <Moon className="w-4 h-4 mr-2" />
+                    <Moon className="w-4 h-4 me-2" />
                     {t('navbar.darkMode')}
                   </>
                 )}

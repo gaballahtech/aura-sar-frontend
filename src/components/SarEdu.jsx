@@ -174,7 +174,7 @@ export default function SarEdu() {
                     <h4 className="font-bold text-xl mt-2" style={{ color: mech.color }}>{t(`sarEdu.scattering.${mech.key}.title`)}</h4>
                   </div>
                   <p className="text-secondary text-sm mb-4">{t(`sarEdu.scattering.${mech.key}.desc`)}</p>
-                  <div className="p-3 rounded-lg bg-glass border-l-4" style={{ borderColor: mech.color }}>
+                  <div className="p-3 rounded-lg bg-glass border-s-4" style={{ borderColor: mech.color }}>
                     <p className="text-sm text-secondary"><strong>{t('sarEdu.scattering.signature')}</strong></p>
                     <p className="text-sm text-muted mt-1">{t(`sarEdu.scattering.${mech.key}.sarSignature`)}</p>
                   </div>
@@ -312,7 +312,7 @@ export default function SarEdu() {
               <ul className="space-y-2">
                 {t(`sarEdu.${col.block}.items`, { returnObjects: true }).map((item, j) => (
                   <li key={j} className="flex items-center space-x-2 text-sm text-secondary">
-                    <ChevronRight className="w-4 h-4 text-accent-green/50" />
+                    <ChevronRight className="w-4 h-4 text-accent-green/50 rtl:-scale-x-100" />
                     <span>{item}</span>
                   </li>
                 ))}

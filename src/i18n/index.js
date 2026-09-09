@@ -13,6 +13,7 @@ const en = {
     "alerts": "Emergency Alerts",
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
+    "menuToggle": "Toggle navigation menu",
     "alertItems": {
       "criticalFire": {
         "msg": "Critical fire risk detected in Zone 7",
@@ -63,7 +64,8 @@ const en = {
       "location": "Location",
       "timestamp": "Timestamp",
       "severity": "Severity",
-      "autoRefresh": "Auto-refresh (30s)"
+      "autoRefresh": "Auto-refresh (30s)",
+      "liveBadge": "LIVE"
     },
     "alertsFeed": {
       "types": {
@@ -114,6 +116,21 @@ const en = {
       "low": "Light Traffic",
       "moderate": "Moderate Traffic",
       "high": "Heavy Traffic"
+    },
+    "mapPopup": {
+      "confidence": "AI Confidence",
+      "intensity": "Intensity",
+      "type": "Type",
+      "coords": "Coordinates",
+      "capacity": "Capacity",
+      "current": "Current",
+      "available": "Available",
+      "occupancy": "Occupancy",
+      "types": {
+        "active": "Active fire",
+        "high-risk": "High risk",
+        "medium-risk": "Medium risk"
+      }
     }
   },
   "analytics": {
@@ -141,7 +158,8 @@ const en = {
       "6months": "6 Months",
       "1year": "1 Year",
       "3years": "3 Years",
-      "5years": "5 Years"
+      "5years": "5 Years",
+      "label": "Time range"
     },
     "comparisonInfo": {
       "preFireLabel": "Pre-Fire",
@@ -168,6 +186,20 @@ const en = {
       "backscatterMean": "Approaching pre-fire baseline",
       "soilMoisture": "Above seasonal average",
       "fuelLoad": "Significantly reduced post-fire"
+    },
+    "series": {
+      "backscatter": "VV Polarization",
+      "soilMoisture": "Soil Moisture",
+      "fuelLoad": "Dry Vegetation Density"
+    },
+    "axisLabels": {
+      "backscatter": "Backscatter (dB)",
+      "normalized": "Normalized Index",
+      "recovery": "Recovery (%)"
+    },
+    "controls": {
+      "fullscreen": "Toggle fullscreen",
+      "download": "Download data (CSV)"
     }
   },
   "report": {
@@ -196,7 +228,8 @@ const en = {
       "submitting": "Submitting...",
       "success": "Report submitted successfully!",
       "error": "Failed to submit report. Please try again.",
-      "getLocation": "Use Current Location"
+      "getLocation": "Use Current Location",
+      "removePhoto": "Remove photo"
     },
     "communityFeed": {
       "title": "Community Verified Reports",
@@ -409,6 +442,7 @@ const ar = {
     "alerts": "تنبيهات الطوارئ",
     "darkMode": "الوضع الداكن",
     "lightMode": "الوضع الفاتح",
+    "menuToggle": "تبديل قائمة التنقل",
     "alertItems": {
       "criticalFire": {
         "msg": "تم رصد خطر حرائق حرج في المنطقة 7",
@@ -459,7 +493,8 @@ const ar = {
       "location": "الموقع",
       "timestamp": "الوقت",
       "severity": "الشدة",
-      "autoRefresh": "تحديث تلقائي (30 ثانية)"
+      "autoRefresh": "تحديث تلقائي (30 ثانية)",
+      "liveBadge": "مباشر"
     },
     "alertsFeed": {
       "types": {
@@ -510,6 +545,21 @@ const ar = {
       "low": "حركة مرور خفيفة",
       "moderate": "حركة مرور متوسطة",
       "high": "حركة مرور كثيفة"
+    },
+    "mapPopup": {
+      "confidence": "ثقة الذكاء الاصطناعي",
+      "intensity": "الشدة",
+      "type": "النوع",
+      "coords": "الإحداثيات",
+      "capacity": "السعة",
+      "current": "الحالي",
+      "available": "المتاح",
+      "occupancy": "الإشغال",
+      "types": {
+        "active": "حريق نشط",
+        "high-risk": "خطر مرتفع",
+        "medium-risk": "خطر متوسط"
+      }
     }
   },
   "analytics": {
@@ -537,7 +587,8 @@ const ar = {
       "6months": "6 أشهر",
       "1year": "سنة واحدة",
       "3years": "3 سنوات",
-      "5years": "5 سنوات"
+      "5years": "5 سنوات",
+      "label": "الفترة الزمنية"
     },
     "comparisonInfo": {
       "preFireLabel": "قبل الحريق",
@@ -564,6 +615,20 @@ const ar = {
       "backscatterMean": "يقترب من خط الأساس قبل الحريق",
       "soilMoisture": "فوق المتوسط الموسمي",
       "fuelLoad": "انخفض بشكل ملحوظ بعد الحريق"
+    },
+    "series": {
+      "backscatter": "الاستقطاب VV",
+      "soilMoisture": "رطوبة التربة",
+      "fuelLoad": "كثافة الغطاء النباتي الجاف"
+    },
+    "axisLabels": {
+      "backscatter": "الاستطاعة المرتجعة (dB)",
+      "normalized": "المؤشر المعياري",
+      "recovery": "التعافي (%)"
+    },
+    "controls": {
+      "fullscreen": "تبديل ملء الشاشة",
+      "download": "تنزيل البيانات (CSV)"
     }
   },
   "report": {
@@ -592,7 +657,8 @@ const ar = {
       "submitting": "جاري الإرسال...",
       "success": "تم إرسال التقرير بنجاح!",
       "error": "فشل إرسال التقرير. يرجى المحاولة مرة أخرى.",
-      "getLocation": "استخدام الموقع الحالي"
+      "getLocation": "استخدام الموقع الحالي",
+      "removePhoto": "إزالة الصورة"
     },
     "communityFeed": {
       "title": "تقارير المجتمع المُتحقق منها",

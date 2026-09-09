@@ -36,7 +36,7 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
       aria-labelledby="hero-title"
     >
-      <div className="absolute inset-0 bg-grid-pattern opacity-50" />
+      <div className={`absolute inset-0 opacity-50 ${theme === 'dark' ? 'bg-grid-pattern' : 'bg-grid-pattern-light'}`} />
       {theme === 'dark' ? (
         <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
       ) : (
@@ -72,7 +72,7 @@ export default function Hero() {
               className="btn-primary group flex items-center space-x-2 text-lg px-8 py-4"
             >
               <span>{t('hero.cta.exploreMap')}</span>
-              <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
+              <ArrowRight className="w-5 h-5 rtl:-scale-x-100 transition-transform ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
             </button>
             <button
               onClick={() => scrollToSection('report')}
