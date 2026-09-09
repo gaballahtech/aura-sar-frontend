@@ -108,16 +108,25 @@
   }
 
   .bg-card {
-    background-color: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 1rem;
+    box-shadow:
+      0 10px 32px rgba(0, 0, 0, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
   .light .bg-card {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(229, 229, 229, 0.5);
+    background-color: rgba(255, 255, 255, 0.76);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    border: 1px solid rgba(229, 229, 229, 0.6);
     border-radius: 1rem;
+    box-shadow:
+      0 10px 32px rgba(0, 0, 0, 0.08),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 
   .bg-card-hover:hover {
@@ -191,14 +200,21 @@
     color: #111827;
   }
 
-  /* Focus visible for keyboard navigation */
+  /* Focus visible for keyboard navigation (intensified specular + z-elevation) */
   :focus-visible {
     outline: 2px solid var(--color-accent-green);
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(7, 192, 107, 0.22);
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    transform: translateY(-1px);
   }
 
   .light :focus-visible {
     outline-color: var(--color-accent-green);
+    box-shadow: 0 0 0 4px rgba(7, 192, 107, 0.2);
   }
 
   /* Disable default button styles */
@@ -244,9 +260,17 @@
 }
 
 @utility glass {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.light .glass {
+  background-color: rgba(255, 255, 255, 0.78);
+  border-color: rgba(229, 229, 229, 0.6);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 @utility btn-primary {
@@ -314,45 +338,117 @@
 }
 
 @utility stat-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1rem;
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1.25rem;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
+  box-shadow:
+    0 10px 34px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 @utility glow-border {
   position: relative;
 }
 
-@utility liquid-glass {
-  background-color: rgba(18, 18, 18, 0.55);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+/* === Liquid Glass surfaces (Apple-style) ===
+   Frosted base: heavy blur + saturation boost (blur drains chroma, saturate
+   restores it). Refractive rim: 1px light border + inset highlights. A
+   diagonal sheen pseudo-layer fakes the glossy specular highlight. */
+
+.liquid-glass,
+.liquid-surface {
+  position: relative;
+  isolation: isolate;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
-@utility liquid-surface {
-  background-color: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+.liquid-surface {
+  contain: paint;
+}
+
+.liquid-glass {
+  background-color: rgba(18, 18, 18, 0.5);
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.08);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.55),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.28),
+    inset 1px 0 1px rgba(255, 255, 255, 0.18),
+    inset -1px 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.liquid-surface {
+  background-color: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px) saturate(180%) brightness(1.06);
+  -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.3),
+    inset 0 1px 1px rgba(255, 255, 255, 0.5),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.24),
+    inset 1px 0 1px rgba(255, 255, 255, 0.16),
+    inset -1px 0 1px rgba(255, 255, 255, 0.16);
+}
+
+/* Diagonal specular sheen */
+.liquid-glass::after,
+.liquid-surface::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.08) 26%,
+    rgba(255, 255, 255, 0) 55%);
+  mix-blend-mode: screen;
+}
+
+/* Real refraction (Chromium only) — graceful, gated, zero cost elsewhere */
+@supports (backdrop-filter: url(#lg-refract)) {
+  .liquid-glass {
+    backdrop-filter: blur(16px) saturate(180%) url(#lg-refract);
+    -webkit-backdrop-filter: blur(16px) saturate(180%) url(#lg-refract);
+  }
 }
 
 .light .liquid-glass {
   background-color: rgba(255, 255, 255, 0.66);
-  border: 1px solid rgba(255, 255, 255, 0.7);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  border-color: rgba(255, 255, 255, 0.75);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
+    inset 1px 0 1px rgba(255, 255, 255, 0.4),
+    inset -1px 0 1px rgba(255, 255, 255, 0.4);
 }
 
 .light .liquid-surface {
-  background-color: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(229, 229, 229, 0.6);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+  background-color: rgba(255, 255, 255, 0.68);
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.1),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
+    inset 1px 0 1px rgba(255, 255, 255, 0.4),
+    inset -1px 0 1px rgba(255, 255, 255, 0.4);
+}
+
+.light .liquid-glass::after,
+.light .liquid-surface::after {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.85) 0%,
+    rgba(255, 255, 255, 0.25) 26%,
+    rgba(255, 255, 255, 0) 55%);
 }
 
 @utility text-gradient {
@@ -382,7 +478,7 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   transition: all 0.3s ease;
   font-size: 0.75rem;
   font-weight: 700;
@@ -529,19 +625,43 @@
 
 .btn-primary:hover {
   background-color: #22c55e;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(7, 192, 107, 0.35);
 }
 
 .btn-primary:active {
   background-color: #15803d;
+  transform: translateY(0) scale(0.97);
 }
 
 .btn-primary:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 4px var(--color-primary-dark);
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 5px color-mix(in srgb, var(--color-accent-green) 30%, transparent), 0 10px 28px rgba(7, 192, 107, 0.3);
+}
+
+.btn-primary,
+.btn-secondary {
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-primary.is-round {
+  border-radius: 9999px;
+  padding-inline: 1.5rem;
 }
 
 .btn-secondary:hover {
   background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.btn-secondary:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.btn-secondary:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-accent-green), 0 0 0 5px rgba(7, 192, 107, 0.25);
 }
 
 .input-field:focus {
@@ -590,11 +710,21 @@
 }
 
 .leaflet-popup-content-wrapper {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 1.25rem !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
+}
+
+.leaflet-popup-content-wrapper {
+  animation: popupIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popupIn {
+  from { opacity: 0; transform: scale(0.92) translateY(4px); }
+  to { opacity: 1; transform: none; }
 }
 
 .leaflet-popup-content {
@@ -604,29 +734,34 @@
 }
 
 .leaflet-popup-tip {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
 }
 
 .light .leaflet-popup-content-wrapper {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(229, 229, 229, 0.5) !important;
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(229, 229, 229, 0.6) !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
 }
 
 .light .leaflet-popup-tip {
-  background-color: rgba(255, 255, 255, 0.8) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(229, 229, 229, 0.5) !important;
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(229, 229, 229, 0.6) !important;
 }
 
 .leaflet-control-layers {
-  background-color: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
 }
 
 .leaflet-control-layers-expanded {
@@ -652,18 +787,19 @@
 }
 
 .recharts-default-tooltip {
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 0.75rem !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  backdrop-filter: blur(16px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
   padding: 1rem !important;
 }
 
 .light .recharts-default-tooltip {
-  background: rgba(255, 255, 255, 0.9) !important;
-  border: 1px solid rgba(229, 229, 229, 0.5) !important;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(229, 229, 229, 0.6) !important;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.15) !important;
 }
 
 /* Chart fullscreen */
@@ -742,6 +878,11 @@
     -webkit-backdrop-filter: none !important;
   }
 
+  .liquid-glass::after,
+  .liquid-surface::after {
+    display: none;
+  }
+
   .liquid-glass { background-color: #18181b; border-color: #27272a; box-shadow: none; }
   .liquid-surface { background-color: #202024; border-color: #2a2a2e; box-shadow: none; }
   .bg-card { background-color: #18181b; box-shadow: none; }
@@ -753,6 +894,32 @@
   .light .bg-card { background-color: #ffffff; box-shadow: none; }
   .light .glass { background-color: #ffffff; box-shadow: none; }
   .light .stat-card { background-color: #ffffff; box-shadow: none; }
+}
+
+/* Performance: heavy blur is wasteful on small screens / GPUs */
+@media (max-width: 640px) {
+  .liquid-glass {
+    backdrop-filter: blur(10px) saturate(160%);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+  }
+  .liquid-surface,
+  .bg-card,
+  .glass,
+  .stat-card,
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip,
+  .leaflet-control-layers,
+  .recharts-default-tooltip {
+    backdrop-filter: blur(8px) saturate(150%);
+    -webkit-backdrop-filter: blur(8px) saturate(150%);
+  }
+  .liquid-glass::after,
+  .liquid-surface::after {
+    background: linear-gradient(135deg,
+      rgba(255, 255, 255, 0.28) 0%,
+      rgba(255, 255, 255, 0.06) 26%,
+      rgba(255, 255, 255, 0) 55%);
+  }
 }
 
 /* Scroll-edge legibility for floating headers (Liquid Glass) */

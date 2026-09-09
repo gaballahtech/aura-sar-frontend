@@ -62,11 +62,9 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 liquid-glass liquid-edge border-b border-subtle transition-transform duration-300 ${
         hideNav ? '-translate-y-full' : 'translate-y-0'
-      } ${
-        isScrolled ? 'liquid-glass liquid-edge border-b border-subtle' : 'bg-transparent'
-      }`}
+      } ${isScrolled ? 'shadow-2xl' : ''}`}
       role="banner"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
@@ -101,7 +99,7 @@ export default function Navbar() {
           </div>
 
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="relative" role="group" aria-label={t('navbar.language')}>
+            <div className="flex items-center gap-1 p-1 rounded-full liquid-surface" role="group" aria-label={t('navbar.language')}>
               <button
                 onClick={toggleLanguage}
                 className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
@@ -118,20 +116,22 @@ export default function Navbar() {
               >
                 <span>AR</span>
               </button>
-            </div>
 
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-xl bg-glass hover:bg-glass-subtle text-secondary transition-colors"
-              aria-label={theme === 'dark' ? t('navbar.lightMode') : t('navbar.darkMode')}
-            >
-              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
+              <span className="w-px h-6 bg-subtle mx-1" aria-hidden="true" />
+
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full text-secondary hover:bg-glass transition-colors"
+                aria-label={theme === 'dark' ? t('navbar.lightMode') : t('navbar.darkMode')}
+              >
+                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </button>
+            </div>
 
             <div className="relative" data-alerts-menu>
               <button
                 onClick={() => setShowAlerts(!showAlerts)}
-                className="btn-primary relative flex items-center space-x-2 glow-border"
+                className="btn-primary is-round relative flex items-center space-x-2 glow-border"
                 aria-expanded={showAlerts}
                 aria-haspopup="true"
               >
@@ -140,7 +140,7 @@ export default function Navbar() {
                 <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
               </button>
               {showAlerts && (
-                <div className="absolute end-0 top-full mt-2 w-80 liquid-surface shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
+                <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
                   <div className="px-4 py-2 border-b border-subtle">
                     <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
                   </div>

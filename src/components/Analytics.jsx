@@ -345,29 +345,29 @@ export default function Analytics() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-start text-muted text-xs uppercase">
-                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.scene')}</th>
-                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.acquisition')}</th>
-                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.polarization')}</th>
-                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.orbit')}</th>
-                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.size')}</th>
-                    <th className="text-start font-medium px-3 py-2"></th>
+                  <tr className="text-start text-muted text-sm">
+                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.scene')}</th>
+                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.acquisition')}</th>
+                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.polarization')}</th>
+                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.orbit')}</th>
+                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.size')}</th>
+                    <th className="text-start font-semibold px-3 py-2.5"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {scenes.map((scene) => (
                     <tr key={scene.fileID} className="border-t border-subtle hover:bg-glass">
-                      <td className="px-3 py-2 text-primary" dir="ltr">
+                      <td className="px-3 py-2.5 text-primary" dir="ltr">
                         <span className="font-mono text-xs">{scene.sceneName}</span>
                         <span className="block text-xs text-muted">{scene.platform} · {scene.beamModeType} / {scene.processingLevel}</span>
                       </td>
-                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{formatSceneTime(scene.startTime)}</td>
-                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{scene.polarization}</td>
-                      <td className="px-3 py-2 text-secondary whitespace-nowrap">
+                      <td className="px-3 py-2.5 text-secondary whitespace-nowrap">{formatSceneTime(scene.startTime)}</td>
+                      <td className="px-3 py-2.5 text-secondary whitespace-nowrap">{scene.polarization}</td>
+                      <td className="px-3 py-2.5 text-secondary whitespace-nowrap">
                         {scene.flightDirection === 'ASCENDING' ? 'A' : 'D'} · P{scene.pathNumber}-{scene.frameNumber}
                       </td>
-                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{formatBytes(scene.bytes)}</td>
-                      <td className="px-3 py-2 text-end">
+                      <td className="px-3 py-2.5 text-secondary whitespace-nowrap">{formatBytes(scene.bytes)}</td>
+                      <td className="px-3 py-2.5 text-end">
                         <a
                           href={scene.url}
                           target="_blank"
