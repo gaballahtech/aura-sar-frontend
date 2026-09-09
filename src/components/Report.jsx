@@ -43,7 +43,7 @@ export default function Report() {
   const handlePhotoUpload = (file) => {
     if (file && file.type.startsWith('image/')) {
       if (file.size > 10 * 1024 * 1024) {
-        alert(t('report.form.photoHint').replace('(max 10MB)', ''));
+        alert(t('report.form.photoTooLarge'));
         return;
       }
       const reader = new FileReader();
@@ -77,7 +77,7 @@ export default function Report() {
 
   const getCurrentLocation = useCallback(() => {
     if (!navigator.geolocation) {
-      alert('Geolocation is not supported by your browser');
+      alert(t('report.form.geolocationUnsupported'));
       return;
     }
 
@@ -92,7 +92,7 @@ export default function Report() {
       },
       (error) => {
         setFormData(prev => ({ ...prev, location: '' }));
-        alert('Unable to retrieve your location. Please enable location services or enter coordinates manually.');
+        alert(t('report.form.geolocationFailed'));
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
@@ -101,7 +101,7 @@ export default function Report() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.photo || !formData.location || !formData.description.trim()) {
-      setSubmitStatus({ type: 'error', message: 'Please fill all required fields' });
+      setSubmitStatus({ type: 'error', message: t('report.form.fillRequired') });
       return;
     }
 
@@ -179,7 +179,7 @@ export default function Report() {
           <div id="submit-panel" role="tabpanel" className="animate-slide-up">
             <form onSubmit={handleSubmit} className="bg-card max-w-2xl mx-auto" noValidate>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
+                <label id="photo-upload-label" className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <Camera className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.photo')}</span>
                 </label>
@@ -192,11 +192,14 @@ export default function Report() {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
+                  role="button"
+                  aria-label={t('report.form.photo')} 
                 >
                   <input
                     ref={fileInputRef}
                     type="file"
                     accept="image/*"
+                    aria-labelledby="photo-upload-label"
                     onChange={(e) => e.target.files[0] && handlePhotoUpload(e.target.files[0])}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                     id="photo-upload"
@@ -361,7 +364,7 @@ export default function Report() {
 
               <div className="space-y-4">
                 {mockReports.map(report => {
-                  const hazard = hazardTypes.find(h => h.value === report.type);
+                  const item = t(`report.communityFeed.items.${report.id}`, { returnObjects: true });
                   return (
                     <div
                       key={report.id}
@@ -371,22 +374,22 @@ export default function Report() {
                         <div className="flex items-center space-x-3">
                           <HazardBadge type={report.type} verified={report.verified} />
                           <div>
-                            <p className="font-medium text-primary">{report.location}</p>
-                            <p className="text-xs text-muted">{report.coords}</p>
+                            <p className="font-medium text-primary">{item.location}</p>
+                            <p className="text-xs text-muted">{item.coords}</p>
                           </div>
                         </div>
                         <div className="flex items-center space-x-3 text-xs text-muted">
                           <span className="flex items-center space-x-1">
                             <Users className="w-3 h-3" />
-                            <span>{report.reporter}</span>
+                            <span>{item.reporter}</span>
                           </span>
                           <span className="flex items-center space-x-1">
                             <MapPin className="w-3 h-3" />
-                            <span>{report.time}</span>
+                            <span>{item.time}</span>
                           </span>
                         </div>
                       </div>
-                      <p className="text-secondary mb-3">{report.description}</p>
+                      <p className="text-secondary mb-3">{item.description}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm">
                           <button className="flex items-center space-x-1 text-secondary hover:text-accent-green transition-colors">
@@ -411,7 +414,7 @@ export default function Report() {
 
               <div className="mt-6 text-center">
                 <button className="btn-secondary">
-                  {t('common.loadMore') || 'Load More Reports'}
+                  {t('common.loadMore')}
                 </button>
               </div>
             </div>

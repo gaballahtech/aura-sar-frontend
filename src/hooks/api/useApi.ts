@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient, queryKeys } from '../../services/api';
+import { apiClient } from '../../services/api';
 import type {
   FireDataPoint,
   AlertData,
@@ -280,6 +280,7 @@ export function useSARCatalog(params: Record<string, unknown> = {}): UseApiState
     error: null,
     refetch: async () => {},
   });
+  const paramsKey = JSON.stringify(params);
 
   const fetchData = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
@@ -290,7 +291,7 @@ export function useSARCatalog(params: Record<string, unknown> = {}): UseApiState
       error: response.error || null,
       refetch: fetchData,
     });
-  }, [JSON.stringify(params)]);
+  }, [paramsKey]);
 
   useEffect(() => {
     fetchData();

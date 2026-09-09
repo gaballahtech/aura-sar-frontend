@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Menu, X, Sun, Moon, Globe, Bell, ChevronDown } from 'lucide-react';
+import { Menu, X, Sun, Moon, Bell } from 'lucide-react';
 const logoLight = '/images/Logo.png';
 const logoDark = '/images/Logo-Dark.png';
 
@@ -30,6 +30,17 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!showAlerts) return;
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('[data-alerts-menu]')) {
+        setShowAlerts(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [showAlerts]);
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -43,7 +54,7 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-primary-dark/90 backdrop-blur-md border-b border-subtle' : 'bg-transparent'
+        isScrolled ? 'bg-glass backdrop-blur-md border-b border-subtle' : 'bg-transparent'
       }`}
       role="banner"
     >
@@ -106,7 +117,7 @@ export default function Navbar() {
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
 
-            <div className="relative">
+            <div className="relative" data-alerts-menu>
               <button
                 onClick={() => setShowAlerts(!showAlerts)}
                 className="btn-primary relative flex items-center space-x-2 glow-border"
@@ -118,31 +129,32 @@ export default function Navbar() {
                 <span className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
               </button>
               {showAlerts && (
-                <div className="absolute right-0 top-full mt-2 w-80 bg-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in">
+                <div className="absolute right-0 top-full mt-2 w-80 bg-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
                   <div className="px-4 py-2 border-b border-subtle">
                     <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
                   </div>
                   <div className="max-h-60 overflow-y-auto">
                     {[
-                      { id: 1, msg: 'Critical fire risk detected in Zone 7', severity: 'critical', time: '2 min ago' },
-                      { id: 2, msg: 'New thermal anomaly near Highway 101', severity: 'high', time: '15 min ago' },
-                      { id: 3, msg: 'Air quality dropping in Santa Clara County', severity: 'medium', time: '1 hour ago' },
+                      { id: 1, key: 'criticalFire', severity: 'critical' },
+                      { id: 2, key: 'thermalAnomaly', severity: 'high' },
+                      { id: 3, key: 'airQuality', severity: 'medium' },
                     ].map(alert => {
+                      const item = t(`navbar.alertItems.${alert.key}`, { returnObjects: true });
                       const severityClass = {
                         critical: 'bg-danger text-danger',
-                        high: 'bg-warning text-warning',
-                        medium: 'bg-warning text-warning',
+                        high: 'bg-orange text-orange',
+                        medium: 'bg-yellow text-yellow',
                         low: 'bg-success text-success',
                       }[alert.severity];
                       return (
-                        <div key={alert.id} className="px-4 py-3 hover:bg-glass border-b border-subtle last:border-0">
+                        <div key={alert.id} role="menuitem" tabIndex={-1} className="px-4 py-3 hover:bg-glass border-b border-subtle last:border-0 cursor-default">
                           <div className="flex items-start justify-between">
-                            <p className="text-sm text-primary">{alert.msg}</p>
+                            <p className="text-sm text-primary">{item.msg}</p>
                             <span className={`text-xs px-2 py-1 rounded-full ${severityClass}`}>
-                              {alert.severity}
+                              {t(`dashboard.severity.${alert.severity}`)}
                             </span>
                           </div>
-                          <p className="text-xs text-muted mt-1">{alert.time}</p>
+                          <p className="text-xs text-muted mt-1">{item.time}</p>
                         </div>
                       );
                     })}
@@ -182,13 +194,13 @@ export default function Navbar() {
               <div className="flex items-center space-x-2">
                 <button
                   onClick={toggleLanguage}
-                  className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'} w-12 h-10`}
+                  className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 >
                   EN
                 </button>
                 <button
                   onClick={toggleLanguage}
-                  className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'} w-12 h-10`}
+                  className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 >
                   AR
                 </button>

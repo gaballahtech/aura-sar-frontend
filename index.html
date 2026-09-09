@@ -2,11 +2,29 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="AURA-SAR: AI & Ultra-Radar Analytics for Wildfire Safety - NASA Space Apps Challenge 2025" />
     <meta name="theme-color" content="#111342" />
     <title>AURA-SAR | NASA Space Apps Challenge 2025</title>
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('aura-sar-language');
+          if (saved === 'ar') {
+            document.documentElement.setAttribute('lang', 'ar');
+            document.documentElement.setAttribute('dir', 'rtl');
+          }
+          var theme = localStorage.getItem('aura-sar-theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (theme === 'light' || (!theme && !prefersDark)) {
+            document.documentElement.classList.add('light');
+          } else {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (e) {}
+      })();
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">

@@ -115,19 +115,3 @@ export interface WebSocketMessage {
   payload: unknown;
   timestamp: string;
 }
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: 'firefighter' | 'public' | 'admin' | 'researcher';
-  organization?: string;
-  verified: boolean;
-}
-
-export interface AuthState {
-  user: User | null;
-  token: string | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-}

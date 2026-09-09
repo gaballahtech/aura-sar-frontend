@@ -4,7 +4,7 @@ import { useTheme } from '../context/ThemeContext';
 import { MapContainer, TileLayer, LayerGroup, CircleMarker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { Layers, Flame, Wind, AlertTriangle, RefreshCw, Filter, X, Shield, MapPin, Users, Truck, Cloud, ArrowUpRight, RotateCcw, Maximize2, Minimize2, Download } from 'lucide-react';
+import { Layers, Flame, Wind, AlertTriangle, Shield, Truck, Cloud, RotateCcw } from 'lucide-react';
 
 const CALIFORNIA_BOUNDS = [[32.5, -124.5], [42.0, -114.0]];
 const CALIFORNIA_CENTER = [37.5, -119.5];
@@ -18,12 +18,15 @@ const mockFireData = [
   { id: 6, lat: 40.5, lng: -122.3, intensity: 0.85, confidence: 89, type: 'active', name: 'Shasta Trinity' },
 ];
 
+const alertTypeKeys = ['criticalFireRisk', 'thermalAnomaly', 'airQuality', 'windShift', 'perimeterExpansion'];
+const alertLocationKeys = ['caldorFire', 'highway101', 'santaClara', 'bigSur', 'shastaTrinity'];
+
 const mockAlerts = [
-  { id: 1, type: 'Critical Fire Risk', location: 'Zone 7 - Caldor Fire', confidence: 94, time: '2 min ago', severity: 'critical' },
-  { id: 2, type: 'New Thermal Anomaly', location: 'Highway 101 Corridor', confidence: 87, time: '15 min ago', severity: 'high' },
-  { id: 3, type: 'Air Quality Alert', location: 'Santa Clara County', confidence: 82, time: '1 hour ago', severity: 'medium' },
-  { id: 4, type: 'Wind Shift Warning', location: 'Big Sur Region', confidence: 91, time: '3 hours ago', severity: 'high' },
-  { id: 5, type: 'Perimeter Expansion', location: 'Shasta Trinity', confidence: 89, time: '4 hours ago', severity: 'critical' },
+  { id: 1, typeKey: 'criticalFireRisk', locationKey: 'caldorFire', confidence: 94, timeKey: '2minAgo', severity: 'critical' },
+  { id: 2, typeKey: 'thermalAnomaly', locationKey: 'highway101', confidence: 87, timeKey: '15minAgo', severity: 'high' },
+  { id: 3, typeKey: 'airQuality', locationKey: 'santaClara', confidence: 82, timeKey: '1hourAgo', severity: 'medium' },
+  { id: 4, typeKey: 'windShift', locationKey: 'bigSur', confidence: 91, timeKey: '3hoursAgo', severity: 'high' },
+  { id: 5, typeKey: 'perimeterExpansion', locationKey: 'shastaTrinity', confidence: 89, timeKey: '4hoursAgo', severity: 'critical' },
 ];
 
 const safeZones = [
@@ -48,30 +51,30 @@ const aqiData = [
 
 const severityColors = {
   critical: { bg: 'bg-danger', text: 'text-danger' },
-  high: { bg: 'bg-warning', text: 'text-warning' },
-  medium: { bg: 'bg-warning', text: 'text-warning' },
+  high: { bg: 'bg-orange', text: 'text-orange' },
+  medium: { bg: 'bg-yellow', text: 'text-yellow' },
   low: { bg: 'bg-success', text: 'text-success' },
 };
 
 const aqiColors = {
   good: { text: 'text-success', bg: 'bg-success' },
   moderate: { text: 'text-warning', bg: 'bg-warning' },
-  unhealthy: { text: 'text-warning', bg: 'bg-warning' },
+  unhealthy: { text: 'text-orange', bg: 'bg-orange' },
   hazardous: { text: 'text-danger', bg: 'bg-danger' },
 };
 
 const routeColors = {
   'open-low': { bg: 'bg-success', text: 'text-success' },
   'open-moderate': { bg: 'bg-warning', text: 'text-warning' },
-  'advisory-high': { bg: 'bg-warning', text: 'text-warning' },
+  'advisory-high': { bg: 'bg-orange', text: 'text-orange' },
 };
 
 const SeverityLegend = ({ theme, t }) => {
   const severities = [
-    { label: t('dashboard.severity.critical'), className: severityColors.critical },
-    { label: t('dashboard.severity.high'), className: severityColors.high },
-    { label: t('dashboard.severity.medium'), className: severityColors.medium },
-    { label: t('dashboard.severity.low'), className: severityColors.low },
+    { label: t('dashboard.severity.critical'), className: severityColors.critical, dot: '#ff4d4d' },
+    { label: t('dashboard.severity.high'), className: severityColors.high, dot: '#f59e0b' },
+    { label: t('dashboard.severity.medium'), className: severityColors.medium, dot: '#eab308' },
+    { label: t('dashboard.severity.low'), className: severityColors.low, dot: '#16a34a' },
   ];
 
   return (
@@ -80,7 +83,7 @@ const SeverityLegend = ({ theme, t }) => {
       <div className="space-y-2">
         {severities.map((s, i) => (
           <div key={i} className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-accent-red)' }} />
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.dot }} />
             <span className="text-sm text-secondary">{s.label}</span>
           </div>
         ))}
@@ -193,10 +196,10 @@ export default function Dashboard() {
       setAlerts(prev => [
         {
           id: Date.now(),
-          type: ['Critical Fire Risk', 'New Thermal Anomaly', 'Air Quality Alert', 'Wind Shift Warning', 'Perimeter Expansion'][Math.floor(Math.random() * 5)],
-          location: ['Zone 7 - Caldor Fire', 'Highway 101 Corridor', 'Santa Clara County', 'Big Sur Region', 'Shasta Trinity'][Math.floor(Math.random() * 5)],
+          typeKey: alertTypeKeys[Math.floor(Math.random() * alertTypeKeys.length)],
+          locationKey: alertLocationKeys[Math.floor(Math.random() * alertLocationKeys.length)],
           confidence: Math.floor(Math.random() * 30) + 70,
-          time: 'Just now',
+          timeKey: 'justNow',
           severity: ['critical', 'high', 'medium'][Math.floor(Math.random() * 3)],
         },
         ...prev.slice(0, 4)
@@ -249,7 +252,7 @@ export default function Dashboard() {
                 className="w-4 h-4 accent-accent-green rounded"
               />
               <RotateCcw className="w-4 h-4" />
-              <span>Auto-refresh (30s)</span>
+              <span>{t('dashboard.firefighterView.autoRefresh')}</span>
             </label>
           </div>
         </div>
@@ -317,14 +320,14 @@ export default function Dashboard() {
                     className={`p-4 rounded-xl border-l-4 transition-all bg-card-hover ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-primary">{alert.type}</h4>
+                      <h4 className="font-semibold text-primary">{t(`dashboard.alertsFeed.types.${alert.typeKey}`)}</h4>
                       <span className={`text-xs px-2 py-1 rounded-full ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}>
                         {t(`dashboard.severity.${alert.severity}`)}
                       </span>
                     </div>
-                    <p className="text-sm text-secondary mb-2">{alert.location}</p>
+                    <p className="text-sm text-secondary mb-2">{t(`dashboard.alertsFeed.locations.${alert.locationKey}`)}</p>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-muted">{alert.time}</span>
+                      <span className="text-muted">{t(`dashboard.alertsFeed.times.${alert.timeKey}`)}</span>
                       <span className="font-medium text-accent-green">{alert.confidence}% {t('dashboard.firefighterView.confidence')}</span>
                     </div>
                   </div>
@@ -373,7 +376,7 @@ export default function Dashboard() {
                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-glass">
                         <span className="font-medium text-primary">{route.name}</span>
                         <span className={`text-sm px-3 py-1 rounded-full ${colors.bg} ${colors.text}`}>
-                          {route.status === 'open' ? 'Open' : 'Advisory'} · {route.congestion}
+                          {t(`dashboard.routeStatus.${route.status}`)} · {t(`dashboard.congestion.${route.congestion}`)}
                         </span>
                       </div>
                     );

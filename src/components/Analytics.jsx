@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import {
-  LineChart, Line, AreaChart, Area, XAxis, YAxis,
+  Area, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar, Cell, ComposedChart
 } from 'recharts';
@@ -36,9 +36,9 @@ const backscatterData = generateBackscatterData();
 const fireEventIndex = backscatterData.findIndex(d => d.backscatter < -18);
 
 const comparisonImages = [
-  { label: 'Pre-Fire', date: 'June 2024', description: 'Healthy vegetation, high moisture content' },
-  { label: 'During Fire', date: 'August 2024', description: 'Active burning, complete canopy loss' },
-  { label: 'Post-Fire Recovery', date: 'March 2025', description: 'Regrowth visible, 73% recovery' },
+  { key: 'preFire', date: 'June 2024' },
+  { key: 'during', date: 'August 2024' },
+  { key: 'postFire', date: 'March 2025' },
 ];
 
 const trendColors = {
@@ -145,42 +145,42 @@ export default function Analytics() {
                     }`}
                     aria-pressed={activeComparison === index}
                   >
-                    <span className="font-semibold">{img.label}</span>
-                    <span className="text-xs text-muted">{img.date}</span>
+                    <span className="font-semibold">{t(`analytics.comparison.${img.key}.label`)}</span>
+                    <span className="text-xs text-muted">{t(`analytics.comparison.${img.key}.date`)}</span>
                   </button>
                 ))}
               </div>
-              <div className="aspect-video relative rounded-xl overflow-hidden bg-gradient-to-br from-primary-navy to-primary-dark">
+              <div className={`aspect-video relative rounded-xl overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-primary-navy to-primary-dark' : 'bg-gradient-to-br from-gray-100 to-gray-200'}`}>
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center p-8">
                     <Camera className="w-16 h-16 mx-auto mb-4 text-muted" />
-                    <p className="text-secondary text-lg">{comparisonImages[activeComparison].label} SAR Snapshot</p>
-                    <p className="text-muted text-sm mt-2">{comparisonImages[activeComparison].description}</p>
+                    <p className="text-secondary text-lg">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.label`)} {t('analytics.sarSnapshot')}</p>
+                    <p className="text-muted text-sm mt-2">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.description`)}</p>
                     <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-subtle">
                       <span className="flex items-center space-x-1">
                         <Satellite className="w-3 h-3" />
-                        <span>Sentinel-1 C-Band VV/VH</span>
+                        <span>{t('analytics.snapshotDetails.satellite')}</span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <MapPin className="w-3 h-3" />
-                        <span>37.5°N, 119.5°W</span>
+                        <span>{t('analytics.snapshotDetails.coords')}</span>
                       </span>
                       <span className="flex items-center space-x-1">
                         <Ruler className="w-3 h-3" />
-                        <span>10m resolution</span>
+                        <span>{t('analytics.snapshotDetails.resolution')}</span>
                       </span>
                     </div>
                   </div>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between">
                   <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>Pre-Fire:</strong> High VV backscatter (-8 dB), dense canopy
+                    <strong>{t('analytics.comparisonInfo.preFireLabel')}:</strong> {t('analytics.comparisonInfo.preFireDesc')}
                   </div>
                   <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>During:</strong> VV drop to -18 dB, volume scattering loss
+                    <strong>{t('analytics.comparisonInfo.duringLabel')}:</strong> {t('analytics.comparisonInfo.duringDesc')}
                   </div>
                   <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                    <strong>Recovery:</strong> VV at -11 dB, cross-pol increasing
+                    <strong>{t('analytics.comparisonInfo.recoveryLabel')}:</strong> {t('analytics.comparisonInfo.recoveryDesc')}
                   </div>
                 </div>
               </div>
@@ -339,9 +339,9 @@ export default function Analytics() {
 
         <div className="mt-10 grid lg:grid-cols-3 gap-6">
           {[
-            { label: 'VV Backscatter Mean', value: '-11.2 dB', change: '+2.1 dB', trend: 'up', description: 'Approaching pre-fire baseline' },
-            { label: 'Soil Moisture Index', value: '0.58', change: '+0.12', trend: 'up', description: 'Above seasonal average' },
-            { label: 'Fuel Load Density', value: '0.42', change: '-0.18', trend: 'down', description: 'Significantly reduced post-fire' },
+            { label: t('analytics.statLabels.backscatterMean'), value: '-11.2 dB', change: '+2.1 dB', trend: 'up', description: t('analytics.statDescriptions.backscatterMean') },
+            { label: t('analytics.statLabels.soilMoisture'), value: '0.58', change: '+0.12', trend: 'up', description: t('analytics.statDescriptions.soilMoisture') },
+            { label: t('analytics.statLabels.fuelLoad'), value: '0.42', change: '-0.18', trend: 'down', description: t('analytics.statDescriptions.fuelLoad') },
           ].map((stat, i) => (
             <div key={i} className="bg-card glow-border">
               <div className="flex items-center justify-between mb-2">

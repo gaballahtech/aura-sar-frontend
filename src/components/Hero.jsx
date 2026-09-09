@@ -37,7 +37,11 @@ export default function Hero() {
       aria-labelledby="hero-title"
     >
       <div className="absolute inset-0 bg-grid-pattern opacity-50" />
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
+      {theme === 'dark' ? (
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-white" />
+      )}
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-green/10 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
@@ -98,7 +102,7 @@ export default function Hero() {
                   </div>
                   <div className="mt-3 flex items-center space-x-1 text-xs text-accent-green">
                     <span className="animate-pulse">●</span>
-                    <span>Live</span>
+                    <span>{t('hero.liveStats.live')}</span>
                   </div>
                 </div>
               ))}

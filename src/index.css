@@ -220,14 +220,12 @@
 
   /* Focus visible for keyboard navigation */
   :focus-visible {
-    outline: none;
-    ring: 2px solid var(--color-accent-green);
-    ring-offset: 2px;
-    ring-offset-color: var(--color-primary-dark);
+    outline: 2px solid var(--color-accent-green);
+    outline-offset: 2px;
   }
 
   .light :focus-visible {
-    ring-offset-color: white;
+    outline-color: var(--color-accent-green);
   }
 
   /* Disable default button styles */
@@ -712,6 +710,14 @@
   color: #3b82f6;
 }
 
+@utility text-orange {
+  color: #f97316;
+}
+
+@utility text-yellow {
+  color: #eab308;
+}
+
 @utility bg-success {
   background-color: rgba(7, 192, 107, 0.15);
 }
@@ -726,6 +732,14 @@
 
 @utility bg-info {
   background-color: rgba(59, 130, 246, 0.15);
+}
+
+@utility bg-orange {
+  background-color: rgba(249, 115, 22, 0.15);
+}
+
+@utility bg-yellow {
+  background-color: rgba(234, 179, 8, 0.15);
 }
 
 @utility border-success {
@@ -761,6 +775,14 @@
   color: #2563eb;
 }
 
+.light .text-orange {
+  color: #ea580c;
+}
+
+.light .text-yellow {
+  color: #ca8a04;
+}
+
 .light .bg-success {
   background-color: rgba(22, 163, 74, 0.1);
 }
@@ -775,6 +797,14 @@
 
 .light .bg-info {
   background-color: rgba(37, 99, 235, 0.1);
+}
+
+.light .bg-orange {
+  background-color: rgba(234, 88, 12, 0.1);
+}
+
+.light .bg-yellow {
+  background-color: rgba(202, 138, 4, 0.1);
 }
 
 /* === Regular CSS for pseudo-classes and complex selectors === */
@@ -1126,4 +1156,82 @@
 
 .progress-fill {
   @apply h-full bg-accent-green rounded-full transition-all duration-500 ease-out;
+}
+
+/* === Light theme overrides for form controls & buttons === */
+
+.light .btn-secondary {
+  color: #111827;
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.light .btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+.light .input-field {
+  background-color: white;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.light .select-field {
+  background-color: white;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.light .checkbox-field {
+  background-color: white;
+  border-color: #d1d5db;
+}
+
+.light .radio-field {
+  background-color: white;
+  border-color: #d1d5db;
+}
+
+.light .file-input {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.light .file-input:hover {
+  border-color: var(--color-accent-green);
+  background-color: rgba(7, 192, 107, 0.05);
+}
+
+.light .remove-photo-btn {
+  color: white;
+}
+
+.light .textarea-field {
+  background-color: white;
+  border-color: #d1d5db;
+  color: #111827;
+}
+
+.light .range-field {
+  background-color: #e5e7eb;
+}
+
+.light .label-field {
+  color: #374151;
+}
+
+.light .glass-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(229, 229, 229, 0.5);
+}
+
+.light .glass-card:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  border-color: rgba(229, 229, 229, 0.5);
+}
+
+.light .stat-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-color: rgba(229, 229, 229, 0.5);
 }

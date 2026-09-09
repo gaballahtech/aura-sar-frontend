@@ -112,9 +112,39 @@ class ApiClient {
   }
 
   async subscribeToAlerts(callback: (alert: AlertData) => void): Promise<() => void> {
-    // WebSocket implementation would go here
-    console.warn('WebSocket not implemented yet');
-    return () => {};
+    if (typeof WebSocket === 'undefined') {
+      console.warn('WebSocket not supported in this environment');
+      return () => {};
+    }
+    const wsUrl = import.meta.env.VITE_WEBSOCKET_URL as string | undefined;
+    if (!wsUrl) {
+      console.warn('VITE_WEBSOCKET_URL not configured; alerts fallback to polling');
+      let cancelled = false;
+      const poll = async () => {
+        if (cancelled) return;
+        const res = await this.getAlerts(1);
+        if (res.success && res.data.length > 0) {
+          callback(res.data[0]);
+        }
+      };
+      const interval = setInterval(poll, 30000);
+      return () => {
+        cancelled = true;
+        clearInterval(interval);
+      };
+    }
+    const ws = new WebSocket(wsUrl);
+    ws.onmessage = (event) => {
+      try {
+        const message = JSON.parse(event.data) as WebSocketMessage;
+        if (message.type === 'alert') {
+          callback(message.payload as AlertData);
+        }
+      } catch {
+        // ignore malformed messages
+      }
+    };
+    return () => ws.close();
   }
 
   // Safe Zones
