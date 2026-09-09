@@ -41,6 +41,11 @@ const comparisonImages = [
   { label: 'Post-Fire Recovery', date: 'March 2025', description: 'Regrowth visible, 73% recovery' },
 ];
 
+const trendColors = {
+  up: { bg: 'bg-green-500/20', text: 'text-green-400' },
+  down: { bg: 'bg-red-500/20', text: 'text-red-400' },
+};
+
 export default function Analytics() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -73,8 +78,8 @@ export default function Analytics() {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} p-3 min-w-[200px]`}>
-          <p className="font-semibold text-white mb-2">{label}</p>
+        <div className="bg-card p-3 min-w-[200px]">
+          <p className="font-semibold text-primary mb-2">{label}</p>
           {payload.map((entry, index) => (
             <p key={index} className="text-sm flex items-center space-x-2" style={{ color: entry.color }}>
               <span className="w-2 h-2 rounded-full" style={{ backgroundColor: entry.color }} />
@@ -88,7 +93,7 @@ export default function Analytics() {
   };
 
   const ChartCard = ({ title, icon: Icon, children, id, className = '' }) => (
-    <div className={`${theme === 'dark' ? 'chart-container' : 'chart-container-light'} ${className} relative`}>
+    <div className={`bg-card ${className} relative`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center space-x-2">
           <Icon className="w-5 h-5 text-accent-green" />
@@ -97,12 +102,12 @@ export default function Analytics() {
         <div className="flex items-center space-x-1">
           <button
             onClick={() => setShowFullscreen(id)}
-            className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 transition-colors"
+            className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors"
             aria-label="Fullscreen"
           >
             {showFullscreen === id ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
-          <button className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 transition-colors" aria-label="Download">
+          <button className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors" aria-label="Download">
             <Download className="w-4 h-4" />
           </button>
         </div>
@@ -122,7 +127,7 @@ export default function Analytics() {
         </div>
 
         <div className="mb-10">
-          <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} p-6 rounded-xl`}>
+          <div className="bg-card p-6 rounded-xl">
             <h3 className="font-semibold text-lg mb-6 flex items-center space-x-2">
               <Camera className="w-5 h-5 text-accent-green" />
               <span>{t('analytics.comparisonSlider.title')}</span>
@@ -136,22 +141,22 @@ export default function Analytics() {
                     className={`flex flex-col items-center space-x-2 px-4 py-3 rounded-xl transition-all ${
                       activeComparison === index
                         ? 'bg-accent-green/20 text-accent-green ring-2 ring-accent-green/50'
-                        : `${theme === 'dark' ? 'text-white/70 hover:bg-white/5' : 'text-gray-600 hover:bg-gray-100'}`
+                        : 'bg-glass hover:bg-glass-subtle'
                     }`}
                     aria-pressed={activeComparison === index}
                   >
                     <span className="font-semibold">{img.label}</span>
-                    <span className="text-xs text-white/50">{img.date}</span>
+                    <span className="text-xs text-muted">{img.date}</span>
                   </button>
                 ))}
               </div>
               <div className="aspect-video relative rounded-xl overflow-hidden bg-gradient-to-br from-primary-navy to-primary-dark">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center p-8">
-                    <Camera className="w-16 h-16 mx-auto mb-4 text-white/20" />
-                    <p className="text-white/60 text-lg">{comparisonImages[activeComparison].label} SAR Snapshot</p>
-                    <p className="text-white/40 text-sm mt-2">{comparisonImages[activeComparison].description}</p>
-                    <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-white/40">
+                    <Camera className="w-16 h-16 mx-auto mb-4 text-muted" />
+                    <p className="text-secondary text-lg">{comparisonImages[activeComparison].label} SAR Snapshot</p>
+                    <p className="text-muted text-sm mt-2">{comparisonImages[activeComparison].description}</p>
+                    <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-subtle">
                       <span className="flex items-center space-x-1">
                         <Satellite className="w-3 h-3" />
                         <span>Sentinel-1 C-Band VV/VH</span>
@@ -168,13 +173,13 @@ export default function Analytics() {
                   </div>
                 </div>
                 <div className="absolute bottom-4 left-4 right-4 flex justify-between">
-                  <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} px-4 py-2 rounded-lg text-sm`}>
+                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
                     <strong>Pre-Fire:</strong> High VV backscatter (-8 dB), dense canopy
                   </div>
-                  <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} px-4 py-2 rounded-lg text-sm`}>
+                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
                     <strong>During:</strong> VV drop to -18 dB, volume scattering loss
                   </div>
-                  <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} px-4 py-2 rounded-lg text-sm`}>
+                  <div className="bg-card px-4 py-2 rounded-lg text-sm">
                     <strong>Recovery:</strong> VV at -11 dB, cross-pol increasing
                   </div>
                 </div>
@@ -197,7 +202,7 @@ export default function Analytics() {
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   timeRange === range.value
                     ? 'bg-accent-green text-primary-dark'
-                    : `${theme === 'dark' ? 'bg-white/5 text-white/80 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
+                    : 'bg-card hover:bg-card-hover'
                 }`}
                 role="radio"
                 aria-checked={timeRange === range.value}
@@ -338,15 +343,15 @@ export default function Analytics() {
             { label: 'Soil Moisture Index', value: '0.58', change: '+0.12', trend: 'up', description: 'Above seasonal average' },
             { label: 'Fuel Load Density', value: '0.42', change: '-0.18', trend: 'down', description: 'Significantly reduced post-fire' },
           ].map((stat, i) => (
-            <div key={i} className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} glow-border`}>
+            <div key={i} className="bg-card glow-border">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-white/60">{stat.label}</span>
-                <span className={`text-xs px-2 py-1 rounded-full ${stat.trend === 'up' ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'}`}>
+                <span className="text-sm text-muted">{stat.label}</span>
+                <span className={`text-xs px-2 py-1 rounded-full ${trendColors[stat.trend].bg} ${trendColors[stat.trend].text}`}>
                   {stat.trend === 'up' ? '+' : ''}{stat.change}
                 </span>
               </div>
               <div className="text-3xl font-bold text-gradient mb-1">{stat.value}</div>
-              <p className="text-sm text-white/50">{stat.description}</p>
+              <p className="text-sm text-muted">{stat.description}</p>
             </div>
           ))}
         </div>

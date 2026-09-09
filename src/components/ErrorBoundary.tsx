@@ -36,8 +36,8 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
             </div>
-            <h2 className="text-xl font-bold text-white mb-2">Something went wrong</h2>
-            <p className="text-white/60 mb-6">We encountered an unexpected error. Please refresh the page or try again later.</p>
+            <h2 className="text-xl font-bold text-primary mb-2">Something went wrong</h2>
+            <p className="text-secondary mb-6">We encountered an unexpected error. Please refresh the page or try again later.</p>
             <button
               onClick={() => window.location.reload()}
               className="btn-primary"
@@ -45,9 +45,9 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               Refresh Page
             </button>
             {this.state.error && (
-              <details className="mt-6 text-left text-xs text-white/40">
+              <details className="mt-6 text-left text-xs text-muted">
                 <summary className="cursor-pointer mb-2">Error Details</summary>
-                <pre className="bg-primary-navy p-3 rounded overflow-auto">{this.state.error.toString()}</pre>
+                <pre className="bg-card p-3 rounded overflow-auto text-primary">{this.state.error.toString()}</pre>
               </details>
             )}
           </div>

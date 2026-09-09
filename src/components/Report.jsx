@@ -18,6 +18,12 @@ const mockReports = [
   { id: 5, type: 'smoke', location: 'East Bay Hills', coords: '37.85°N, 122.18°W', description: 'Smoke drifting into residential areas', verified: false, reporter: 'Community Watch', time: '5 hours ago', votes: 7 },
 ];
 
+const tabButtonClass = (isActive, theme) => `
+  px-6 py-3 rounded-xl font-medium transition-all ${isActive
+    ? 'bg-accent-green text-primary-dark'
+    : 'bg-card hover:bg-card-hover'
+  }`;
+
 export default function Report() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -125,7 +131,7 @@ export default function Report() {
   const HazardBadge = ({ type, verified }) => {
     const hazard = hazardTypes.find(h => h.value === type);
     return (
-      <span className="flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium bg-white/10">
+      <span className="flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium bg-glass">
         {hazard?.icon && <hazard.icon className="w-4 h-4" />}
         <span>{t(hazard?.labelKey || type)}</span>
         {verified && (
@@ -149,11 +155,7 @@ export default function Report() {
         <div className="mb-8" role="tablist" aria-label="Report sections">
           <button
             onClick={() => setActiveTab('submit')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ${
-              activeTab === 'submit'
-                ? 'bg-accent-green text-primary-dark'
-                : `${theme === 'dark' ? 'bg-white/5 text-white/80 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
-            }`}
+            className={tabButtonClass(activeTab === 'submit', theme)}
             role="tab"
             aria-selected={activeTab === 'submit'}
             aria-controls="submit-panel"
@@ -163,11 +165,7 @@ export default function Report() {
           </button>
           <button
             onClick={() => setActiveTab('feed')}
-            className={`px-6 py-3 rounded-xl font-medium transition-all ml-2 ${
-              activeTab === 'feed'
-                ? 'bg-accent-green text-primary-dark'
-                : `${theme === 'dark' ? 'bg-white/5 text-white/80 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
-            }`}
+            className={tabButtonClass(activeTab === 'feed', theme) + ' ml-2'}
             role="tab"
             aria-selected={activeTab === 'feed'}
             aria-controls="feed-panel"
@@ -179,31 +177,31 @@ export default function Report() {
 
         {activeTab === 'submit' && (
           <div id="submit-panel" role="tabpanel" className="animate-slide-up">
-            <form onSubmit={handleSubmit} className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} max-w-2xl mx-auto`} noValidate>
+            <form onSubmit={handleSubmit} className="bg-card max-w-2xl mx-auto" noValidate>
               <div className="mb-6">
-                <label className="block text-sm font-medium text-white/80 mb-3 flex items-center space-x-2">
+                <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <Camera className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.photo')}</span>
                 </label>
-<div
-                    className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
-                      formData.photoPreview
-                        ? 'border-transparent'
-                        : `${theme === 'dark' ? 'border-white/20 hover:border-accent-green/50' : 'border-gray-300 hover:border-accent-green/50'}`
-                    } file-input relative`}
-                    onDragOver={handleDragOver}
-                    onDragLeave={handleDragLeave}
-                    onDrop={handleDrop}
-                  >
-                    <input
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => e.target.files[0] && handlePhotoUpload(e.target.files[0])}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      id="photo-upload"
-                      disabled={isSubmitting}
-                    />
+                <div
+                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all file-input relative ${
+                    formData.photoPreview
+                      ? 'border-transparent'
+                      : 'border-subtle hover:border-accent-green/50'
+                  }`}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => e.target.files[0] && handlePhotoUpload(e.target.files[0])}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    id="photo-upload"
+                    disabled={isSubmitting}
+                  />
                   {formData.photoPreview ? (
                     <div className="relative max-w-md mx-auto">
                       <img
@@ -222,9 +220,9 @@ export default function Report() {
                     </div>
                   ) : (
                     <>
-                      <Image className="w-12 h-12 mx-auto mb-4 text-white/40" />
-                      <p className="text-white/60 mb-1">{t('report.form.photoHint')}</p>
-                      <p className="text-sm text-white/40">Click or drag & drop</p>
+                      <Image className="w-12 h-12 mx-auto mb-4 text-muted" />
+                      <p className="text-secondary mb-1">{t('report.form.photoHint')}</p>
+                      <p className="text-sm text-muted">Click or drag & drop</p>
                       <label htmlFor="photo-upload" className="mt-4 inline-block">
                         <span className="btn-secondary">{t('common.upload') || 'Browse Files'}</span>
                       </label>
@@ -234,7 +232,7 @@ export default function Report() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-white/80 mb-3 flex items-center space-x-2">
+                <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <MapPin className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.location')}</span>
                 </label>
@@ -244,7 +242,7 @@ export default function Report() {
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     placeholder={t('report.form.locationHint')}
-                    className={`${theme === 'dark' ? 'input-field' : 'input-field-light'} pr-32`}
+                    className="input-field pr-32"
                     disabled={isSubmitting}
                   />
                   <button
@@ -260,7 +258,7 @@ export default function Report() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-white/80 mb-3 flex items-center space-x-2">
+                <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <AlertCircle className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.hazardType')}</span>
                 </label>
@@ -273,14 +271,14 @@ export default function Report() {
                       className={`relative p-4 rounded-xl text-left transition-all ${
                         formData.hazardType === hazard.value
                           ? 'ring-2 ring-accent-green bg-accent-green/10'
-                          : `${theme === 'dark' ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-100 hover:bg-gray-200'}`
+                          : 'bg-card hover:bg-card-hover'
                       }`}
                       role="radio"
                       aria-checked={formData.hazardType === hazard.value}
                     >
                       <div className="flex items-center space-x-3">
                         {hazard.icon && <hazard.icon className="w-8 h-8 text-accent-green" />}
-                        <span className="font-medium">{t(hazard.labelKey)}</span>
+                        <span className="font-medium text-primary">{t(hazard.labelKey)}</span>
                       </div>
                       {formData.hazardType === hazard.value && (
                         <CheckCircle className="absolute top-2 right-2 w-5 h-5 text-accent-green" />
@@ -291,18 +289,18 @@ export default function Report() {
               </div>
 
               <div className="mb-8">
-                <label className="block text-sm font-medium text-white/80 mb-3">
+                <label className="block text-sm font-medium text-secondary mb-3">
                   {t('report.form.description')}
                 </label>
-<textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                    placeholder={t('report.form.descriptionPlaceholder')}
-                    rows={4}
-                    className={`${theme === 'dark' ? 'textarea-field' : 'textarea-field-light'} resize-none`}
-                    disabled={isSubmitting}
-                    required
-                  />
+                <textarea
+                  value={formData.description}
+                  onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+                  placeholder={t('report.form.descriptionPlaceholder')}
+                  rows={4}
+                  className="textarea-field resize-none"
+                  disabled={isSubmitting}
+                  required
+                />
               </div>
 
               {submitStatus && (
@@ -316,7 +314,7 @@ export default function Report() {
                   ) : (
                     <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
                   )}
-                  <span className="text-sm">{submitStatus.message}</span>
+                  <span className="text-sm text-primary">{submitStatus.message}</span>
                 </div>
               )}
 
@@ -343,13 +341,13 @@ export default function Report() {
 
         {activeTab === 'feed' && (
           <div id="feed-panel" role="tabpanel" className="animate-slide-up">
-            <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'}`}>
+            <div className="bg-card">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
                   <Map className="w-5 h-5 text-accent-green" />
-                  <span>{t('report.communityFeed.title')}</span>
+                  <span className="text-primary">{t('report.communityFeed.title')}</span>
                 </h3>
-                <div className="flex items-center space-x-4 text-sm text-white/60">
+                <div className="flex items-center space-x-4 text-sm text-secondary">
                   <span className="flex items-center space-x-1">
                     <Shield className="w-4 h-4 text-accent-green" />
                     <span>{mockReports.filter(r => r.verified).length} {t('report.communityFeed.verified')}</span>
@@ -367,19 +365,17 @@ export default function Report() {
                   return (
                     <div
                       key={report.id}
-                      className={`p-5 rounded-xl border transition-all ${
-                        theme === 'dark' ? 'bg-white/5 hover:bg-white/10 border-white/10' : 'bg-gray-50 hover:bg-gray-100 border-gray-200'
-                      }`}
+                      className="p-5 rounded-xl border border-subtle transition-all bg-card-hover"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                         <div className="flex items-center space-x-3">
                           <HazardBadge type={report.type} verified={report.verified} />
                           <div>
-                            <p className="font-medium text-white">{report.location}</p>
-                            <p className="text-xs text-white/50">{report.coords}</p>
+                            <p className="font-medium text-primary">{report.location}</p>
+                            <p className="text-xs text-muted">{report.coords}</p>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-3 text-xs text-white/50">
+                        <div className="flex items-center space-x-3 text-xs text-muted">
                           <span className="flex items-center space-x-1">
                             <Users className="w-3 h-3" />
                             <span>{report.reporter}</span>
@@ -390,14 +386,14 @@ export default function Report() {
                           </span>
                         </div>
                       </div>
-                      <p className="text-white/80 mb-3">{report.description}</p>
+                      <p className="text-secondary mb-3">{report.description}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4 text-sm">
-                          <button className="flex items-center space-x-1 text-white/60 hover:text-accent-green transition-colors">
+                          <button className="flex items-center space-x-1 text-secondary hover:text-accent-green transition-colors">
                             <ThumbsUp className="w-5 h-5" />
                             <span>{report.votes}</span>
                           </button>
-                          <button className="flex items-center space-x-1 text-white/60 hover:text-red-400 transition-colors">
+                          <button className="flex items-center space-x-1 text-secondary hover:text-red-400 transition-colors">
                             <ThumbsDown className="w-5 h-5" />
                             <span>2</span>
                           </button>

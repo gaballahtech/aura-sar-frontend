@@ -4,33 +4,9 @@ import { useTheme } from '../context/ThemeContext';
 import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalLink, ChevronRight, BookOpen, Flame, Ruler, Building2, Mountain, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
 
 const frequencyBands = [
-  {
-    key: 'xBand',
-    icon: Zap,
-    color: '#ef4444',
-    wavelength: '~3 cm',
-    penetration: 'Low vegetation penetration',
-    useCase: 'High-res urban & infrastructure mapping',
-    missions: ['TerraSAR-X', 'COSMO-SkyMed', 'Capella Space'],
-  },
-  {
-    key: 'cBand',
-    icon: Waves,
-    color: '#3b82f6',
-    wavelength: '~5.6 cm',
-    penetration: 'Moderate vegetation penetration',
-    useCase: 'General purpose, Sentinel-1, NISAR',
-    missions: ['Sentinel-1', 'RADARSAT-2', 'NISAR (partial)'],
-  },
-  {
-    key: 'lBand',
-    icon: TreePine,
-    color: '#07c06b',
-    wavelength: '~24 cm',
-    penetration: 'Deep vegetation & canopy penetration',
-    useCase: 'Biomass, forest structure, UAVSAR, NISAR',
-    missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'],
-  },
+  { key: 'xBand', icon: Zap, color: '#ef4444', wavelength: '~3 cm', penetration: 'Low vegetation penetration', useCase: 'High-res urban & infrastructure mapping', missions: ['TerraSAR-X', 'COSMO-SkyMed', 'Capella Space'] },
+  { key: 'cBand', icon: Waves, color: '#3b82f6', wavelength: '~5.6 cm', penetration: 'Moderate vegetation penetration', useCase: 'General purpose, Sentinel-1, NISAR', missions: ['Sentinel-1', 'RADARSAT-2', 'NISAR (partial)'] },
+  { key: 'lBand', icon: TreePine, color: '#07c06b', wavelength: '~24 cm', penetration: 'Deep vegetation & canopy penetration', useCase: 'Biomass, forest structure, UAVSAR, NISAR', missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'] },
 ];
 
 const polarizations = [
@@ -63,6 +39,12 @@ const sarApplications = [
   { icon: Database, title: 'Sea Ice & Maritime', desc: 'Ice extent, thickness, type classification, ship detection, oil spills' },
 ];
 
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-card ${className}`}>
+    {children}
+  </div>
+);
+
 export default function SarEdu() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -76,18 +58,18 @@ export default function SarEdu() {
     { id: 'applications', label: 'SAR Applications', icon: BookOpen },
   ];
 
-  const Card = ({ children, className = '' }) => (
-    <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} ${className}`}>
-      {children}
-    </div>
-  );
+  const tabButtonClass = (isActive) => `
+    flex items-center space-x-2 px-5 py-3 rounded-xl font-medium transition-all ${isActive
+      ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
+      : 'bg-card hover:bg-card-hover'
+    }`;
 
   const TabContent = () => {
     switch (activeTab) {
       case 'frequencies':
         return (
           <div className="space-y-6">
-            <p className="text-white/70 leading-relaxed max-w-3xl">
+            <p className="text-secondary leading-relaxed max-w-3xl">
               Synthetic Aperture Radar operates across different frequency bands, each with unique penetration capabilities and applications. 
               The choice of frequency determines what the radar "sees" — from surface details to deep canopy structure.
             </p>
@@ -101,7 +83,7 @@ export default function SarEdu() {
                     </div>
                     <div>
                       <h4 className="font-bold text-lg" style={{ color: band.color }}>{t(`sarEdu.frequencies.${band.key}.name`)}</h4>
-                      <p className="text-sm text-white/50">{band.wavelength} wavelength</p>
+                      <p className="text-sm text-muted">{band.wavelength} wavelength</p>
                     </div>
                   </div>
                   <div className="space-y-3 mb-4">
@@ -114,11 +96,11 @@ export default function SarEdu() {
                       <span><strong>{t('sarEdu.frequencies.useCase')}:</strong> {t(`sarEdu.frequencies.${band.key}.useCase`)}</span>
                     </div>
                   </div>
-                  <div className="pt-4 border-t border-white/10">
-                    <p className="text-xs text-white/50 mb-2">Key Missions:</p>
+                  <div className="pt-4 border-t border-subtle">
+                    <p className="text-xs text-muted mb-2">Key Missions:</p>
                     <div className="flex flex-wrap gap-2">
                       {band.missions.map((mission, i) => (
-                        <span key={i} className="px-2 py-1 text-xs rounded-full bg-white/5 text-white/70">{mission}</span>
+                        <span key={i} className="px-2 py-1 text-xs rounded-full bg-glass text-secondary">{mission}</span>
                       ))}
                     </div>
                   </div>
@@ -131,7 +113,7 @@ export default function SarEdu() {
       case 'polarizations':
         return (
           <div className="space-y-6">
-            <p className="text-white/70 leading-relaxed max-w-3xl">
+            <p className="text-secondary leading-relaxed max-w-3xl">
               Polarization describes the orientation of the electromagnetic wave's electric field. 
               Different polarization combinations reveal different scattering mechanisms and surface properties.
             </p>
@@ -143,12 +125,12 @@ export default function SarEdu() {
                       <pol.icon className="w-8 h-8 text-accent-green" />
                       <div>
                         <h4 className="font-bold text-xl text-accent-green">{pol.label} Polarization</h4>
-                        <p className="text-sm text-white/60">{pol.desc}</p>
+                        <p className="text-sm text-secondary">{pol.desc}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="p-3 rounded-lg bg-white/5">
-                    <p className="text-sm text-white/80"><strong>SAR Signature:</strong> {pol.detail}</p>
+                  <div className="p-3 rounded-lg bg-glass">
+                    <p className="text-sm text-secondary"><strong>SAR Signature:</strong> {pol.detail}</p>
                   </div>
                 </Card>
               ))}
@@ -164,9 +146,9 @@ export default function SarEdu() {
                   { combo: 'HH + HV', use: 'Forest structure, ALOS-PALSAR standard' },
                   { combo: 'Full Quad (HH+HV+VH+VV)', use: 'Complete scattering matrix, UAVSAR, NISAR' },
                 ].map((item, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-white/5">
+                  <div key={i} className="p-4 rounded-xl bg-glass">
                     <code className="text-accent-green font-mono text-lg">{item.combo}</code>
-                    <p className="text-sm text-white/70 mt-1">{item.use}</p>
+                    <p className="text-sm text-secondary mt-1">{item.use}</p>
                   </div>
                 ))}
               </div>
@@ -177,7 +159,7 @@ export default function SarEdu() {
       case 'scattering':
         return (
           <div className="space-y-6">
-            <p className="text-white/70 leading-relaxed max-w-3xl">
+            <p className="text-secondary leading-relaxed max-w-3xl">
               Understanding scattering mechanisms is key to interpreting SAR imagery. 
               Each mechanism produces distinct backscatter signatures that reveal surface and volume properties.
             </p>
@@ -189,10 +171,10 @@ export default function SarEdu() {
                     <mech.icon className="w-12 h-12 mx-auto" style={{ color: mech.color }} />
                     <h4 className="font-bold text-xl mt-2" style={{ color: mech.color }}>{mech.title}</h4>
                   </div>
-                  <p className="text-white/70 text-sm mb-4">{mech.desc}</p>
-                  <div className="p-3 rounded-lg bg-white/5 border-l-4" style={{ borderColor: mech.color }}>
-                    <p className="text-sm text-white/80"><strong>SAR Signature:</strong></p>
-                    <p className="text-sm text-white/60 mt-1">{mech.sarSignature}</p>
+                  <p className="text-secondary text-sm mb-4">{mech.desc}</p>
+                  <div className="p-3 rounded-lg bg-glass border-l-4" style={{ borderColor: mech.color }}>
+                    <p className="text-sm text-secondary"><strong>SAR Signature:</strong></p>
+                    <p className="text-sm text-muted mt-1">{mech.sarSignature}</p>
                   </div>
                 </Card>
               ))}
@@ -202,7 +184,7 @@ export default function SarEdu() {
                 <Zap className="w-5 h-5 text-accent-green" />
                 <span>Freeman-Durden / Yamaguchi Decomposition</span>
               </h4>
-              <p className="text-white/70 mb-4">
+              <p className="text-secondary mb-4">
                 Polarimetric decomposition separates mixed scattering into component mechanisms, 
                 enabling quantitative analysis of vegetation structure and fire damage.
               </p>
@@ -212,10 +194,10 @@ export default function SarEdu() {
                   { label: 'Double Bounce %', value: '10-25%', desc: 'Trunk-ground interaction' },
                   { label: 'Volume %', value: '50-70%', desc: 'Canopy scattering' },
                 ].map((item, i) => (
-                  <div key={i} className="p-4 rounded-xl bg-white/5">
+                  <div key={i} className="p-4 rounded-xl bg-glass">
                     <div className="text-2xl font-bold text-accent-green">{item.value}</div>
-                    <div className="text-sm font-medium">{item.label}</div>
-                    <div className="text-xs text-white/50 mt-1">{item.desc}</div>
+                    <div className="text-sm font-medium text-primary">{item.label}</div>
+                    <div className="text-xs text-muted mt-1">{item.desc}</div>
                   </div>
                 ))}
               </div>
@@ -226,7 +208,7 @@ export default function SarEdu() {
       case 'resources':
         return (
           <div className="space-y-6">
-            <p className="text-white/70 leading-relaxed max-w-3xl">
+            <p className="text-secondary leading-relaxed max-w-3xl">
               AURA SAR leverages multiple NASA and commercial data sources for comprehensive wildfire monitoring. 
               These platforms provide the SAR data foundation for our AI-driven analytics.
             </p>
@@ -242,7 +224,7 @@ export default function SarEdu() {
                         <h4 className="font-bold text-lg group-hover:text-accent-green transition-colors">{resource.title}</h4>
                         <span className="px-2 py-0.5 text-xs rounded-full bg-accent-green/20 text-accent-green">{resource.category}</span>
                       </div>
-                      <p className="text-white/60">{resource.desc}</p>
+                      <p className="text-secondary">{resource.desc}</p>
                     </div>
                   </div>
                   <a
@@ -263,7 +245,7 @@ export default function SarEdu() {
       case 'applications':
         return (
           <div className="space-y-6">
-            <p className="text-white/70 leading-relaxed max-w-3xl">
+            <p className="text-secondary leading-relaxed max-w-3xl">
               SAR technology enables diverse applications beyond wildfire monitoring. 
               AURA SAR's framework can be extended to these critical environmental and safety use cases.
             </p>
@@ -274,7 +256,7 @@ export default function SarEdu() {
                     <app.icon className="w-6 h-6 text-accent-green" />
                   </div>
                   <h4 className="font-bold text-lg mb-2">{app.title}</h4>
-                  <p className="text-white/60 text-sm">{app.desc}</p>
+                  <p className="text-secondary text-sm">{app.desc}</p>
                 </Card>
               ))}
             </div>
@@ -300,11 +282,7 @@ export default function SarEdu() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center space-x-2 px-5 py-3 rounded-xl font-medium transition-all ${
-                  activeTab === tab.id
-                    ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
-                    : `${theme === 'dark' ? 'bg-white/5 text-white/80 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
-                }`}
+                className={`flex items-center space-x-2 px-5 py-3 rounded-xl font-medium transition-all ${tabButtonClass(activeTab === tab.id)}`}
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 aria-controls={`${tab.id}-panel`}
@@ -322,24 +300,9 @@ export default function SarEdu() {
 
         <div className="mt-16 grid md:grid-cols-3 gap-6">
           {[
-            {
-              icon: BookOpen,
-              title: 'Learn More',
-              desc: 'Explore SAR theory, processing techniques, and applications',
-              items: ['SAR Handbook (ESA)', 'Radar Polarimetry (Lee & Pottier)', 'InSAR Principles (Rosen et al.)'],
-            },
-            {
-              icon: Cpu,
-              title: 'Open Source Tools',
-              desc: 'Software for SAR processing and analysis',
-              items: ['SNAP (ESA)', 'PySAR / ARIA-Tools', 'GMTSAR / ISCE', 'OpenSARLab (JupyterHub)'],
-            },
-            {
-              icon: Zap,
-              title: 'AURA SAR Pipeline',
-              desc: 'Our processing workflow for wildfire intelligence',
-              items: ['GEE / ASF Data Ingestion', 'Pre-processing & Calibration', 'AI/ML Feature Extraction', 'Real-time Dashboard'],
-            },
+            { icon: BookOpen, title: 'Learn More', desc: 'Explore SAR theory, processing techniques, and applications', items: ['SAR Handbook (ESA)', 'Radar Polarimetry (Lee & Pottier)', 'InSAR Principles (Rosen et al.)'] },
+            { icon: Cpu, title: 'Open Source Tools', desc: 'Software for SAR processing and analysis', items: ['SNAP (ESA)', 'PySAR / ARIA-Tools', 'GMTSAR / ISCE', 'OpenSARLab (JupyterHub)'] },
+            { icon: Zap, title: 'AURA SAR Pipeline', desc: 'Our processing workflow for wildfire intelligence', items: ['GEE / ASF Data Ingestion', 'Pre-processing & Calibration', 'AI/ML Feature Extraction', 'Real-time Dashboard'] },
           ].map((col, i) => (
             <Card key={i}>
               <div className="flex items-center space-x-3 mb-4">
@@ -348,10 +311,10 @@ export default function SarEdu() {
                 </div>
                 <h4 className="font-bold text-lg">{col.title}</h4>
               </div>
-              <p className="text-white/60 text-sm mb-4">{col.desc}</p>
+              <p className="text-secondary text-sm mb-4">{col.desc}</p>
               <ul className="space-y-2">
                 {col.items.map((item, j) => (
-                  <li key={j} className="flex items-center space-x-2 text-sm text-white/70">
+                  <li key={j} className="flex items-center space-x-2 text-sm text-secondary">
                     <ChevronRight className="w-4 h-4 text-accent-green/50" />
                     <span>{item}</span>
                   </li>

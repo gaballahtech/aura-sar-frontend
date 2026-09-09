@@ -45,7 +45,7 @@ export default function Hero() {
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass mb-8 animate-slide-up">
             <Sparkles className="w-4 h-4 text-accent-green" />
-            <span className="text-sm font-medium text-white/80">
+            <span className="text-sm font-medium text-secondary">
               {t('footer.nasaChallenge')} 2025 — {t('footer.challengeTheme')}
             </span>
           </div>
@@ -58,7 +58,7 @@ export default function Hero() {
             {t('hero.headline')}
           </h1>
 
-          <p className="section-subtitle text-xl sm:text-2xl text-white/70 max-w-3xl mx-auto mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
+          <p className="section-subtitle text-xl sm:text-2xl text-secondary max-w-3xl mx-auto mb-12 animate-slide-up" style={{ animationDelay: '200ms' }}>
             {t('hero.subtitle')}
           </p>
 
@@ -83,18 +83,18 @@ export default function Hero() {
               {statsData.map((stat, index) => (
                 <div
                   key={stat.key}
-                  className={`${theme === 'dark' ? 'stat-card' : 'stat-card-light'} glow-border group`}
+                  className={`stat-card glow-border group`}
                   style={{ animationDelay: `${500 + index * 100}ms` }}
                 >
                   <div className="flex items-center space-x-3 mb-3">
                     <div className="p-3 rounded-xl bg-accent-green/20 text-accent-green">
                       <stat.icon className="w-6 h-6" />
                     </div>
-                    <h3 className="text-sm font-medium text-white/70">{t(`hero.liveStats.${stat.key}`)}</h3>
+                    <h3 className="text-sm font-medium text-secondary">{t(`hero.liveStats.${stat.key}`)}</h3>
                   </div>
                   <div className="flex items-end space-x-1">
                     <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gradient animate-count-up">{stat.value}</span>
-                    <span className="text-lg font-semibold text-white/60 mb-1">{stat.suffix}</span>
+                    <span className="text-lg font-semibold text-muted mb-1">{stat.suffix}</span>
                   </div>
                   <div className="mt-3 flex items-center space-x-1 text-xs text-accent-green">
                     <span className="animate-pulse">●</span>
@@ -107,8 +107,8 @@ export default function Hero() {
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
-          <div className="w-6 h-10 border-2 border-white/20 rounded-full flex justify-center pt-1">
-            <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
+          <div className="w-6 h-10 border-2 border-subtle rounded-full flex justify-center pt-1">
+            <div className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
           </div>
         </div>
       </div>

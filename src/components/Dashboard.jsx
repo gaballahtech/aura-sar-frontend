@@ -46,39 +46,42 @@ const aqiData = [
   { location: 'San Diego', aqi: 67, level: 'moderate' },
 ];
 
-function getSeverityColor(severity, theme) {
-  const colors = {
-    critical: theme === 'dark' ? '#ff4d4d' : '#dc2626',
-    high: theme === 'dark' ? '#ff8c00' : '#ea580c',
-    medium: theme === 'dark' ? '#ffd700' : '#ca8a04',
-    low: theme === 'dark' ? '#07c06b' : '#16a34a',
-  };
-  return colors[severity] || colors.medium;
-}
+const severityColors = {
+  critical: { bg: 'bg-accent-red/20', text: 'text-accent-red' },
+  high: { bg: 'bg-orange-500/20', text: 'text-orange-400' },
+  medium: { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
+  low: { bg: 'bg-accent-green/20', text: 'text-accent-green' },
+};
 
-function getIntensityColor(intensity, theme) {
-  if (intensity > 0.8) return theme === 'dark' ? '#ff4d4d' : '#dc2626';
-  if (intensity > 0.6) return theme === 'dark' ? '#ff8c00' : '#ea580c';
-  if (intensity > 0.4) return theme === 'dark' ? '#ffd700' : '#ca8a04';
-  return theme === 'dark' ? '#07c06b' : '#16a34a';
-}
+const aqiColors = {
+  good: { text: 'text-green-400', bg: 'bg-green-500/20' },
+  moderate: { text: 'text-yellow-400', bg: 'bg-yellow-500/20' },
+  unhealthy: { text: 'text-orange-400', bg: 'bg-orange-500/20' },
+  hazardous: { text: 'text-red-400', bg: 'bg-red-500/20' },
+};
+
+const routeColors = {
+  'open-low': { bg: 'bg-green-500/20', text: 'text-green-400' },
+  'open-moderate': { bg: 'bg-yellow-500/20', text: 'text-yellow-400' },
+  'advisory-high': { bg: 'bg-orange-500/20', text: 'text-orange-400' },
+};
 
 const SeverityLegend = ({ theme, t }) => {
   const severities = [
-    { label: t('dashboard.severity.critical'), color: getSeverityColor('critical', theme) },
-    { label: t('dashboard.severity.high'), color: getSeverityColor('high', theme) },
-    { label: t('dashboard.severity.medium'), color: getSeverityColor('medium', theme) },
-    { label: t('dashboard.severity.low'), color: getSeverityColor('low', theme) },
+    { label: t('dashboard.severity.critical'), className: severityColors.critical },
+    { label: t('dashboard.severity.high'), className: severityColors.high },
+    { label: t('dashboard.severity.medium'), className: severityColors.medium },
+    { label: t('dashboard.severity.low'), className: severityColors.low },
   ];
 
   return (
-    <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} p-3 min-w-[180px]`}>
-      <h4 className="font-semibold text-white mb-2">{t('dashboard.firefighterView.severity')}</h4>
+    <div className="bg-card p-3 min-w-[180px]">
+      <h4 className="font-semibold text-primary mb-2">{t('dashboard.firefighterView.severity')}</h4>
       <div className="space-y-2">
         {severities.map((s, i) => (
           <div key={i} className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.color }} />
-            <span className="text-sm text-white/80">{s.label}</span>
+            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: 'var(--color-accent-red)' }} />
+            <span className="text-sm text-secondary">{s.label}</span>
           </div>
         ))}
       </div>
@@ -94,8 +97,8 @@ const LayerControl = ({ theme, t, mapLayers, toggleLayer }) => {
   ];
 
   return (
-    <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} p-2`}>
-      <h4 className="font-semibold text-white mb-2 flex items-center space-x-2">
+    <div className="bg-card p-2">
+      <h4 className="font-semibold text-primary mb-2 flex items-center space-x-2">
         <Layers className="w-4 h-4" />
         <span>{t('dashboard.firefighterView.mapLayers')}</span>
       </h4>
@@ -109,7 +112,7 @@ const LayerControl = ({ theme, t, mapLayers, toggleLayer }) => {
               className="w-4 h-4 accent-accent-green rounded"
             />
             <layer.icon className="w-4 h-4 text-accent-green" />
-            <span className="text-sm text-white/90">{layer.label}</span>
+            <span className="text-sm text-primary">{layer.label}</span>
           </label>
         ))}
       </div>
@@ -122,8 +125,8 @@ const FirePoint = ({ fire, theme }) => (
     center={[fire.lat, fire.lng]}
     radius={12 + fire.intensity * 10}
     pathOptions={{
-      fillColor: getIntensityColor(fire.intensity, theme),
-      color: getIntensityColor(fire.intensity, theme),
+      fillColor: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#07c06b') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
+      color: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#07c06b') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
       fillOpacity: 0.6,
       weight: 2,
       className: 'marker-pulse',
@@ -132,7 +135,7 @@ const FirePoint = ({ fire, theme }) => (
     <Popup>
       <div className="p-2 min-w-[200px]">
         <h4 className="font-bold text-primary-dark mb-1">{fire.name}</h4>
-        <div className="text-sm text-gray-600 space-y-1">
+        <div className="text-sm text-secondary space-y-1">
           <p><strong>AI Confidence:</strong> {fire.confidence}%</p>
           <p><strong>Intensity:</strong> {(fire.intensity * 100).toFixed(0)}%</p>
           <p><strong>Type:</strong> {fire.type.replace('-', ' ')}</p>
@@ -160,7 +163,7 @@ const SafeZoneMarker = ({ zone }) => (
           <Shield className="w-4 h-4 text-accent-green" />
           <span>{zone.name}</span>
         </h4>
-        <div className="text-sm text-gray-600 space-y-1">
+        <div className="text-sm text-secondary space-y-1">
           <p><strong>Capacity:</strong> {zone.capacity.toLocaleString()}</p>
           <p><strong>Current:</strong> {zone.current.toLocaleString()}</p>
           <p><strong>Available:</strong> {(zone.capacity - zone.current).toLocaleString()}</p>
@@ -226,7 +229,7 @@ export default function Dashboard() {
                 className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                   activeRole === role.value
                     ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
-                    : `${theme === 'dark' ? 'bg-white/5 text-white/80 hover:bg-white/10' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`
+                    : 'bg-card hover:bg-card-hover'
                 }`}
                 role="radio"
                 aria-checked={activeRole === role.value}
@@ -238,7 +241,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <label className="flex items-center space-x-2 text-sm text-white/70 cursor-pointer">
+            <label className="flex items-center space-x-2 text-sm text-secondary cursor-pointer">
               <input
                 type="checkbox"
                 checked={autoRefresh}
@@ -299,7 +302,7 @@ export default function Dashboard() {
 
         <div className="grid lg:grid-cols-3 gap-6 mt-8">
           <div className="lg:col-span-2">
-            <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'} h-full`}>
+            <div className="bg-card h-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
                   <AlertTriangle className="w-5 h-5 text-accent-red" />
@@ -311,23 +314,17 @@ export default function Dashboard() {
                 {alerts.map(alert => (
                   <div
                     key={alert.id}
-                    className={`p-4 rounded-xl border-l-4 transition-all ${
-                      theme === 'dark' ? 'bg-white/5 hover:bg-white/10' : 'bg-gray-50 hover:bg-gray-100'
-                    } ${getSeverityColor(alert.severity, theme)}`}
+                    className={`p-4 rounded-xl border-l-4 transition-all bg-card-hover ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="font-semibold text-white">{alert.type}</h4>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        alert.severity === 'critical' ? 'bg-accent-red/20 text-accent-red' :
-                        alert.severity === 'high' ? 'bg-orange-500/20 text-orange-400' :
-                        'bg-yellow-500/20 text-yellow-400'
-                      }`}>
+                      <h4 className="font-semibold text-primary">{alert.type}</h4>
+                      <span className={`text-xs px-2 py-1 rounded-full ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}>
                         {t(`dashboard.severity.${alert.severity}`)}
                       </span>
                     </div>
-                    <p className="text-sm text-white/70 mb-2">{alert.location}</p>
+                    <p className="text-sm text-secondary mb-2">{alert.location}</p>
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-white/50">{alert.time}</span>
+                      <span className="text-muted">{alert.time}</span>
                       <span className="font-medium text-accent-green">{alert.confidence}% {t('dashboard.firefighterView.confidence')}</span>
                     </div>
                   </div>
@@ -338,56 +335,49 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             {activeRole === 'public' && (
-              <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'}`}>
+              <div className="bg-card">
                 <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Cloud className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.airQuality')}</span>
                 </h3>
                 <div className="space-y-3">
-                  {aqiData.map(item => (
-                    <div key={item.location} className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                      <span className="font-medium">{item.location}</span>
-                      <div className="flex items-center space-x-2">
-                        <span className={`text-lg font-bold ${
-                          item.level === 'good' ? 'text-green-400' :
-                          item.level === 'moderate' ? 'text-yellow-400' :
-                          item.level === 'unhealthy' ? 'text-orange-400' :
-                          'text-red-400'
-                        }`}>{item.aqi}</span>
-                        <span className={`text-xs px-2 py-1 rounded-full ${
-                          item.level === 'good' ? 'bg-green-500/20 text-green-400' :
-                          item.level === 'moderate' ? 'bg-yellow-500/20 text-yellow-400' :
-                          item.level === 'unhealthy' ? 'bg-orange-500/20 text-orange-400' :
-                          'bg-red-500/20 text-red-400'
-                        }`}>
-                          {t(`dashboard.publicView.aqi${item.level.charAt(0).toUpperCase() + item.level.slice(1)}`)}
-                        </span>
+                  {aqiData.map(item => {
+                    const colors = aqiColors[item.level];
+                    return (
+                      <div key={item.location} className="flex items-center justify-between p-3 rounded-xl bg-glass">
+                        <span className="font-medium text-primary">{item.location}</span>
+                        <div className="flex items-center space-x-2">
+                          <span className={`text-lg font-bold ${colors.text}`}>{item.aqi}</span>
+                          <span className={`text-xs px-2 py-1 rounded-full ${colors.bg} ${colors.text}`}>
+                            {t(`dashboard.publicView.aqi${item.level.charAt(0).toUpperCase() + item.level.slice(1)}`)}
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             {activeRole === 'public' && (
-              <div className={`${theme === 'dark' ? 'glass-card' : 'stat-card-light'}`}>
+              <div className="bg-card">
                 <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Truck className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.evacuationRoutes')}</span>
                 </h3>
                 <div className="space-y-2">
-                  {evacuationRoutes.map((route, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5">
-                      <span className="font-medium">{route.name}</span>
-                      <span className={`text-sm px-3 py-1 rounded-full ${
-                        route.status === 'open' && route.congestion === 'low' ? 'bg-green-500/20 text-green-400' :
-                        route.status === 'open' && route.congestion === 'moderate' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-orange-500/20 text-orange-400'
-                      }`}>
-                        {route.status === 'open' ? 'Open' : 'Advisory'} · {route.congestion}
-                      </span>
-                    </div>
-                  ))}
+                  {evacuationRoutes.map((route, i) => {
+                    const key = `${route.status}-${route.congestion}`;
+                    const colors = routeColors[key] || routeColors['advisory-high'];
+                    return (
+                      <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-glass">
+                        <span className="font-medium text-primary">{route.name}</span>
+                        <span className={`text-sm px-3 py-1 rounded-full ${colors.bg} ${colors.text}`}>
+                          {route.status === 'open' ? 'Open' : 'Advisory'} · {route.congestion}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             )}
