@@ -200,6 +200,24 @@ const en = {
     "controls": {
       "fullscreen": "Toggle fullscreen",
       "download": "Download data (CSV)"
+    },
+    "sarCatalog": {
+      "title": "SAR Scene Catalog",
+      "subtitle": "Scenes queried from the ASF asf_search backend (Sentinel-1 GRD, 10m). Falls back to offline demo data when the backend is unreachable.",
+      "wktLabel": "WKT Polygon (optional)",
+      "wktPlaceholder": "POLYGON (( -122.3 36.0, ... ))",
+      "refresh": "Refresh",
+      "empty": "No scenes found for the selected range.",
+      "live": "LIVE",
+      "offline": "Offline demo data",
+      "download": "Download",
+      "columns": {
+        "scene": "Scene",
+        "acquisition": "Acquisition",
+        "polarization": "Polarization",
+        "orbit": "Orbit",
+        "size": "Size"
+      }
     }
   },
   "report": {
@@ -629,6 +647,24 @@ const ar = {
     "controls": {
       "fullscreen": "تبديل ملء الشاشة",
       "download": "تنزيل البيانات (CSV)"
+    },
+    "sarCatalog": {
+      "title": "كتالوج مشاهد الرادار",
+      "subtitle": "مشاهد من خادم ASF asf_search (سينتينل-1 GRD، دقة 10م). يُستخدم وضع تجريبي دون اتصال عند تعذر الوصول إلى الخادم.",
+      "wktLabel": "مضلع WKT (اختياري)",
+      "wktPlaceholder": "POLYGON (( -122.3 36.0, ... ))",
+      "refresh": "تحديث",
+      "empty": "لا توجد مشاهد للنطاق المحدد.",
+      "live": "مباشر",
+      "offline": "بيانات تجريبية دون اتصال",
+      "download": "تحميل",
+      "columns": {
+        "scene": "المشهد",
+        "acquisition": "الالتقاط",
+        "polarization": "الاستقطاب",
+        "orbit": "المدار",
+        "size": "الحجم"
+      }
     }
   },
   "report": {

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary-dark: #111342;
-  --color-primary-navy: #1a1c54;
+  --color-primary-dark: #0a0a0a;
+  --color-primary-navy: #141414;
   --color-accent-green: #07c06b;
   --color-accent-red: #ff4d4d;
   
@@ -327,6 +327,34 @@
   position: relative;
 }
 
+@utility liquid-glass {
+  background-color: rgba(18, 18, 18, 0.55);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@utility liquid-surface {
+  background-color: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(20px) saturate(150%);
+  -webkit-backdrop-filter: blur(20px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.light .liquid-glass {
+  background-color: rgba(255, 255, 255, 0.66);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.light .liquid-surface {
+  background-color: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(229, 229, 229, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
 @utility text-gradient {
   background: linear-gradient(90deg, var(--color-accent-green), #4ade80);
   -webkit-background-clip: text;
@@ -557,7 +585,7 @@
 
 /* Leaflet Map Styles */
 .leaflet-container {
-  border-radius: 1rem;
+  border-radius: 1.25rem;
   font-family: inherit;
 }
 
@@ -570,7 +598,7 @@
 }
 
 .leaflet-popup-content {
-  color: var(--color-primary-dark) !important;
+  color: white !important;
   padding: 0.5rem !important;
   margin: 0 !important;
 }
@@ -606,8 +634,12 @@
 }
 
 .leaflet-control-layers-label {
-  color: var(--color-primary-dark) !important;
+  color: white !important;
   font-weight: 500 !important;
+}
+
+.light .leaflet-popup-content {
+  color: #111827 !important;
 }
 
 .light .leaflet-control-layers-label {
@@ -683,4 +715,67 @@
 .light .stat-card {
   background-color: rgba(255, 255, 255, 0.8);
   border-color: rgba(229, 229, 229, 0.5);
+}
+
+/* === Liquid Glass: accessibility & adaptive behavior === */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .liquid-glass,
+  .liquid-surface,
+  .bg-card,
+  .glass,
+  .stat-card,
+  .leaflet-popup-content-wrapper,
+  .leaflet-popup-tip,
+  .leaflet-control-layers,
+  .recharts-default-tooltip {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  .liquid-glass { background-color: #18181b; border-color: #27272a; box-shadow: none; }
+  .liquid-surface { background-color: #202024; border-color: #2a2a2e; box-shadow: none; }
+  .bg-card { background-color: #18181b; box-shadow: none; }
+  .glass { background-color: #18181b; box-shadow: none; }
+  .stat-card { background-color: #18181b; box-shadow: none; }
+
+  .light .liquid-glass { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
+  .light .liquid-surface { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
+  .light .bg-card { background-color: #ffffff; box-shadow: none; }
+  .light .glass { background-color: #ffffff; box-shadow: none; }
+  .light .stat-card { background-color: #ffffff; box-shadow: none; }
+}
+
+/* Scroll-edge legibility for floating headers (Liquid Glass) */
+.liquid-edge {
+  position: relative;
+}
+.liquid-edge::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  height: 12px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.06), transparent);
+}
+
+/* Concentric radii: inner controls echo the container curvature */
+@utility rounded-concentric-lg {
+  border-radius: calc(1rem - 0.5rem);
+}
+
+.wkt-input {
+  width: 17rem;
+  max-width: 100%;
 }

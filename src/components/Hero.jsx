@@ -47,7 +47,7 @@ export default function Hero() {
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass mb-8 animate-slide-up">
+          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full liquid-surface mb-8 animate-slide-up">
             <Sparkles className="w-4 h-4 text-accent-green" />
             <span className="text-sm font-medium text-secondary">
               {t('footer.nasaChallenge')} 2025 — {t('footer.challengeTheme')}
@@ -87,7 +87,7 @@ export default function Hero() {
               {statsData.map((stat, index) => (
                 <div
                   key={stat.key}
-                  className={`stat-card glow-border group`}
+                  className={`stat-card liquid-surface glow-border group`}
                   style={{ animationDelay: `${500 + index * 100}ms` }}
                 >
                   <div className="flex items-center space-x-3 mb-3">

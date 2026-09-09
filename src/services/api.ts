@@ -10,7 +10,11 @@ import type {
   NASASource,
   ApiResponse,
   WebSocketMessage,
+  SARSenseScene,
+  SARSenseQuery,
 } from '../types';
+import { boundsToWKT } from './wkt';
+import { mockSARCatalog } from './mockSARCatalog';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 const TIMEOUT = parseInt(import.meta.env.VITE_API_TIMEOUT || '30000', 10);
@@ -227,6 +231,32 @@ class ApiClient {
   }
 
   // SAR Data
+  /**
+   * Query the SAR scene catalog (ASF asf_search backend).
+   * Accepts a WKT polygon (5-point pentagon) or map bounds, an optional date
+   * range and beam mode. When the backend is unreachable the client falls back
+   * to the bundled mock catalog so the UI keeps working offline.
+   */
+  async searchSARScenes(query: SARSenseQuery = {}): Promise<ApiResponse<SARSenseScene[]>> {
+    const params = new URLSearchParams();
+    const wkt = query.wkt ?? (query.bounds ? boundsToWKT(query.bounds) : undefined);
+    if (wkt) params.append('wkt', wkt);
+    if (query.startDate) params.append('startDate', query.startDate);
+    if (query.endDate) params.append('endDate', query.endDate);
+    if (query.polarization) params.append('polarization', query.polarization);
+    if (query.beamModeType) params.append('beamModeType', query.beamModeType);
+    if (query.maxResults) params.append('maxResults', String(query.maxResults));
+
+    const res = await this.request<SARSenseScene[]>(`/sar/scenes?${params.toString()}`);
+    if (res.success) return res;
+
+    return {
+      data: mockSARCatalog({ ...query, wkt }),
+      success: true,
+      message: 'mock-fallback',
+    };
+  }
+
   async getSARCatalog(params: {
     startDate?: string;
     endDate?: string;

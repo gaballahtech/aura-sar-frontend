@@ -115,3 +115,40 @@ export interface WebSocketMessage {
   payload: unknown;
   timestamp: string;
 }
+
+/*
+ * SAR scene contract — matches the ASF asf_search backend (see read/readit.txt).
+ * Backend returns Sentinel-1 GRD scenes; geometry is the coverage polygon
+ * expressed in WKT form using a 5-point pentagon for the query area.
+ */
+export interface SARSenseScene {
+  fileID: string;
+  sceneName: string;
+  platform: string;
+  sensor: string;
+  processingLevel: string;
+  beamModeType: string;
+  polarization: string;
+  startTime: string;
+  stopTime: string;
+  flightDirection: 'ASCENDING' | 'DESCENDING';
+  orbit: number;
+  pathNumber: number;
+  frameNumber: number;
+  bytes: number;
+  url: string;
+  pgeVersion: string;
+  granuleType: string;
+  geometry: number[][][];
+  geometryWKT: string;
+}
+
+export interface SARSenseQuery {
+  wkt?: string;
+  bounds?: [[number, number], [number, number]];
+  startDate?: string;
+  endDate?: string;
+  polarization?: string;
+  beamModeType?: string;
+  maxResults?: number;
+}

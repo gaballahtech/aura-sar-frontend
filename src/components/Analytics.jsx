@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import {
@@ -6,7 +6,8 @@ import {
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar, Cell, ComposedChart
 } from 'recharts';
-import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, Satellite, MapPin, Ruler } from 'lucide-react';
+import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, Satellite, MapPin, Ruler, RefreshCw, Database, ExternalLink } from 'lucide-react';
+import { apiClient } from '../services/api';
 
 const generateBackscatterData = (locale) => {
   const data = [];
@@ -43,12 +44,28 @@ const trendColors = {
   down: { bg: 'bg-danger', text: 'text-danger' },
 };
 
+const SAR_TIME_RANGES = {
+  '6months': 6 * 30 * 24 * 60 * 60 * 1000,
+  '1year': 12 * 30 * 24 * 60 * 60 * 1000,
+  '3years': 36 * 30 * 24 * 60 * 60 * 1000,
+  '5years': 60 * 30 * 24 * 60 * 60 * 1000,
+};
+
+const formatBytes = (bytes) => {
+  const mb = bytes / (1024 * 1024);
+  return mb >= 1024 ? `${(mb / 1024).toFixed(1)} GB` : `${mb.toFixed(0)} MB`;
+};
+
 export default function Analytics() {
   const { t, i18n } = useTranslation();
   const { theme } = useTheme();
   const [timeRange, setTimeRange] = useState('1year');
   const [activeComparison, setActiveComparison] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(null);
+  const [scenes, setScenes] = useState([]);
+  const [sceneSource, setSceneSource] = useState('idle');
+  const [sceneLoading, setSceneLoading] = useState(false);
+  const [sceneWKT, setSceneWKT] = useState('');
   const chartRefs = useRef({});
 
   const backscatterData = useMemo(
@@ -127,6 +144,34 @@ export default function Analytics() {
     a.click();
     URL.revokeObjectURL(url);
   };
+
+  const fetchSceneCatalog = useCallback(async () => {
+    const now = Date.now();
+    const startDate = new Date(now - SAR_TIME_RANGES[timeRange]).toISOString();
+    const endDate = new Date(now).toISOString();
+    setSceneLoading(true);
+    const res = await apiClient.searchSARScenes({
+      wkt: sceneWKT.trim() || undefined,
+      startDate,
+      endDate,
+      maxResults: 12,
+    });
+    setScenes(res.data);
+    setSceneSource(res.message === 'mock-fallback' ? 'mock' : res.success ? 'live' : 'error');
+    setSceneLoading(false);
+  }, [timeRange, sceneWKT]);
+
+  useEffect(() => {
+    fetchSceneCatalog();
+  }, [fetchSceneCatalog]);
+
+  const formatSceneTime = (iso) =>
+    new Date(iso).toLocaleString(i18n.language === 'ar' ? 'ar-EG' : 'en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
 
   const ChartCard = ({ title, icon: Icon, children, id, className = '' }) => (
     <div ref={el => (chartRefs.current[id] = el)} className={`bg-card ${className} relative fullscreen-card`}>
@@ -250,6 +295,95 @@ export default function Analytics() {
                 {range.label}
               </button>
             ))}
+          </div>
+        </div>
+
+        <div className="mb-8">
+          <div className="liquid-surface rounded-xl p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <h3 className="font-semibold text-lg flex items-center space-x-2">
+                <Database className="w-5 h-5 text-accent-green" />
+                <span>{t('analytics.sarCatalog.title')}</span>
+                {sceneSource === 'live' && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-success text-success flex items-center space-x-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                    <span>{t('analytics.sarCatalog.live')}</span>
+                  </span>
+                )}
+                {sceneSource === 'mock' && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-warning text-warning">
+                    {t('analytics.sarCatalog.offline')}
+                  </span>
+                )}
+              </h3>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="text"
+                  value={sceneWKT}
+                  onChange={(e) => setSceneWKT(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter') fetchSceneCatalog(); }}
+                  placeholder={t('analytics.sarCatalog.wktPlaceholder')}
+                  aria-label={t('analytics.sarCatalog.wktLabel')}
+                  className="input-field wkt-input text-sm"
+                />
+                <button
+                  onClick={fetchSceneCatalog}
+                  className="btn-secondary flex items-center space-x-2 text-sm"
+                  disabled={sceneLoading}
+                >
+                  <RefreshCw className={`w-4 h-4 ${sceneLoading ? 'animate-spin' : ''}`} />
+                  <span>{t('analytics.sarCatalog.refresh')}</span>
+                </button>
+              </div>
+            </div>
+            <p className="text-sm text-muted mb-4">{t('analytics.sarCatalog.subtitle')}</p>
+
+            {scenes.length === 0 && !sceneLoading && (
+              <p className="text-center text-muted py-6">{t('analytics.sarCatalog.empty')}</p>
+            )}
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-start text-muted text-xs uppercase">
+                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.scene')}</th>
+                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.acquisition')}</th>
+                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.polarization')}</th>
+                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.orbit')}</th>
+                    <th className="text-start font-medium px-3 py-2">{t('analytics.sarCatalog.columns.size')}</th>
+                    <th className="text-start font-medium px-3 py-2"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {scenes.map((scene) => (
+                    <tr key={scene.fileID} className="border-t border-subtle hover:bg-glass">
+                      <td className="px-3 py-2 text-primary" dir="ltr">
+                        <span className="font-mono text-xs">{scene.sceneName}</span>
+                        <span className="block text-xs text-muted">{scene.platform} · {scene.beamModeType} / {scene.processingLevel}</span>
+                      </td>
+                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{formatSceneTime(scene.startTime)}</td>
+                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{scene.polarization}</td>
+                      <td className="px-3 py-2 text-secondary whitespace-nowrap">
+                        {scene.flightDirection === 'ASCENDING' ? 'A' : 'D'} · P{scene.pathNumber}-{scene.frameNumber}
+                      </td>
+                      <td className="px-3 py-2 text-secondary whitespace-nowrap">{formatBytes(scene.bytes)}</td>
+                      <td className="px-3 py-2 text-end">
+                        <a
+                          href={scene.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center space-x-1 text-accent-green hover:text-accent-green/80 transition-colors"
+                          aria-label={`${t('analytics.sarCatalog.download')} ${scene.sceneName}`}
+                        >
+                          <span>{t('analytics.sarCatalog.download')}</span>
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 

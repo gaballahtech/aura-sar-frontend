@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -20,11 +20,20 @@ export default function Navbar() {
   const { language, toggleLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hideNav, setHideNav] = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const y = window.scrollY;
+      setIsScrolled(y > 20);
+      setHideNav((prev) => {
+        if (y > 120 && y > lastScrollY.current) return true;
+        if (y < lastScrollY.current) return false;
+        return prev;
+      });
+      lastScrollY.current = y;
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -54,7 +63,9 @@ export default function Navbar() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-glass backdrop-blur-md border-b border-subtle' : 'bg-transparent'
+        hideNav ? '-translate-y-full' : 'translate-y-0'
+      } ${
+        isScrolled ? 'liquid-glass liquid-edge border-b border-subtle' : 'bg-transparent'
       }`}
       role="banner"
     >
@@ -129,7 +140,7 @@ export default function Navbar() {
                 <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
               </button>
               {showAlerts && (
-                <div className="absolute end-0 top-full mt-2 w-80 bg-card shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
+                <div className="absolute end-0 top-full mt-2 w-80 liquid-surface shadow-2xl rounded-xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
                   <div className="px-4 py-2 border-b border-subtle">
                     <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
                   </div>
