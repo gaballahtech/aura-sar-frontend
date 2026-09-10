@@ -204,7 +204,7 @@ export default function Analytics() {
           </button>
         </div>
       </div>
-      <div className="h-[350px] chart-body">
+      <div className="h-[300px] md:h-[350px] chart-body">
         {children}
       </div>
     </div>

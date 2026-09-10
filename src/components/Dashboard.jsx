@@ -274,7 +274,7 @@ export default function Dashboard() {
         </div>
 
         <div className="relative">
-          <div className="relative h-[600px] rounded-2xl overflow-hidden">
+          <div className="relative h-[420px] md:h-[520px] rounded-2xl overflow-hidden">
             <MapContainer
               center={CALIFORNIA_CENTER}
               zoom={7}
