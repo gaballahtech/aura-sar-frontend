@@ -28,26 +28,36 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [hideNav, setHideNav] = useState(false);
   const [showAlerts, setShowAlerts] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
   const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
       setIsScrolled(y > 20);
-              setHideNav((prev) => {
-                const wasHidden = prev;
-                if (y > 120 && y > lastScrollY.current) {
-                  if (!wasHidden) setShowAlerts(false);
-                  return true;
-                }
-                if (y < lastScrollY.current) return false;
-                return prev;
-              });
-              lastScrollY.current = y;
-            };
-            window.addEventListener('scroll', handleScroll);
-            return () => window.removeEventListener('scroll', handleScroll);
-          }, []);
+      setHideNav((prev) => {
+        const wasHidden = prev;
+        if (y > 120 && y > lastScrollY.current) {
+          if (!wasHidden) setShowAlerts(false);
+          return true;
+        }
+        if (y < lastScrollY.current) return false;
+        return prev;
+      });
+      lastScrollY.current = y;
+
+      const sections = navLinks
+        .map((link) => document.getElementById(link.id))
+        .filter(Boolean);
+      const current = sections.find((section) => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= 120 && rect.bottom > 120;
+      });
+      if (current) setActiveSection(current.id);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
           useEffect(() => {
             if (!showAlerts) return;
