@@ -105,12 +105,13 @@ export default function Navbar() {
             </span>
           </a>
 
-          <div className="hidden lg:flex items-center space-x-8">
+            <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
               <a
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
+                aria-current={activeSection === link.id ? 'true' : undefined}
                 className="text-secondary hover:text-accent-green transition-colors duration-200 font-medium text-sm relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent-green after:transition-all hover:after:w-full"
               >
                 {t(link.label)}
@@ -156,8 +157,15 @@ export default function Navbar() {
                 aria-haspopup="true"
               >
                 <Bell className="w-4 h-4" />
-                <span>{t('navbar.alerts')}</span>
-                <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">{navbarAlertItems.length}</span>
+                <span className="me-1">{t('navbar.alerts')}</span>
+                {navbarAlertItems.length > 0 && (
+                  <span
+                    className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center"
+                    aria-hidden="true"
+                  >
+                    {navbarAlertItems.length}
+                  </span>
+                )}
               </button>
               {showAlerts && (
                 <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>

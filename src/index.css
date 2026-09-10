@@ -491,12 +491,14 @@
   background-color: var(--color-accent-green);
   color: var(--color-primary-dark);
   box-shadow: 0 0 15px rgba(7, 192, 107, 0.5);
+  transition: all 0.3s ease;
 }
 
 @utility lang-toggle-inactive {
   background-color: rgba(255, 255, 255, 0.05);
   color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
 }
 
 @utility animate-count-up {
