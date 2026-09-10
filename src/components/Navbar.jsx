@@ -60,35 +60,72 @@ export default function Navbar() {
   }, []);
 
           useEffect(() => {
-            if (!showAlerts) return;
-            const handleOutside = (e) => {
-              if (!e.target.closest('[data-alerts-menu]')) {
-                setShowAlerts(false);
-              }
-            };
-            const handleEsc = (e) => {
-              if (e.key === 'Escape') {
-                setShowAlerts(false);
-                setIsMenuOpen(false);
-              }
-            };
-            document.addEventListener('click', handleOutside);
-            document.addEventListener('keydown', handleEsc);
-            return () => {
-              document.removeEventListener('click', handleOutside);
-              document.removeEventListener('keydown', handleEsc);
-            };
-          }, [showAlerts]);
+    if (!showAlerts) return;
+    const handleOutside = (e) => {
+      if (!e.target.closest('[data-alerts-menu]')) {
+        setShowAlerts(false);
+      }
+    };
+    const handleEsc = (e) => {
+      if (e.key === 'Escape') {
+        setShowAlerts(false);
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleOutside);
+    document.addEventListener('keydown', handleEsc);
+    return () => {
+      document.removeEventListener('click', handleOutside);
+      document.removeEventListener('keydown', handleEsc);
+    };
+  }, [showAlerts]);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
+      setHideNav(false);
+      lastScrollY.current = window.scrollY;
       element.scrollIntoView({ behavior: 'smooth' });
     }
     setIsMenuOpen(false);
+    setShowAlerts(false);
   };
 
   const currentLogo = theme === 'dark' ? logoDark : logoLight;
+
+  const renderAlertItems = () => {
+    const severityClass = {
+      critical: 'bg-danger text-danger',
+      high: 'bg-orange text-orange',
+      medium: 'bg-yellow text-yellow',
+      low: 'bg-success text-success',
+    };
+    return navbarAlertItems.map(alert => {
+      const item = t(`navbar.alertItems.${alert.key}`, { returnObjects: true });
+      return (
+        <li key={alert.id} className="px-4 py-3 hover:bg-glass border-b border-subtle last:border-0 cursor-default">
+          <div className="flex items-start justify-between">
+            <p className="text-sm text-primary">{item.msg}</p>
+            <span className={`text-xs px-2 py-1 rounded-full ${severityClass[alert.severity]}`}>
+              {t(`dashboard.severity.${alert.severity}`)}
+            </span>
+          </div>
+          <p className="text-xs text-muted mt-1">{item.time}</p>
+        </li>
+      );
+    });
+  };
+
+  const renderAlertsPanel = () => (
+    <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="region" aria-label={t('navbar.alerts')}>
+      <div className="px-4 py-2 border-b border-subtle">
+        <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
+      </div>
+      <ul className="max-h-60 overflow-y-auto" data-alerts-list aria-live="polite" aria-relevant="additions">
+        {renderAlertItems()}
+      </ul>
+    </div>
+  );
 
   return (
     <header
@@ -103,11 +140,11 @@ export default function Navbar() {
             href="#home"
             onClick={(e) => { e.preventDefault(); scrollToSection('home'); }}
             className="flex items-center space-x-3 group"
-            aria-label={t('footer.brand')}
+            aria-label={t('navbar.brand')}
           >
             <img
               src={currentLogo}
-              alt={t('footer.brand')}
+              alt={t('navbar.brand')}
               className="h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
             />
             <span className="hidden sm:block font-bold text-xl text-gradient">
@@ -121,8 +158,12 @@ export default function Navbar() {
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
-                aria-current={activeSection === link.id ? 'true' : undefined}
-                className="text-secondary hover:text-accent-green transition-colors duration-200 font-medium text-sm relative after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-accent-green after:transition-all hover:after:w-full"
+                aria-current={activeSection === link.id ? 'location' : undefined}
+                className={`relative text-sm font-medium transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:transition-all after:duration-300 ${
+                  activeSection === link.id
+                    ? 'text-accent-green after:w-full after:bg-accent-green'
+                    : 'text-secondary hover:text-accent-green after:w-0 after:bg-accent-green hover:after:w-full'
+                }`}
               >
                 {t(link.label)}
               </a>
@@ -135,17 +176,17 @@ export default function Navbar() {
                 onClick={() => setLanguage('en')}
                 className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'en'}
-                aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
+                aria-label="English"
               >
-                <span>EN</span>
+                <span lang="en">EN</span>
               </button>
               <button
                 onClick={() => setLanguage('ar')}
                 className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'ar'}
-                aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
+                aria-label="العربية"
               >
-                <span>AR</span>
+                <span lang="ar">AR</span>
               </button>
 
               <span className="w-px h-6 bg-subtle mx-1" aria-hidden="true" />
@@ -177,35 +218,7 @@ export default function Navbar() {
                   </span>
                 )}
               </button>
-              {showAlerts && (
-                <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
-                  <div className="px-4 py-2 border-b border-subtle">
-                    <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
-                  </div>
-                  <div className="max-h-60 overflow-y-auto" data-alerts-list aria-live="polite" aria-relevant="additions">
-                    {navbarAlertItems.map(alert => {
-                      const item = t(`navbar.alertItems.${alert.key}`, { returnObjects: true });
-                      const severityClass = {
-                        critical: 'bg-danger text-danger',
-                        high: 'bg-orange text-orange',
-                        medium: 'bg-yellow text-yellow',
-                        low: 'bg-success text-success',
-                      }[alert.severity];
-                      return (
-                        <div key={alert.id} role="menuitem" tabIndex={-1} className="px-4 py-3 hover:bg-glass border-b border-subtle last:border-0 cursor-default">
-                          <div className="flex items-start justify-between">
-                            <p className="text-sm text-primary">{item.msg}</p>
-                            <span className={`text-xs px-2 py-1 rounded-full ${severityClass}`}>
-                              {t(`dashboard.severity.${alert.severity}`)}
-                            </span>
-                          </div>
-                          <p className="text-xs text-muted mt-1">{item.time}</p>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+              {showAlerts && renderAlertsPanel()}
             </div>
           </div>
 
@@ -222,7 +235,12 @@ export default function Navbar() {
 
         <div
           id="mobile-menu"
-          className={`lg:hidden overflow-hidden transition-all duration-300 ${isMenuOpen ? 'max-h-[34rem] opacity-100' : 'max-h-0 opacity-0'}`}
+          className={`lg:hidden overflow-hidden transition-all duration-300 ${
+            isMenuOpen
+              ? 'max-h-[40rem] opacity-100 visible'
+              : 'max-h-0 opacity-0 invisible pointer-events-none'
+          }`}
+          aria-hidden={!isMenuOpen}
         >
           <div className="py-4 space-y-2 border-t border-subtle">
             {navLinks.map((link) => (
@@ -230,24 +248,33 @@ export default function Navbar() {
                 key={link.id}
                 href={`#${link.id}`}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
-                className="block px-4 py-3 rounded-xl text-secondary hover:text-accent-green hover:bg-glass transition-colors"
+                aria-current={activeSection === link.id ? 'location' : undefined}
+                className={`block px-4 py-3 rounded-xl transition-colors ${
+                  activeSection === link.id
+                    ? 'text-accent-green bg-glass'
+                    : 'text-secondary hover:text-accent-green hover:bg-glass'
+                }`}
               >
                 {t(link.label)}
               </a>
             ))}
             <div className="pt-4 border-t border-subtle flex flex-wrap items-center justify-center gap-4">
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2" role="group" aria-label={t('navbar.language')}>
                 <button
                   onClick={() => setLanguage('en')}
                   className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
+                  aria-pressed={language === 'en'}
+                  aria-label="English"
                 >
-                  EN
+                  <span lang="en">EN</span>
                 </button>
                 <button
                   onClick={() => setLanguage('ar')}
                   className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
+                  aria-pressed={language === 'ar'}
+                  aria-label="العربية"
                 >
-                  AR
+                  <span lang="ar">AR</span>
                 </button>
               </div>
               <button
@@ -266,10 +293,24 @@ export default function Navbar() {
                   </>
                 )}
               </button>
-              <button className="btn-primary w-full sm:w-auto flex items-center justify-center space-x-2">
-                <Bell className="w-4 h-4" />
-                {t('navbar.alerts')}
-              </button>
+              <div className="relative w-full sm:w-auto" data-alerts-menu>
+                <button
+                  onClick={() => setShowAlerts(!showAlerts)}
+                  className="btn-primary is-round w-full sm:w-auto flex items-center justify-center relative"
+                  aria-expanded={showAlerts}
+                  aria-haspopup="true"
+                  aria-label={t('navbar.alerts')}
+                >
+                  <Bell className="w-4 h-4 me-2" />
+                  {t('navbar.alerts')}
+                  {navbarAlertItems.length > 0 && (
+                    <span className="ms-2 bg-danger text-white text-xs px-2 py-0.5 rounded-full">
+                      {navbarAlertItems.length}
+                    </span>
+                  )}
+                </button>
+                {showAlerts && renderAlertsPanel()}
+              </div>
             </div>
           </div>
         </div>

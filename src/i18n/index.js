@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 
 const en = {
   "navbar": {
+    "brand": "AURA SAR",
     "home": "Home",
     "dashboard": "Interactive Dashboard",
     "analytics": "Time-Series Analytics",
@@ -451,6 +452,7 @@ const en = {
 
 const ar = {
   "navbar": {
+    "brand": "أورا سار",
     "home": "الرئيسية",
     "dashboard": "لوحة التحكم التفاعلية",
     "analytics": "التحليلات الزمنية",
