@@ -74,7 +74,7 @@
     color: rgba(255, 255, 255, 0.5);
   }
   .light .text-muted {
-    color: rgba(17, 24, 39, 0.5);
+    color: rgba(17, 24, 39, 0.6);
   }
 
   .text-subtle {
@@ -337,6 +337,10 @@
   margin-bottom: 2.5rem;
 }
 
+.light .section-subtitle {
+  color: rgba(17, 24, 39, 0.7);
+}
+
 @utility stat-card {
   background-color: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(18px) saturate(160%);
@@ -365,10 +369,6 @@
   position: relative;
   isolation: isolate;
   transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-}
-
-.liquid-surface {
-  contain: paint;
 }
 
 .liquid-glass {
@@ -413,11 +413,14 @@
   mix-blend-mode: screen;
 }
 
-/* Real refraction (Chromium only) — graceful, gated, zero cost elsewhere */
+/* Real refraction (Chromium only) — graceful, gated, desktop-only for perf.
+   Keeps brightness for a consistent glass look; skipped on touch/small GPUs. */
 @supports (backdrop-filter: url(#lg-refract)) {
-  .liquid-glass {
-    backdrop-filter: blur(16px) saturate(180%) url(#lg-refract);
-    -webkit-backdrop-filter: blur(16px) saturate(180%) url(#lg-refract);
+  @media (min-width: 1024px) {
+    .liquid-glass {
+      backdrop-filter: blur(16px) saturate(180%) url(#lg-refract) brightness(1.08);
+      -webkit-backdrop-filter: blur(16px) saturate(180%) url(#lg-refract) brightness(1.08);
+    }
   }
 }
 
@@ -560,16 +563,8 @@
   border-color: var(--color-accent-green);
 }
 
-@utility border-warning {
-  border-color: #f59e0b;
-}
-
 @utility border-danger {
   border-color: var(--color-accent-red);
-}
-
-@utility border-info {
-  border-color: #3b82f6;
 }
 
 /* Light theme overrides for status colors */
@@ -781,6 +776,56 @@
   color: #111827 !important;
 }
 
+.light .leaflet-control-layers {
+  background-color: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(229, 229, 229, 0.6) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Glass zoom control (replaces the default white Leaflet bar) */
+.leaflet-control-zoom {
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0.875rem !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  background: rgba(255, 255, 255, 0.07) !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a,
+.leaflet-control-zoom a {
+  background-color: transparent !important;
+  color: white !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+.leaflet-control-zoom a:last-child {
+  border-bottom: none !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background-color: rgba(255, 255, 255, 0.12) !important;
+  color: white !important;
+}
+
+.light .leaflet-control-zoom {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(229, 229, 229, 0.6) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12) !important;
+}
+
+.light .leaflet-bar a,
+.light .leaflet-control-zoom a {
+  color: #111827 !important;
+  border-bottom: 1px solid rgba(229, 229, 229, 0.6) !important;
+}
+
+.light .leaflet-control-zoom a:hover {
+  background-color: rgba(17, 24, 39, 0.06) !important;
+  color: #111827 !important;
+}
+
 /* Recharts custom tooltip */
 .recharts-tooltip-wrapper {
   outline: none;
@@ -822,6 +867,12 @@
   flex: 1;
   height: auto;
   min-height: 0;
+}
+
+/* In fullscreen the backdrop is opaque — no glass to blur, disable the cost */
+.fullscreen-card:fullscreen .recharts-default-tooltip {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 /* === Light theme overrides for form controls & buttons === */
@@ -879,7 +930,8 @@
   }
 
   .liquid-glass::after,
-  .liquid-surface::after {
+  .liquid-surface::after,
+  .liquid-edge::before {
     display: none;
   }
 
@@ -922,11 +974,13 @@
   }
 }
 
-/* Scroll-edge legibility for floating headers (Liquid Glass) */
+/* Scroll-edge legibility for floating headers (Liquid Glass).
+   ::before carries the bottom fade so it never collides with the sheen
+   on ::after — the header keeps both the gloss and the scroll-edge. */
 .liquid-edge {
   position: relative;
 }
-.liquid-edge::after {
+.liquid-edge::before {
   content: '';
   position: absolute;
   left: 0;
@@ -935,11 +989,6 @@
   height: 12px;
   pointer-events: none;
   background: linear-gradient(to top, rgba(255, 255, 255, 0.06), transparent);
-}
-
-/* Concentric radii: inner controls echo the container curvature */
-@utility rounded-concentric-lg {
-  border-radius: calc(1rem - 0.5rem);
 }
 
 .wkt-input {

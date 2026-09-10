@@ -6,6 +6,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Layers, Flame, Wind, AlertTriangle, Shield, Truck, Cloud, RotateCcw } from 'lucide-react';
 
+const ROLE_OPTIONS = ['firefighter', 'public'];
+
 const CALIFORNIA_BOUNDS = [[32.5, -124.5], [42.0, -114.0]];
 const CALIFORNIA_CENTER = [37.5, -119.5];
 
@@ -137,7 +139,7 @@ const FirePoint = ({ fire, theme, t }) => (
   >
     <Popup>
       <div className="p-2 min-w-[200px]">
-        <h4 className="font-bold text-primary-dark mb-1">{fire.name}</h4>
+        <h4 className="font-bold text-primary mb-1">{fire.name}</h4>
         <div className="text-sm text-secondary space-y-1">
           <p><strong>{t('dashboard.mapPopup.confidence')}:</strong> {fire.confidence}%</p>
           <p><strong>{t('dashboard.mapPopup.intensity')}:</strong> {(fire.intensity * 100).toFixed(0)}%</p>
@@ -162,7 +164,7 @@ const SafeZoneMarker = ({ zone, t }) => (
   >
     <Popup>
       <div className="p-2 min-w-[200px]">
-        <h4 className="font-bold text-primary-dark mb-1 flex items-center space-x-1">
+        <h4 className="font-bold text-primary mb-1 flex items-center space-x-1">
           <Shield className="w-4 h-4 text-accent-green" />
           <span>{zone.name}</span>
         </h4>
@@ -189,6 +191,7 @@ export default function Dashboard() {
   const [alerts, setAlerts] = useState(mockAlerts);
   const [autoRefresh, setAutoRefresh] = useState(true);
   const [showControls, setShowControls] = useState(true);
+  const roleRefs = useRef([]);
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -212,6 +215,16 @@ export default function Dashboard() {
     setMapLayers(prev => ({ ...prev, [layer]: !prev[layer] }));
   };
 
+  const handleRoleKeyDown = (e, index) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const next = e.key === 'ArrowRight'
+      ? (index + 1) % ROLE_OPTIONS.length
+      : (index - 1 + ROLE_OPTIONS.length) % ROLE_OPTIONS.length;
+    setActiveRole(ROLE_OPTIONS[next]);
+    roleRefs.current[next]?.focus();
+  };
+
   return (
     <section id="dashboard" className="py-20 sm:py-28" aria-labelledby="dashboard-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -222,25 +235,28 @@ export default function Dashboard() {
 
         <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center space-x-4" role="radiogroup" aria-label={t('dashboard.roleToggle.firefighter')}>
-            {[
-              { value: 'firefighter', label: t('dashboard.roleToggle.firefighter'), icon: Flame },
-              { value: 'public', label: t('dashboard.roleToggle.public'), icon: Shield },
-            ].map(role => (
-              <button
-                key={role.value}
-                onClick={() => setActiveRole(role.value)}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                  activeRole === role.value
-                    ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
-                    : 'bg-card hover:bg-card-hover'
-                }`}
-                role="radio"
-                aria-checked={activeRole === role.value}
-              >
-                <role.icon className="w-5 h-5" />
-                <span>{role.label}</span>
-              </button>
-            ))}
+            {ROLE_OPTIONS.map((roleValue, index) => {
+              const role = { value: roleValue, label: t(`dashboard.roleToggle.${roleValue}`), icon: roleValue === 'firefighter' ? Flame : Shield };
+              return (
+                <button
+                  key={role.value}
+                  ref={el => (roleRefs.current[index] = el)}
+                  onClick={() => setActiveRole(role.value)}
+                  onKeyDown={(e) => handleRoleKeyDown(e, index)}
+                  className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
+                    activeRole === role.value
+                      ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
+                      : 'bg-card hover:bg-card-hover'
+                  }`}
+                  role="radio"
+                  aria-checked={activeRole === role.value}
+                  tabIndex={activeRole === role.value ? 0 : -1}
+                >
+                  <role.icon className="w-5 h-5" />
+                  <span>{role.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           <div className="flex items-center space-x-2">
@@ -267,7 +283,6 @@ export default function Dashboard() {
               minZoom={6}
               className="h-full w-full"
               attributionControl={false}
-              zoomControl={false}
             >
               <TileLayer
                 url={theme === 'dark'

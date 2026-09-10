@@ -67,6 +67,12 @@ export default function Analytics() {
   const [sceneLoading, setSceneLoading] = useState(false);
   const [sceneWKT, setSceneWKT] = useState('');
   const chartRefs = useRef({});
+  const rangeRefs = useRef({});
+  const wktRef = useRef('');
+
+  useEffect(() => {
+    wktRef.current = sceneWKT;
+  }, [sceneWKT]);
 
   const backscatterData = useMemo(
     () => generateBackscatterData(i18n.language === 'ar' ? 'ar-EG' : 'en-US'),
@@ -149,9 +155,10 @@ export default function Analytics() {
     const now = Date.now();
     const startDate = new Date(now - SAR_TIME_RANGES[timeRange]).toISOString();
     const endDate = new Date(now).toISOString();
+    const wkt = wktRef.current.trim();
     setSceneLoading(true);
     const res = await apiClient.searchSARScenes({
-      wkt: sceneWKT.trim() || undefined,
+      wkt: wkt || undefined,
       startDate,
       endDate,
       maxResults: 12,
@@ -159,7 +166,7 @@ export default function Analytics() {
     setScenes(res.data);
     setSceneSource(res.message === 'mock-fallback' ? 'mock' : res.success ? 'live' : 'error');
     setSceneLoading(false);
-  }, [timeRange, sceneWKT]);
+  }, [timeRange]);
 
   useEffect(() => {
     fetchSceneCatalog();
@@ -174,7 +181,7 @@ export default function Analytics() {
     });
 
   const ChartCard = ({ title, icon: Icon, children, id, className = '' }) => (
-    <div ref={el => (chartRefs.current[id] = el)} className={`bg-card ${className} relative fullscreen-card`}>
+    <div ref={el => (chartRefs.current[id] = el)} className={`bg-card p-6 ${className} relative fullscreen-card`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center space-x-2">
           <Icon className="w-5 h-5 text-accent-green" />
@@ -280,10 +287,21 @@ export default function Analytics() {
               { value: '1year', label: t('analytics.timeRange.1year') },
               { value: '3years', label: t('analytics.timeRange.3years') },
               { value: '5years', label: t('analytics.timeRange.5years') },
-            ].map(range => (
+            ].map((range, index) => (
               <button
                 key={range.value}
+                ref={el => (rangeRefs.current[range.value] = el)}
                 onClick={() => setTimeRange(range.value)}
+                onKeyDown={(e) => {
+                  if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+                  e.preventDefault();
+                  const options = ['6months', '1year', '3years', '5years'];
+                  const next = e.key === 'ArrowRight'
+                    ? (index + 1) % options.length
+                    : (index - 1 + options.length) % options.length;
+                  setTimeRange(options[next]);
+                  rangeRefs.current[options[next]]?.focus();
+                }}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   timeRange === range.value
                     ? 'bg-accent-green text-primary-dark'
@@ -291,6 +309,7 @@ export default function Analytics() {
                 }`}
                 role="radio"
                 aria-checked={timeRange === range.value}
+                tabIndex={timeRange === range.value ? 0 : -1}
               >
                 {range.label}
               </button>
@@ -344,14 +363,15 @@ export default function Analytics() {
 
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
+                <caption className="sr-only">{t('analytics.sarCatalog.title')}</caption>
                 <thead>
                   <tr className="text-start text-muted text-sm">
-                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.scene')}</th>
-                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.acquisition')}</th>
-                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.polarization')}</th>
-                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.orbit')}</th>
-                    <th className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.size')}</th>
-                    <th className="text-start font-semibold px-3 py-2.5"></th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.scene')}</th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.acquisition')}</th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.polarization')}</th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.orbit')}</th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5">{t('analytics.sarCatalog.columns.size')}</th>
+                    <th scope="col" className="text-start font-semibold px-3 py-2.5"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -503,7 +523,7 @@ export default function Analytics() {
             { label: t('analytics.statLabels.soilMoisture'), value: '0.58', change: '+0.12', trend: 'up', description: t('analytics.statDescriptions.soilMoisture') },
             { label: t('analytics.statLabels.fuelLoad'), value: '0.42', change: '-0.18', trend: 'down', description: t('analytics.statDescriptions.fuelLoad') },
           ].map((stat, i) => (
-            <div key={i} className="bg-card glow-border">
+            <div key={i} className="bg-card glow-border p-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted">{stat.label}</span>
                 <span className={`text-xs px-2 py-1 rounded-full ${trendColors[stat.trend].bg} ${trendColors[stat.trend].text}`}>

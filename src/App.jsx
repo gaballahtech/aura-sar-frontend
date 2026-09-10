@@ -14,11 +14,12 @@ import Footer from './components/Footer';
 import './index.css';
 
 function LoadingFallback() {
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen flex items-center justify-center bg-card">
       <div className="flex flex-col items-center space-y-4 text-primary">
         <div className="w-12 h-12 border-4 border-accent-green border-t-transparent rounded-full animate-spin" />
-        <p className="text-muted">Loading AURA SAR...</p>
+        <p className="text-muted">{t('common.loading')}</p>
       </div>
     </div>
   );

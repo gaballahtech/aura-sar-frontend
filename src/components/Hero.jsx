@@ -87,7 +87,7 @@ export default function Hero() {
               {statsData.map((stat, index) => (
                 <div
                   key={stat.key}
-                  className={`stat-card liquid-surface glow-border group`}
+                  className={`stat-card liquid-surface glow-border`}
                   style={{ animationDelay: `${500 + index * 100}ms` }}
                 >
                   <div className="flex items-center space-x-3 mb-3">

@@ -242,7 +242,7 @@ export default function Report() {
                     <>
                       <Image className="w-12 h-12 mx-auto mb-4 text-muted" />
                       <p className="text-secondary mb-1">{t('report.form.photoHint')}</p>
-                      <p className="text-sm text-muted">Click or drag & drop</p>
+                      <p className="text-sm text-muted">{t('report.form.clickOrDrag')}</p>
                       <label htmlFor="photo-upload" className="mt-4 inline-block">
                         <span className="btn-secondary">{t('common.upload') || 'Browse Files'}</span>
                       </label>

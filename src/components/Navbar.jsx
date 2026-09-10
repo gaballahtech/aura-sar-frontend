@@ -14,10 +14,16 @@ const navLinks = [
   { id: 'about', label: 'navbar.about' },
 ];
 
+const navbarAlertItems = [
+  { id: 1, key: 'criticalFire', severity: 'critical' },
+  { id: 2, key: 'thermalAnomaly', severity: 'high' },
+  { id: 3, key: 'airQuality', severity: 'medium' },
+];
+
 export default function Navbar() {
   const { t } = useTranslation();
   const { theme, toggleTheme } = useTheme();
-  const { language, toggleLanguage } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hideNav, setHideNav] = useState(false);
@@ -101,7 +107,7 @@ export default function Navbar() {
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center gap-1 p-1 rounded-full liquid-surface" role="group" aria-label={t('navbar.language')}>
               <button
-                onClick={toggleLanguage}
+                onClick={() => setLanguage('en')}
                 className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'en'}
                 aria-label={language === 'en' ? 'Switch to Arabic' : 'Switch to English'}
@@ -109,7 +115,7 @@ export default function Navbar() {
                 <span>EN</span>
               </button>
               <button
-                onClick={toggleLanguage}
+                onClick={() => setLanguage('ar')}
                 className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 aria-pressed={language === 'ar'}
                 aria-label={language === 'ar' ? 'Switch to English' : 'Switch to Arabic'}
@@ -137,19 +143,15 @@ export default function Navbar() {
               >
                 <Bell className="w-4 h-4" />
                 <span>{t('navbar.alerts')}</span>
-                <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">3</span>
+                <span className="absolute -top-1 -end-1 w-5 h-5 bg-danger rounded-full text-xs flex items-center justify-center animate-pulse">{navbarAlertItems.length}</span>
               </button>
               {showAlerts && (
                 <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="menu" aria-label={t('navbar.alerts')}>
                   <div className="px-4 py-2 border-b border-subtle">
                     <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
                   </div>
-                  <div className="max-h-60 overflow-y-auto">
-                    {[
-                      { id: 1, key: 'criticalFire', severity: 'critical' },
-                      { id: 2, key: 'thermalAnomaly', severity: 'high' },
-                      { id: 3, key: 'airQuality', severity: 'medium' },
-                    ].map(alert => {
+                  <div className="max-h-60 overflow-y-auto" data-alerts-list aria-live="polite" aria-relevant="additions">
+                    {navbarAlertItems.map(alert => {
                       const item = t(`navbar.alertItems.${alert.key}`, { returnObjects: true });
                       const severityClass = {
                         critical: 'bg-danger text-danger',
@@ -204,13 +206,13 @@ export default function Navbar() {
             <div className="pt-4 border-t border-subtle flex flex-wrap items-center justify-center gap-4">
               <div className="flex items-center space-x-2">
                 <button
-                  onClick={toggleLanguage}
+                  onClick={() => setLanguage('en')}
                   className={`lang-toggle ${language === 'en' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 >
                   EN
                 </button>
                 <button
-                  onClick={toggleLanguage}
+                  onClick={() => setLanguage('ar')}
                   className={`lang-toggle ${language === 'ar' ? 'lang-toggle-active' : 'lang-toggle-inactive'}`}
                 >
                   AR
