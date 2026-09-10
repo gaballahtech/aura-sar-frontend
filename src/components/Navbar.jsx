@@ -34,27 +34,41 @@ export default function Navbar() {
     const handleScroll = () => {
       const y = window.scrollY;
       setIsScrolled(y > 20);
-      setHideNav((prev) => {
-        if (y > 120 && y > lastScrollY.current) return true;
-        if (y < lastScrollY.current) return false;
-        return prev;
-      });
-      lastScrollY.current = y;
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+              setHideNav((prev) => {
+                const wasHidden = prev;
+                if (y > 120 && y > lastScrollY.current) {
+                  if (!wasHidden) setShowAlerts(false);
+                  return true;
+                }
+                if (y < lastScrollY.current) return false;
+                return prev;
+              });
+              lastScrollY.current = y;
+            };
+            window.addEventListener('scroll', handleScroll);
+            return () => window.removeEventListener('scroll', handleScroll);
+          }, []);
 
-  useEffect(() => {
-    if (!showAlerts) return;
-    const handleClickOutside = (e) => {
-      if (!e.target.closest('[data-alerts-menu]')) {
-        setShowAlerts(false);
-      }
-    };
-    document.addEventListener('click', handleClickOutside);
-    return () => document.removeEventListener('click', handleClickOutside);
-  }, [showAlerts]);
+          useEffect(() => {
+            if (!showAlerts) return;
+            const handleOutside = (e) => {
+              if (!e.target.closest('[data-alerts-menu]')) {
+                setShowAlerts(false);
+              }
+            };
+            const handleEsc = (e) => {
+              if (e.key === 'Escape') {
+                setShowAlerts(false);
+                setIsMenuOpen(false);
+              }
+            };
+            document.addEventListener('click', handleOutside);
+            document.addEventListener('keydown', handleEsc);
+            return () => {
+              document.removeEventListener('click', handleOutside);
+              document.removeEventListener('keydown', handleEsc);
+            };
+          }, [showAlerts]);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
