@@ -41,7 +41,7 @@ const sarApplications = [
 ];
 
 const Card = ({ children, className = '' }) => (
-  <div className={`bg-card ${className}`}>
+  <div className={`bg-card p-6 ${className}`}>
     {children}
   </div>
 );
