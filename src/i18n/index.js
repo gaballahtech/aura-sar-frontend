@@ -11,27 +11,9 @@ const en = {
     "about": "About SAR",
     "language": "Language",
     "theme": "Theme",
-    "alerts": "Emergency Alerts",
     "darkMode": "Dark Mode",
     "lightMode": "Light Mode",
-    "menuToggle": "Toggle navigation menu",
-    "alertItems": {
-      "criticalFire": {
-        "msg": "Critical fire risk detected in Zone 7",
-        "time": "2 min ago",
-        "severityLabel": "critical"
-      },
-      "thermalAnomaly": {
-        "msg": "New thermal anomaly near Highway 101",
-        "time": "15 min ago",
-        "severityLabel": "high"
-      },
-      "airQuality": {
-        "msg": "Air quality dropping in Santa Clara County",
-        "time": "1 hour ago",
-        "severityLabel": "medium"
-      }
-    }
+    "menuToggle": "Toggle navigation menu"
   },
   "hero": {
     "headline": "AI & Synthetic Aperture Radar Driven Wildfire Intelligence Platform",
@@ -466,27 +448,9 @@ const ar = {
     "about": "حول رادار الفتحة التركيبية",
     "language": "اللغة",
     "theme": "السمة",
-    "alerts": "تنبيهات الطوارئ",
     "darkMode": "الوضع الداكن",
     "lightMode": "الوضع الفاتح",
-    "menuToggle": "تبديل قائمة التنقل",
-    "alertItems": {
-      "criticalFire": {
-        "msg": "تم رصد خطر حرائق حرج في المنطقة 7",
-        "time": "قبل دقيقتين",
-        "severityLabel": "حرج"
-      },
-      "thermalAnomaly": {
-        "msg": "شذوذ حراري جديد بالقرب من الطريق 101",
-        "time": "قبل 15 دقيقة",
-        "severityLabel": "عالي"
-      },
-      "airQuality": {
-        "msg": "انخفاض جودة الهواء في مقاطعة سانتا كلارا",
-        "time": "قبل ساعة",
-        "severityLabel": "متوسط"
-      }
-    }
+    "menuToggle": "تبديل قائمة التنقل"
   },
   "hero": {
     "headline": "منصة ذكاء حرائق الغابات المدعومة بالذكاء الاصطناعي ورادار الفتحة التركيبية",
