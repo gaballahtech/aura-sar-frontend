@@ -83,7 +83,7 @@ export default function SarEdu() {
             <p className="text-secondary leading-relaxed max-w-3xl">
               {t('sarEdu.frequencies.intro')}
             </p>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {frequencyBands.map(band => (
                 <Card key={band.key} className="relative overflow-hidden glow-border group">
                   <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${band.color}80, ${band.color})` }} />
@@ -126,7 +126,7 @@ export default function SarEdu() {
             <p className="text-secondary leading-relaxed max-w-3xl">
               {t('sarEdu.polarizations.intro')}
             </p>
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-6">
               {polarizations.map(pol => (
                 <Card key={pol.key} className="hover:border-accent-green/30 transition-colors">
                   <div className="flex items-center justify-between mb-3">
@@ -149,7 +149,7 @@ export default function SarEdu() {
                 <Radio className="w-5 h-5 text-accent-green" />
                 <span>{t('sarEdu.polarizations.combinationsTitle')}</span>
               </h4>
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {(['vvVh', 'hhHv', 'quad']).map((key, i) => (
                   <div key={i} className="p-4 rounded-xl bg-glass">
                     <code className="text-accent-green font-mono text-lg">{t(`sarEdu.polarizations.combinations.${key}.combo`)}</code>
@@ -167,7 +167,7 @@ export default function SarEdu() {
             <p className="text-secondary leading-relaxed max-w-3xl">
               {t('sarEdu.scattering.intro')}
             </p>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {scatteringMechanisms.map(mech => (
                 <Card key={mech.key} className="relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${mech.color}80, ${mech.color})` }} />
@@ -191,7 +191,7 @@ export default function SarEdu() {
               <p className="text-secondary mb-4">
                 {t('sarEdu.scattering.decompositionDesc')}
               </p>
-              <div className="grid md:grid-cols-3 gap-4 text-center">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
                 {decompositionItems.map((key, i) => (
                   <div key={i} className="p-4 rounded-xl bg-glass">
                     <div className="text-2xl font-bold text-accent-green">{t(`sarEdu.scattering.decomposition.${key}.value`)}</div>
@@ -246,7 +246,7 @@ export default function SarEdu() {
             <p className="text-secondary leading-relaxed max-w-3xl">
               {t('sarEdu.applications.intro')}
             </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sarApplications.map((app, i) => (
                 <Card key={i} className="group hover:border-accent-green/30 transition-colors">
                   <div className="p-3 rounded-xl bg-accent-green/10 mb-4">
@@ -299,7 +299,7 @@ export default function SarEdu() {
           <TabContent />
         </div>
 
-        <div className="mt-16 grid md:grid-cols-3 gap-6">
+        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { block: 'learnMore', icon: BookOpen },
             { block: 'openTools', icon: Cpu },

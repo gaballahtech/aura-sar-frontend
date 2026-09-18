@@ -344,7 +344,7 @@ export default function Analytics() {
         </div>
 
         <div className="mb-8">
-          <div className="liquid-surface rounded-xl p-6">
+          <div className="bg-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <h3 className="font-semibold text-lg flex items-center space-x-2">
                 <Database className="w-5 h-5 text-accent-green" />
@@ -545,7 +545,7 @@ export default function Analytics() {
           </ChartCard>
         </div>
 
-        <div className="mt-10 grid lg:grid-cols-3 gap-6">
+        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { label: t('analytics.statLabels.backscatterMean'), value: '-11.2 dB', change: '+2.1 dB', trend: 'up', description: t('analytics.statDescriptions.backscatterMean') },
             { label: t('analytics.statLabels.soilMoisture'), value: '0.58', change: '+0.12', trend: 'up', description: t('analytics.statDescriptions.soilMoisture') },

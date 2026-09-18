@@ -220,7 +220,7 @@ export default function Report() {
 
         {activeTab === 'submit' && (
           <div id="submit-panel" role="tabpanel" aria-labelledby="tab-submit" tabIndex={0} className="animate-slide-up">
-            <form onSubmit={handleSubmit} className="bg-card max-w-2xl mx-auto" noValidate>
+            <form onSubmit={handleSubmit} className="bg-card p-6 sm:p-8 max-w-2xl mx-auto" noValidate>
               {submitStatus && (
                 <div
                   role="alert"
@@ -399,7 +399,7 @@ export default function Report() {
 
         {activeTab === 'feed' && (
           <div id="feed-panel" role="tabpanel" aria-labelledby="tab-feed" tabIndex={0} className="animate-slide-up">
-            <div className="bg-card">
+            <div className="bg-card p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
                   <Map className="w-5 h-5 text-accent-green" />
@@ -425,7 +425,7 @@ export default function Report() {
                   return (
                     <div
                       key={report.id}
-                      className="p-5 rounded-xl border border-subtle transition-all bg-card-hover"
+                      className="p-6 rounded-xl border border-subtle transition-all bg-card-hover"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                         <div className="flex items-center space-x-3">

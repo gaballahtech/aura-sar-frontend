@@ -329,7 +329,7 @@ export default function Dashboard() {
           </div>
 
           {activeRole === 'firefighter' && (
-            <div className="absolute bottom-4 end-4 z-10">
+            <div className="absolute bottom-4 end-4 z-[1200]">
               <button
                 onClick={() => setShowControls(prev => !prev)}
                 className="p-2 rounded-xl bg-card hover:bg-card-hover text-secondary transition-colors"
@@ -341,7 +341,7 @@ export default function Dashboard() {
             </div>
           )}
           {activeRole === 'firefighter' && showControls && (
-            <div className="absolute top-4 end-4 z-10 flex flex-col gap-2 max-w-[calc(100vw-2rem)]">
+            <div className="absolute top-4 end-4 z-[1200] flex flex-col gap-2 max-w-[calc(100vw-2rem)]">
               <LayerControl theme={theme} t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />
               <SeverityLegend theme={theme} t={t} />
             </div>
@@ -350,7 +350,7 @@ export default function Dashboard() {
 
         <div className="grid lg:grid-cols-3 gap-6 mt-8">
           <div className="lg:col-span-2">
-            <div className="bg-card h-full">
+            <div className="bg-card p-6 h-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
                   <AlertTriangle className="w-5 h-5 text-accent-red" />
@@ -383,7 +383,7 @@ export default function Dashboard() {
 
           <div className="space-y-6">
             {activeRole === 'public' && (
-              <div className="bg-card">
+              <div className="bg-card p-6">
                 <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Cloud className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.airQuality')}</span>
@@ -408,7 +408,7 @@ export default function Dashboard() {
             )}
 
             {activeRole === 'public' && (
-              <div className="bg-card">
+              <div className="bg-card p-6">
                 <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Truck className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.evacuationRoutes')}</span>

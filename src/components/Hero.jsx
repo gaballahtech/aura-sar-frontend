@@ -71,11 +71,11 @@ export default function Hero() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label={t('hero.liveStats.regionLabel')} aria-live="polite">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label={t('hero.liveStats.regionLabel')} aria-live="polite">
             {statsData.map((stat, index) => (
               <div
                 key={stat.key}
-                className={`stat-card glow-border`}
+                className={`stat-card glow-border h-full`}
                 style={{ animationDelay: `${500 + index * 100}ms` }}
               >
                 <div className="flex items-center space-x-3 mb-3">
@@ -94,12 +94,6 @@ export default function Hero() {
                 </div>
               </div>
             ))}
-          </div>
-        </div>
-
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">
-          <div className="w-6 h-10 border-2 border-subtle rounded-full flex justify-center pt-1">
-            <div className="w-1.5 h-1.5 bg-muted rounded-full animate-bounce" style={{ animationDelay: '0.5s' }} />
           </div>
         </div>
       </div>
