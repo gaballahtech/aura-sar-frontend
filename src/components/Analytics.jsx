@@ -239,7 +239,7 @@ export default function Analytics() {
               <span>{t('analytics.comparisonSlider.title')}</span>
             </h3>
             <div className="relative">
-              <div className="flex items-center justify-between mb-8" role="radiogroup" aria-label={t('analytics.comparisonSlider.title')}>
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-8" role="radiogroup" aria-label={t('analytics.comparisonSlider.title')}>
                 {comparisonImages.map((img, index) => (
                   <button
                     key={index}

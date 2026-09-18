@@ -117,12 +117,12 @@ class ApiClient {
 
   async subscribeToAlerts(callback: (alert: AlertData) => void): Promise<() => void> {
     if (typeof WebSocket === 'undefined') {
-      console.warn('WebSocket not supported in this environment');
+      if (import.meta.env.DEV) console.warn('WebSocket not supported in this environment');
       return () => {};
     }
     const wsUrl = import.meta.env.VITE_WEBSOCKET_URL as string | undefined;
     if (!wsUrl) {
-      console.warn('VITE_WEBSOCKET_URL not configured; alerts fallback to polling');
+      if (import.meta.env.DEV) console.warn('VITE_WEBSOCKET_URL not configured; alerts fallback to polling');
       let cancelled = false;
       const poll = async () => {
         if (cancelled) return;

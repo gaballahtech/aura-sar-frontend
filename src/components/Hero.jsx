@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { ArrowRight, MapPin, Shield, TrendingUp, Sparkles } from 'lucide-react';
@@ -12,14 +11,6 @@ const statsData = [
 export default function Hero() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const [statsVisible, setStatsVisible] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    const timer = setTimeout(() => setStatsVisible(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -27,8 +18,6 @@ export default function Hero() {
       element.scrollIntoView({ behavior: 'smooth' });
     }
   };
-
-  if (!mounted) return null;
 
   return (
     <section
@@ -42,8 +31,8 @@ export default function Hero() {
       ) : (
         <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-white" />
       )}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-green/10 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-accent-green/10 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-4xl mx-auto">
@@ -82,32 +71,30 @@ export default function Hero() {
             </button>
           </div>
 
-          {statsVisible && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label={t('hero.liveStats.regionLabel')} aria-live="polite">
-              {statsData.map((stat, index) => (
-                <div
-                  key={stat.key}
-                  className={`stat-card liquid-surface glow-border`}
-                  style={{ animationDelay: `${500 + index * 100}ms` }}
-                >
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="p-3 rounded-xl bg-accent-green/20 text-accent-green">
-                      <stat.icon className="w-6 h-6" />
-                    </div>
-                    <h3 className="text-sm font-medium text-secondary">{t(`hero.liveStats.${stat.key}`)}</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label={t('hero.liveStats.regionLabel')} aria-live="polite">
+            {statsData.map((stat, index) => (
+              <div
+                key={stat.key}
+                className={`stat-card glow-border`}
+                style={{ animationDelay: `${500 + index * 100}ms` }}
+              >
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="p-3 rounded-xl bg-accent-green/20 text-accent-green">
+                    <stat.icon className="w-6 h-6" />
                   </div>
-                  <div className="flex items-end space-x-1">
-                    <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gradient animate-count-up">{stat.value}</span>
-                    <span className="text-lg font-semibold text-muted mb-1">{stat.suffix}</span>
-                  </div>
-                  <div className="mt-3 flex items-center space-x-1 text-xs text-accent-green">
-                    <span className="animate-pulse" aria-hidden="true">●</span>
-                    <span>{t('hero.liveStats.live')}</span>
-                  </div>
+                  <h3 className="text-sm font-medium text-secondary">{t(`hero.liveStats.${stat.key}`)}</h3>
                 </div>
-              ))}
-            </div>
-          )}
+                <div className="flex items-end space-x-1">
+                  <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gradient animate-count-up">{stat.value}</span>
+                  <span className="text-lg font-semibold text-muted mb-1">{stat.suffix}</span>
+                </div>
+                <div className="mt-3 flex items-center space-x-1 text-xs text-accent-green">
+                  <span className="animate-pulse" aria-hidden="true">●</span>
+                  <span>{t('hero.liveStats.live')}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce" aria-hidden="true">

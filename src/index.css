@@ -726,9 +726,6 @@
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 1.25rem !important;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.14) !important;
-}
-
-.leaflet-popup-content-wrapper {
   animation: popupIn 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
@@ -917,6 +914,16 @@
 .light .stat-card {
   background-color: rgba(255, 255, 255, 0.8);
   border-color: rgba(229, 229, 229, 0.5);
+  box-shadow:
+    0 10px 34px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.light .text-gradient {
+  background: linear-gradient(90deg, #059669, #16a34a);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* === Liquid Glass: accessibility & adaptive behavior === */
@@ -934,6 +941,8 @@
   .liquid-glass,
   .liquid-surface,
   .bg-card,
+  .bg-glass,
+  .bg-glass-subtle,
   .glass,
   .stat-card,
   .leaflet-popup-content-wrapper,
@@ -953,12 +962,16 @@
   .liquid-glass { background-color: #18181b; border-color: #27272a; box-shadow: none; }
   .liquid-surface { background-color: #202024; border-color: #2a2a2e; box-shadow: none; }
   .bg-card { background-color: #18181b; box-shadow: none; }
+  .bg-glass { background-color: #18181b; }
+  .bg-glass-subtle { background-color: #141414; }
   .glass { background-color: #18181b; box-shadow: none; }
   .stat-card { background-color: #18181b; box-shadow: none; }
 
   .light .liquid-glass { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
   .light .liquid-surface { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
   .light .bg-card { background-color: #ffffff; box-shadow: none; }
+  .light .bg-glass { background-color: #ffffff; }
+  .light .bg-glass-subtle { background-color: #f3f4f6; }
   .light .glass { background-color: #ffffff; box-shadow: none; }
   .light .stat-card { background-color: #ffffff; box-shadow: none; }
 }

@@ -1,17 +1,17 @@
-import { useEffect, Suspense } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { useEffect, Suspense, lazy } from 'react';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import Dashboard from './components/Dashboard';
-import Analytics from './components/Analytics';
 import Report from './components/Report';
 import SarEdu from './components/SarEdu';
 import Footer from './components/Footer';
 import './index.css';
+
+const Dashboard = lazy(() => import('./components/Dashboard'));
+const Analytics = lazy(() => import('./components/Analytics'));
 
 function LoadingFallback() {
   const { t } = useTranslation();
@@ -51,17 +51,15 @@ function AppContent() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <LanguageProvider>
-          <ErrorBoundary>
-            <Suspense fallback={<LoadingFallback />}>
-              <AppContent />
-            </Suspense>
-          </ErrorBoundary>
-        </LanguageProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ThemeProvider>
+      <LanguageProvider>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingFallback />}>
+            <AppContent />
+          </Suspense>
+        </ErrorBoundary>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }
 

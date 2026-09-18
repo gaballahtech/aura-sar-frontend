@@ -341,7 +341,7 @@ export default function Dashboard() {
             </div>
           )}
           {activeRole === 'firefighter' && showControls && (
-            <div className="absolute top-4 end-4 z-10 flex flex-col gap-2">
+            <div className="absolute top-4 end-4 z-10 flex flex-col gap-2 max-w-[calc(100vw-2rem)]">
               <LayerControl theme={theme} t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />
               <SeverityLegend theme={theme} t={t} />
             </div>
@@ -392,7 +392,7 @@ export default function Dashboard() {
                   {aqiData.map(item => {
                     const colors = aqiColors[item.level];
                     return (
-                      <div key={item.location} className="flex items-center justify-between p-3 rounded-xl bg-glass">
+                      <div key={item.location} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-glass">
                         <span className="font-medium text-primary">{item.location}</span>
                         <div className="flex items-center space-x-2">
                           <span className={`text-lg font-bold ${colors.text}`}>{item.aqi}</span>
@@ -418,7 +418,7 @@ export default function Dashboard() {
                     const key = `${route.status}-${route.congestion}`;
                     const colors = routeColors[key] || routeColors['advisory-high'];
                     return (
-                      <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-glass">
+                      <div key={i} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-glass">
                         <span className="font-medium text-primary">{route.name}</span>
                         <span className={`text-sm px-3 py-1 rounded-full ${colors.bg} ${colors.text}`}>
                           {t(`dashboard.routeStatus.${route.status}`)} · {t(`dashboard.congestion.${route.congestion}`)}

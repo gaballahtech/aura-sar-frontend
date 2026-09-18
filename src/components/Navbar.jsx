@@ -117,7 +117,7 @@ export default function Navbar() {
   };
 
   const renderAlertsPanel = () => (
-    <div className="absolute end-0 top-full mt-2 w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="region" aria-label={t('navbar.alerts')}>
+    <div className="absolute end-0 top-full mt-2 w-[calc(100vw-2rem)] max-w-80 liquid-surface rounded-2xl py-2 z-50 animate-slide-in" role="region" aria-label={t('navbar.alerts')}>
       <div className="px-4 py-2 border-b border-subtle">
         <h3 className="font-semibold text-primary">{t('navbar.alerts')}</h3>
       </div>
