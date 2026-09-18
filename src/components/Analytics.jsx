@@ -91,7 +91,7 @@ export default function Analytics() {
     grid: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
     text: theme === 'dark' ? '#ffffff' : '#1f2937',
     axis: theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
-    backscatter: '#07c06b',
+    backscatter: '#39FF14',
     soilMoisture: '#3b82f6',
     fuelLoad: '#f59e0b',
     recovery: '#8b5cf6',
@@ -204,14 +204,14 @@ export default function Analytics() {
         <div className="flex items-center space-x-1">
           <button
             onClick={() => toggleFullscreen(id)}
-            className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-glass-subtle text-secondary transition-colors"
             aria-label={t('analytics.controls.fullscreen')}
           >
             {showFullscreen === id ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
           <button
             onClick={() => downloadChartData(id)}
-            className="p-2 rounded-lg bg-glass hover:bg-glass-subtle text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-glass-subtle text-secondary transition-colors"
             aria-label={t('analytics.controls.download')}
           >
             <Download className="w-4 h-4" />
@@ -232,9 +232,9 @@ export default function Analytics() {
           <p className="section-subtitle">{t('analytics.subtitle')}</p>
         </div>
 
-        <div className="mb-10">
+        <div className="mb-8">
           <div className="bg-card p-6 rounded-xl">
-            <h3 className="font-semibold text-lg mb-6 flex items-center space-x-2">
+            <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
               <Camera className="w-5 h-5 text-accent-green" />
               <span>{t('analytics.comparisonSlider.title')}</span>
             </h3>
@@ -350,13 +350,13 @@ export default function Analytics() {
                 <Database className="w-5 h-5 text-accent-green" />
                 <span>{t('analytics.sarCatalog.title')}</span>
                 {sceneSource === 'live' && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-success text-success flex items-center space-x-1">
+                  <span className="text-xs px-2 py-1 rounded-full bg-success text-success flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
                     <span>{t('analytics.sarCatalog.live')}</span>
                   </span>
                 )}
                 {sceneSource === 'mock' && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-warning text-warning">
+                  <span className="text-xs px-2 py-1 rounded-full bg-warning text-warning">
                     {t('analytics.sarCatalog.offline')}
                   </span>
                 )}
@@ -424,7 +424,7 @@ export default function Analytics() {
                           aria-label={`${t('analytics.sarCatalog.download')} ${scene.sceneName}`}
                         >
                           <span>{t('analytics.sarCatalog.download')}</span>
-                          <ExternalLink className="w-3.5 h-3.5" />
+                          <ExternalLink className="w-4 h-4" />
                         </a>
                       </td>
                     </tr>
@@ -545,7 +545,7 @@ export default function Analytics() {
           </ChartCard>
         </div>
 
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { label: t('analytics.statLabels.backscatterMean'), value: '-11.2 dB', change: '+2.1 dB', trend: 'up', description: t('analytics.statDescriptions.backscatterMean') },
             { label: t('analytics.statLabels.soilMoisture'), value: '0.58', change: '+0.12', trend: 'up', description: t('analytics.statDescriptions.soilMoisture') },

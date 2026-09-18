@@ -57,6 +57,13 @@ const severityColors = {
   low: { bg: 'bg-success', text: 'text-success' },
 };
 
+const severityStripe = {
+  critical: '#ff4d4d',
+  high: '#f59e0b',
+  medium: '#eab308',
+  low: '#39FF14',
+};
+
 const aqiColors = {
   good: { text: 'text-success', bg: 'bg-success' },
   moderate: { text: 'text-warning', bg: 'bg-warning' },
@@ -129,8 +136,8 @@ const FirePoint = ({ fire, theme, t }) => (
     center={[fire.lat, fire.lng]}
     radius={12 + fire.intensity * 10}
     pathOptions={{
-      fillColor: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#07c06b') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
-      color: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#07c06b') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
+      fillColor: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
+      color: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
       fillOpacity: 0.6,
       weight: 2,
       className: 'marker-pulse',
@@ -155,8 +162,8 @@ const SafeZoneMarker = ({ zone, t }) => (
     center={[zone.lat, zone.lng]}
     radius={15}
     pathOptions={{
-      fillColor: '#07c06b',
-      color: '#07c06b',
+      fillColor: '#39FF14',
+      color: '#39FF14',
       fillOpacity: 0.3,
       weight: 2,
     }}
@@ -348,25 +355,29 @@ export default function Dashboard() {
           )}
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6 mt-8">
-          <div className="lg:col-span-2">
+        <div className="grid lg:grid-cols-3 gap-6 mt-12">
+          <div className={activeRole === 'public' ? 'lg:col-span-2' : 'lg:col-span-3'}>
             <div className="bg-card p-6 h-full">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
                   <AlertTriangle className="w-5 h-5 text-accent-red" />
                   <span>{t('dashboard.firefighterView.earlyWarnings')}</span>
                 </h3>
-                <span className="text-xs px-2 py-1 bg-accent-green/20 text-accent-green rounded-full">{t('dashboard.firefighterView.liveBadge')}</span>
+                <span className="text-xs px-2 py-1 bg-accent-green/20 text-accent-green rounded-full flex items-center space-x-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent-green animate-pulse" aria-hidden="true" />
+                  <span>{t('dashboard.firefighterView.liveBadge')}</span>
+                </span>
               </div>
-              <div className="space-y-3 max-h-[300px] overflow-y-auto" role="log" aria-live="polite" aria-label={t('dashboard.firefighterView.earlyWarnings')}>
+              <div className={`grid gap-3 max-h-[320px] overflow-y-auto ${activeRole === 'public' ? '' : 'md:grid-cols-2'}`} role="log" aria-live="polite" aria-label={t('dashboard.firefighterView.earlyWarnings')}>
                 {alerts.map(alert => (
                   <div
                     key={alert.id}
-                    className={`p-4 rounded-xl border-s-4 transition-all ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}
+                    className="p-4 rounded-xl bg-glass border border-subtle border-s-4 transition-all"
+                    style={{ borderInlineStartColor: severityStripe[alert.severity] }}
                   >
-                    <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-start justify-between gap-2 mb-2">
                       <h4 className="font-semibold text-primary">{t(`dashboard.alertsFeed.types.${alert.typeKey}`)}</h4>
-                      <span className={`text-xs px-2 py-1 rounded-full ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}>
+                      <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${severityColors[alert.severity].bg} ${severityColors[alert.severity].text}`}>
                         {t(`dashboard.severity.${alert.severity}`)}
                       </span>
                     </div>
@@ -381,6 +392,7 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {activeRole === 'public' && (
           <div className="space-y-6">
             {activeRole === 'public' && (
               <div className="bg-card p-6">
@@ -413,14 +425,14 @@ export default function Dashboard() {
                   <Truck className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.evacuationRoutes')}</span>
                 </h3>
-                <div className="space-y-2">
+                <div className="space-y-3">
                   {evacuationRoutes.map((route, i) => {
                     const key = `${route.status}-${route.congestion}`;
                     const colors = routeColors[key] || routeColors['advisory-high'];
                     return (
                       <div key={i} className="flex flex-wrap items-center justify-between gap-2 p-3 rounded-xl bg-glass">
                         <span className="font-medium text-primary">{route.name}</span>
-                        <span className={`text-sm px-3 py-1 rounded-full ${colors.bg} ${colors.text}`}>
+                        <span className={`text-xs px-2 py-1 rounded-full ${colors.bg} ${colors.text}`}>
                           {t(`dashboard.routeStatus.${route.status}`)} · {t(`dashboard.congestion.${route.congestion}`)}
                         </span>
                       </div>
@@ -430,6 +442,7 @@ export default function Dashboard() {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </section>

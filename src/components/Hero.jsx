@@ -26,6 +26,7 @@ export default function Hero() {
       aria-labelledby="hero-title"
     >
       <div className={`absolute inset-0 opacity-50 ${theme === 'dark' ? 'bg-grid-pattern' : 'bg-grid-pattern-light'}`} />
+      <div className="absolute inset-0 bg-radar-rings" aria-hidden="true" />
       {theme === 'dark' ? (
         <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
       ) : (

@@ -51,7 +51,7 @@ export default function Footer() {
   return (
     <footer className="bg-card border-t border-subtle" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-8 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-6 mb-12">
           <div className="sm:col-span-2 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img
@@ -59,12 +59,12 @@ export default function Footer() {
                 alt={t('footer.brand')}
                 className="h-10 w-auto"
               />
-              <span className="font-bold text-xl text-gradient">AURA SAR</span>
+              <span className="font-display text-sm text-gradient">AURA SAR</span>
             </div>
             <p className="text-secondary mb-6 max-w-xs">{t('footer.tagline')}</p>
             <div className="flex flex-wrap gap-2 mb-6">
               {badges.map((badge, i) => (
-                <span key={i} className="flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium bg-glass border border-subtle">
+                <span key={i} className="flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium bg-glass border border-subtle">
                   <badge.icon className={`w-3 h-3 ${badge.color}`} />
                   <span className={badge.color}>{badge.text}</span>
                 </span>

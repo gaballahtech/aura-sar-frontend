@@ -5,7 +5,7 @@ import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalL
 const frequencyBands = [
   { key: 'xBand', icon: Zap, color: '#ef4444', missions: ['TerraSAR-X', 'COSMO-SkyMed', 'Capella Space'] },
   { key: 'cBand', icon: Waves, color: '#3b82f6', missions: ['Sentinel-1', 'RADARSAT-2', 'NISAR (partial)'] },
-  { key: 'lBand', icon: TreePine, color: '#07c06b', missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'] },
+  { key: 'lBand', icon: TreePine, color: '#39FF14', missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'] },
 ];
 
 const polarizations = [
@@ -18,7 +18,7 @@ const polarizations = [
 const scatteringMechanisms = [
   { key: 'surface', icon: Ruler, color: '#3b82f6' },
   { key: 'doubleBounce', icon: Building2, color: '#f59e0b' },
-  { key: 'volume', icon: TreePine, color: '#07c06b' },
+  { key: 'volume', icon: TreePine, color: '#39FF14' },
 ];
 
 const nasaResourceKeys = [
@@ -70,7 +70,7 @@ export default function SarEdu() {
   ];
 
   const tabButtonClass = (isActive) => `
-    flex items-center space-x-2 px-5 py-3 rounded-xl font-medium transition-all ${isActive
+    flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all ${isActive
       ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
       : 'bg-card hover:bg-card-hover'
     }`;
@@ -92,7 +92,7 @@ export default function SarEdu() {
                       <band.icon className="w-6 h-6" style={{ color: band.color }} />
                     </div>
                     <div>
-                      <h4 className="font-bold text-lg" style={{ color: band.color }}>{t(`sarEdu.frequencies.${band.key}.name`)}</h4>
+                      <h4 className="font-semibold text-lg" style={{ color: band.color }}>{t(`sarEdu.frequencies.${band.key}.name`)}</h4>
                       <p className="text-sm text-muted">{t(`sarEdu.frequencies.${band.key}.wavelength`)} {t('sarEdu.frequencies.wavelength')}</p>
                     </div>
                   </div>
@@ -131,14 +131,16 @@ export default function SarEdu() {
                 <Card key={pol.key} className="hover:border-accent-green/30 transition-colors">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <pol.icon className="w-8 h-8 text-accent-green" />
+                      <div className="p-3 rounded-xl bg-accent-green/10">
+                        <pol.icon className="w-6 h-6 text-accent-green" />
+                      </div>
                       <div>
-                        <h4 className="font-bold text-xl text-accent-green">{pol.key.toUpperCase()} {t('sarEdu.polarizations.polarizationSuffix')}</h4>
+                        <h4 className="font-semibold text-lg text-accent-green">{pol.key.toUpperCase()} {t('sarEdu.polarizations.polarizationSuffix')}</h4>
                         <p className="text-sm text-secondary">{t(`sarEdu.polarizations.${pol.key}.desc`)}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="p-3 rounded-lg bg-glass">
+                  <div className="p-3 rounded-xl bg-glass">
                     <p className="text-sm text-secondary"><strong>{t('sarEdu.polarizations.signature')}</strong> {t(`sarEdu.polarizations.${pol.key}.detail`)}</p>
                   </div>
                 </Card>
@@ -171,12 +173,14 @@ export default function SarEdu() {
               {scatteringMechanisms.map(mech => (
                 <Card key={mech.key} className="relative overflow-hidden group">
                   <div className="absolute top-0 left-0 w-full h-1" style={{ background: `linear-gradient(90deg, ${mech.color}80, ${mech.color})` }} />
-                  <div className="text-center mb-4">
-                    <mech.icon className="w-12 h-12 mx-auto" style={{ color: mech.color }} />
-                    <h4 className="font-bold text-xl mt-2" style={{ color: mech.color }}>{t(`sarEdu.scattering.${mech.key}.title`)}</h4>
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="p-3 rounded-xl" style={{ backgroundColor: `${mech.color}20` }}>
+                      <mech.icon className="w-6 h-6" style={{ color: mech.color }} />
+                    </div>
+                    <h4 className="font-semibold text-lg" style={{ color: mech.color }}>{t(`sarEdu.scattering.${mech.key}.title`)}</h4>
                   </div>
                   <p className="text-secondary text-sm mb-4">{t(`sarEdu.scattering.${mech.key}.desc`)}</p>
-                  <div className="p-3 rounded-lg bg-glass border-s-4" style={{ borderColor: mech.color }}>
+                  <div className="p-3 rounded-xl bg-glass border-s-4" style={{ borderColor: mech.color }}>
                     <p className="text-sm text-secondary"><strong>{t('sarEdu.scattering.signature')}</strong></p>
                     <p className="text-sm text-muted mt-1">{t(`sarEdu.scattering.${mech.key}.sarSignature`)}</p>
                   </div>
@@ -191,7 +195,7 @@ export default function SarEdu() {
               <p className="text-secondary mb-4">
                 {t('sarEdu.scattering.decompositionDesc')}
               </p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 text-center">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {decompositionItems.map((key, i) => (
                   <div key={i} className="p-4 rounded-xl bg-glass">
                     <div className="text-2xl font-bold text-accent-green">{t(`sarEdu.scattering.decomposition.${key}.value`)}</div>
@@ -212,14 +216,14 @@ export default function SarEdu() {
             </p>
             <div className="space-y-4">
               {nasaResourceKeys.map(resource => (
-                <Card key={resource.key} className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-6 group hover:border-accent-green/30 transition-colors">
+                <Card key={resource.key} className="flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:border-accent-green/30 transition-colors">
                   <div className="flex items-center space-x-4">
-                    <div className="p-4 rounded-xl bg-accent-green/10">
+                    <div className="p-3 rounded-xl bg-accent-green/10">
                       <resource.icon className="w-6 h-6 text-accent-green" />
                     </div>
                     <div>
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-bold text-lg group-hover:text-accent-green transition-colors">{t(`sarEdu.nasaResources.${resource.key}.title`)}</h4>
+                        <h4 className="font-semibold text-lg group-hover:text-accent-green transition-colors">{t(`sarEdu.nasaResources.${resource.key}.title`)}</h4>
                         <span className="px-2 py-0.5 text-xs rounded-full bg-accent-green/20 text-accent-green">{t(`sarEdu.nasaResources.categories.${resource.category}`)}</span>
                       </div>
                       <p className="text-secondary">{t(`sarEdu.nasaResources.${resource.key}.desc`)}</p>
@@ -252,7 +256,7 @@ export default function SarEdu() {
                   <div className="p-3 rounded-xl bg-accent-green/10 mb-4">
                     <app.icon className="w-6 h-6 text-accent-green" />
                   </div>
-                  <h4 className="font-bold text-lg mb-2">{t(app.titleKey)}</h4>
+                  <h4 className="font-semibold text-lg mb-2">{t(app.titleKey)}</h4>
                   <p className="text-secondary text-sm">{t(app.descKey)}</p>
                 </Card>
               ))}
@@ -273,7 +277,7 @@ export default function SarEdu() {
           <p className="section-subtitle">{t('sarEdu.subtitle')}</p>
         </div>
 
-        <div className="mb-10" role="tablist" aria-label="SAR Education sections">
+        <div className="mb-8" role="tablist" aria-label="SAR Education sections">
           <div className="flex flex-wrap items-center justify-center gap-2">
             {tabs.map((tab, tIndex) => (
               <button
@@ -299,7 +303,7 @@ export default function SarEdu() {
           <TabContent />
         </div>
 
-        <div className="mt-16 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {[
             { block: 'learnMore', icon: BookOpen },
             { block: 'openTools', icon: Cpu },
@@ -310,7 +314,7 @@ export default function SarEdu() {
                 <div className="p-3 rounded-xl bg-accent-green/10">
                   <col.icon className="w-6 h-6 text-accent-green" />
                 </div>
-                <h4 className="font-bold text-lg">{t(`sarEdu.${col.block}.title`)}</h4>
+                <h4 className="font-semibold text-lg">{t(`sarEdu.${col.block}.title`)}</h4>
               </div>
               <p className="text-secondary text-sm mb-4">{t(`sarEdu.${col.block}.desc`)}</p>
               <ul className="space-y-2">
