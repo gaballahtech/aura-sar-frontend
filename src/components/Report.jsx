@@ -379,16 +379,16 @@ export default function Report() {
               <button
                 type="submit"
                 disabled={isSubmitting || !formData.photo || !formData.location || !formData.description.trim()}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-primary w-full flex items-center justify-center gap-2 text-base disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isSubmitting ? (
                   <>
-                    <Loader2 className="w-5 h-5 me-2 animate-spin" />
+                    <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                     {t('report.form.submitting')}
                   </>
                 ) : (
                   <>
-                    <Send className="w-5 h-5 me-2" />
+                    <Send className="w-5 h-5" aria-hidden="true" />
                     {t('report.form.submit')}
                   </>
                 )}
