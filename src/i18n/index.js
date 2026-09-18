@@ -38,6 +38,7 @@ const en = {
     "subtitle": "Penetrating smoke, clouds, and darkness — SAR technology provides 24/7 wildfire monitoring and early warning capabilities for California and beyond.",
     "liveStats": {
       "live": "Live",
+      "regionLabel": "Live wildfire statistics",
       "activeZones": "Active High-Risk Zones",
       "hazardIndex": "Real-Time Hazard Index",
       "recoveryRate": "Forest Regrowth Recovery Rate"
@@ -51,6 +52,7 @@ const en = {
     "title": "Interactive Wildfire Dashboard",
     "subtitle": "Real-time SAR backscatter analysis, AI risk heatmaps, and thermal anomaly detection",
     "roleToggle": {
+      "label": "Choose dashboard view",
       "firefighter": "Emergency Responders / Firefighters",
       "public": "Local Residents / Public"
     },
@@ -491,6 +493,7 @@ const ar = {
     "subtitle": "اختراق الدخان والغيوم والظلام — توفر تقنية رادار الفتحة التركيبية مراقبة حرائق الغابات على مدار الساعة وقدرات الإنذار المبكر لكاليفورنيا وما وراءها.",
     "liveStats": {
       "live": "مباشر",
+      "regionLabel": "إحصائيات حرائق الغابات المباشرة",
       "activeZones": "مناطق عالية الخطورة النشطة",
       "hazardIndex": "مؤشر الخطر في الوقت الفعلي",
       "recoveryRate": "معدل تعافي نمو الغابات"
@@ -504,6 +507,7 @@ const ar = {
     "title": "لوحة تحكم حرائق الغابات التفاعلية",
     "subtitle": "تحليل ارتداد رادار الفتحة التركيبية في الوقت الفعلي، وخرائط الحرارة لمخاطر الحرائق بالذكاء الاصطناعي، وكشف الشذوذ الحراري",
     "roleToggle": {
+      "label": "اختر عرض لوحة التحكم",
       "firefighter": "فرق الاستجابة للطوارئ / رجال الإطفاء",
       "public": "السكان المحليون / الجمهور"
     },

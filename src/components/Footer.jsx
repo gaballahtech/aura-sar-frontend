@@ -75,7 +75,7 @@ export default function Footer() {
             </p>
           </div>
 
-          <nav aria-label="Product links">
+          <nav aria-label={t('footer.columnHeaders.product')}>
             <h4 className="font-semibold text-primary mb-4">{t('footer.columnHeaders.product')}</h4>
             <ul className="space-y-3">
               {footerLinks.product.map((link, i) => (
@@ -97,7 +97,7 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <nav aria-label="Resources links">
+          <nav aria-label={t('footer.columnHeaders.resources')}>
             <h4 className="font-semibold text-primary mb-4">{t('footer.columnHeaders.resources')}</h4>
             <ul className="space-y-3">
               {footerLinks.resources.map((link, i) => (
@@ -109,14 +109,14 @@ export default function Footer() {
                     className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{t(`footer.${link.labelKey}`)}</span>
-                    {link.external && <Globe className="w-3 h-3" />}
+                    {link.external && <Globe className="w-3 h-3" aria-hidden="true" />}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <nav aria-label="Community links">
+          <nav aria-label={t('footer.columnHeaders.community')}>
             <h4 className="font-semibold text-primary mb-4">{t('footer.columnHeaders.community')}</h4>
             <ul className="space-y-3">
               {footerLinks.community.map((link, i) => (
@@ -128,14 +128,14 @@ export default function Footer() {
                     className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{t(`footer.${link.labelKey}`)}</span>
-                    {link.external && <Globe className="w-3 h-3" />}
+                    {link.external && <Globe className="w-3 h-3" aria-hidden="true" />}
                   </a>
                 </li>
               ))}
             </ul>
           </nav>
 
-          <nav aria-label="Legal links">
+          <nav aria-label={t('footer.columnHeaders.legal')}>
             <h4 className="font-semibold text-primary mb-4">{t('footer.columnHeaders.legal')}</h4>
             <ul className="space-y-3">
               {footerLinks.legal.map((link, i) => (

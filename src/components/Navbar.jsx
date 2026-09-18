@@ -241,6 +241,7 @@ export default function Navbar() {
               : 'max-h-0 opacity-0 invisible pointer-events-none'
           }`}
           aria-hidden={!isMenuOpen}
+          inert={!isMenuOpen}
         >
           <div className="py-4 space-y-2 border-t border-subtle">
             {navLinks.map((link) => (

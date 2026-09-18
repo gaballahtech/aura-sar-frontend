@@ -48,7 +48,7 @@ export default function Hero() {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full liquid-surface mb-8 animate-slide-up">
-            <Sparkles className="w-4 h-4 text-accent-green" />
+            <Sparkles className="w-4 h-4 text-accent-green" aria-hidden="true" />
             <span className="text-sm font-medium text-secondary">
               {t('footer.nasaChallenge')} 2025 — {t('footer.challengeTheme')}
             </span>
@@ -72,7 +72,7 @@ export default function Hero() {
               className="btn-primary group flex items-center space-x-2 text-lg px-8 py-4"
             >
               <span>{t('hero.cta.exploreMap')}</span>
-              <ArrowRight className="w-5 h-5 rtl:-scale-x-100 transition-transform ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
+              <ArrowRight className="w-5 h-5 rtl:-scale-x-100 transition-transform ltr:group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden="true" />
             </button>
             <button
               onClick={() => scrollToSection('report')}
@@ -83,7 +83,7 @@ export default function Hero() {
           </div>
 
           {statsVisible && (
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label="Live Statistics">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 animate-slide-up" style={{ animationDelay: '400ms' }} role="region" aria-label={t('hero.liveStats.regionLabel')} aria-live="polite">
               {statsData.map((stat, index) => (
                 <div
                   key={stat.key}
@@ -101,7 +101,7 @@ export default function Hero() {
                     <span className="text-lg font-semibold text-muted mb-1">{stat.suffix}</span>
                   </div>
                   <div className="mt-3 flex items-center space-x-1 text-xs text-accent-green">
-                    <span className="animate-pulse">●</span>
+                    <span className="animate-pulse" aria-hidden="true">●</span>
                     <span>{t('hero.liveStats.live')}</span>
                   </div>
                 </div>

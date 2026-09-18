@@ -82,12 +82,12 @@ const SeverityLegend = ({ theme, t }) => {
     <div className="bg-card p-3 min-w-[180px]">
       <h4 className="font-semibold text-primary mb-2">{t('dashboard.firefighterView.severity')}</h4>
       <div className="space-y-2">
-        {severities.map((s, i) => (
-          <div key={i} className="flex items-center space-x-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.dot }} />
-            <span className="text-sm text-secondary">{s.label}</span>
-          </div>
-        ))}
+          {severities.map((s, i) => (
+            <div key={i} className="flex items-center space-x-2">
+              <div className="w-3 h-3 rounded-full" style={{ backgroundColor: s.dot }} aria-hidden="true" />
+              <span className="text-sm text-secondary">{s.label}</span>
+            </div>
+          ))}
       </div>
     </div>
   );
@@ -233,7 +233,7 @@ export default function Dashboard() {
         </div>
 
         <div className="mb-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-4" role="radiogroup" aria-label={t('dashboard.roleToggle.firefighter')}>
+          <div className="flex items-center space-x-4" role="radiogroup" aria-label={t('dashboard.roleToggle.label')}>
             {ROLE_OPTIONS.map((roleValue, index) => {
               const role = { value: roleValue, label: t(`dashboard.roleToggle.${roleValue}`), icon: roleValue === 'firefighter' ? Flame : Shield };
               return (
@@ -272,7 +272,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative" role="region" aria-label={t('dashboard.title')}>
           <div className="relative h-[420px] md:h-[520px] rounded-2xl overflow-hidden">
             <MapContainer
               center={CALIFORNIA_CENTER}
@@ -358,7 +358,7 @@ export default function Dashboard() {
                 </h3>
                 <span className="text-xs px-2 py-1 bg-accent-green/20 text-accent-green rounded-full">{t('dashboard.firefighterView.liveBadge')}</span>
               </div>
-              <div className="space-y-3 max-h-[300px] overflow-y-auto">
+              <div className="space-y-3 max-h-[300px] overflow-y-auto" role="log" aria-live="polite" aria-label={t('dashboard.firefighterView.earlyWarnings')}>
                 {alerts.map(alert => (
                   <div
                     key={alert.id}

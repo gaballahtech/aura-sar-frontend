@@ -41,6 +41,18 @@ export default function Report() {
   );
   const [visibleCount, setVisibleCount] = useState(3);
   const fileInputRef = useRef(null);
+  const tabRefs = useRef([]);
+  const reportTabs = ['submit', 'feed'];
+
+  const handleTabKeyDown = (e, index) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const next = e.key === 'ArrowRight'
+      ? (index + 1) % reportTabs.length
+      : (index - 1 + reportTabs.length) % reportTabs.length;
+    setActiveTab(reportTabs[next]);
+    tabRefs.current[next]?.focus();
+  };
 
   const handleVote = (id, dir) => {
     setVotes(prev => {
@@ -177,21 +189,29 @@ export default function Report() {
 
         <div className="mb-8" role="tablist" aria-label="Report sections">
           <button
+            ref={el => (tabRefs.current[0] = el)}
             onClick={() => setActiveTab('submit')}
+            onKeyDown={(e) => handleTabKeyDown(e, 0)}
             className={tabButtonClass(activeTab === 'submit')}
             role="tab"
+            id="tab-submit"
             aria-selected={activeTab === 'submit'}
             aria-controls="submit-panel"
+            tabIndex={activeTab === 'submit' ? 0 : -1}
           >
             <Send className="w-4 h-4 me-2 inline" />
             {t('report.form.title')}
           </button>
           <button
+            ref={el => (tabRefs.current[1] = el)}
             onClick={() => setActiveTab('feed')}
+            onKeyDown={(e) => handleTabKeyDown(e, 1)}
             className={tabButtonClass(activeTab === 'feed') + ' ms-2'}
             role="tab"
+            id="tab-feed"
             aria-selected={activeTab === 'feed'}
             aria-controls="feed-panel"
+            tabIndex={activeTab === 'feed' ? 0 : -1}
           >
             <Users className="w-4 h-4 me-2 inline" />
             {t('report.communityFeed.title')}
@@ -199,7 +219,7 @@ export default function Report() {
         </div>
 
         {activeTab === 'submit' && (
-          <div id="submit-panel" role="tabpanel" className="animate-slide-up">
+          <div id="submit-panel" role="tabpanel" aria-labelledby="tab-submit" tabIndex={0} className="animate-slide-up">
             <form onSubmit={handleSubmit} className="bg-card max-w-2xl mx-auto" noValidate>
               {submitStatus && (
                 <div
@@ -232,8 +252,6 @@ export default function Report() {
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  role="button"
-                  aria-label={t('report.form.photo')} 
                 >
                   <input
                     ref={fileInputRef}
@@ -275,12 +293,13 @@ export default function Report() {
               </div>
 
               <div className="mb-6">
-                <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
+                <label htmlFor="report-location" className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
                   <MapPin className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.location')}</span>
                 </label>
                 <div className="relative">
                   <input
+                    id="report-location"
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
@@ -305,12 +324,21 @@ export default function Report() {
                   <AlertCircle className="w-5 h-5 text-accent-green" />
                   <span>{t('report.form.hazardType')}</span>
                 </label>
-                <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Hazard type">
-                  {hazardTypes.map(hazard => (
+                <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label={t('report.form.hazardType')}>
+                  {hazardTypes.map((hazard, hIndex) => (
                     <button
                       key={hazard.value}
                       type="button"
                       onClick={() => setFormData(prev => ({ ...prev, hazardType: hazard.value }))}
+                      onKeyDown={(e) => {
+                        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+                        e.preventDefault();
+                        const dir = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1 : -1;
+                        const next = hazardTypes[(hIndex + dir + hazardTypes.length) % hazardTypes.length];
+                        setFormData(prev => ({ ...prev, hazardType: next.value }));
+                        document.getElementById(`hazard-${next.value}`)?.focus();
+                      }}
+                      id={`hazard-${hazard.value}`}
                       className={`relative p-4 rounded-xl text-start transition-all ${
                         formData.hazardType === hazard.value
                           ? 'ring-2 ring-accent-green bg-accent-green/10'
@@ -318,6 +346,7 @@ export default function Report() {
                       }`}
                       role="radio"
                       aria-checked={formData.hazardType === hazard.value}
+                      tabIndex={formData.hazardType === hazard.value ? 0 : -1}
                     >
                       <div className="flex items-center space-x-3">
                         {hazard.icon && <hazard.icon className="w-8 h-8 text-accent-green" />}
@@ -332,10 +361,11 @@ export default function Report() {
               </div>
 
               <div className="mb-8">
-                <label className="block text-sm font-medium text-secondary mb-3">
+                <label htmlFor="report-description" className="block text-sm font-medium text-secondary mb-3">
                   {t('report.form.description')}
                 </label>
                 <textarea
+                  id="report-description"
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder={t('report.form.descriptionPlaceholder')}
@@ -368,7 +398,7 @@ export default function Report() {
         )}
 
         {activeTab === 'feed' && (
-          <div id="feed-panel" role="tabpanel" className="animate-slide-up">
+          <div id="feed-panel" role="tabpanel" aria-labelledby="tab-feed" tabIndex={0} className="animate-slide-up">
             <div className="bg-card">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">

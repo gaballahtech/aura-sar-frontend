@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalLink, ChevronRight, BookOpen, Flame, Ruler, Building2, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
 
@@ -50,6 +50,7 @@ export default function SarEdu() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState('frequencies');
   const tabIds = ['frequencies', 'polarizations', 'scattering', 'resources', 'applications'];
+  const tabRefs = useRef([]);
 
   const handleTabKeyDown = (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
@@ -57,6 +58,7 @@ export default function SarEdu() {
     const currentIndex = tabIds.indexOf(activeTab);
     const nextIndex = e.key === 'ArrowRight' ? (currentIndex + 1) % tabIds.length : (currentIndex - 1 + tabIds.length) % tabIds.length;
     setActiveTab(tabIds[nextIndex]);
+    tabRefs.current[nextIndex]?.focus();
   };
 
   const tabs = [
@@ -273,13 +275,15 @@ export default function SarEdu() {
 
         <div className="mb-10" role="tablist" aria-label="SAR Education sections">
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {tabs.map(tab => (
+            {tabs.map((tab, tIndex) => (
               <button
                 key={tab.id}
+                ref={el => (tabRefs.current[tIndex] = el)}
                 onClick={() => setActiveTab(tab.id)}
                 onKeyDown={handleTabKeyDown}
                 className={tabButtonClass(activeTab === tab.id)}
                 role="tab"
+                id={`saredu-tab-${tab.id}`}
                 aria-selected={activeTab === tab.id}
                 aria-controls={`${tab.id}-panel`}
                 tabIndex={activeTab === tab.id ? 0 : -1}
@@ -291,7 +295,7 @@ export default function SarEdu() {
           </div>
         </div>
 
-        <div id={`${activeTab}-panel`} role="tabpanel" className="animate-slide-up">
+        <div id={`${activeTab}-panel`} role="tabpanel" aria-labelledby={`saredu-tab-${activeTab}`} tabIndex={0} className="animate-slide-up">
           <TabContent />
         </div>
 

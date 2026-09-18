@@ -70,6 +70,7 @@ export default function Analytics() {
   const [sceneWKT, setSceneWKT] = useState('');
   const chartRefs = useRef({});
   const rangeRefs = useRef({});
+  const comparisonRefs = useRef({});
   const wktRef = useRef('');
 
   useEffect(() => {
@@ -217,7 +218,7 @@ export default function Analytics() {
           </button>
         </div>
       </div>
-      <div className="h-[300px] md:h-[350px] chart-body">
+      <div className="h-[300px] md:h-[350px] chart-body" role="img" aria-label={title}>
         {children}
       </div>
     </div>
@@ -238,17 +239,29 @@ export default function Analytics() {
               <span>{t('analytics.comparisonSlider.title')}</span>
             </h3>
             <div className="relative">
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between mb-8" role="radiogroup" aria-label={t('analytics.comparisonSlider.title')}>
                 {comparisonImages.map((img, index) => (
                   <button
                     key={index}
+                    ref={el => (comparisonRefs.current[index] = el)}
                     onClick={() => setActiveComparison(index)}
+                    onKeyDown={(e) => {
+                      if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+                      e.preventDefault();
+                      const next = e.key === 'ArrowRight'
+                        ? (index + 1) % comparisonImages.length
+                        : (index - 1 + comparisonImages.length) % comparisonImages.length;
+                      setActiveComparison(next);
+                      comparisonRefs.current[next]?.focus();
+                    }}
                     className={`flex flex-col items-center space-x-2 px-4 py-3 rounded-xl transition-all ${
                       activeComparison === index
                         ? 'bg-accent-green/20 text-accent-green ring-2 ring-accent-green/50'
                         : 'bg-glass hover:bg-glass-subtle'
                     }`}
-                    aria-pressed={activeComparison === index}
+                    role="radio"
+                    aria-checked={activeComparison === index}
+                    tabIndex={activeComparison === index ? 0 : -1}
                   >
                     <span className="font-semibold">{t(`analytics.comparison.${img.key}.label`)}</span>
                     <span className="text-xs text-muted">{t(`analytics.comparison.${img.key}.date`)}</span>
@@ -349,7 +362,9 @@ export default function Analytics() {
                 )}
               </h3>
               <div className="flex flex-wrap items-center gap-2">
+                <label htmlFor="sar-wkt-input" className="sr-only">{t('analytics.sarCatalog.wktLabel')}</label>
                 <input
+                  id="sar-wkt-input"
                   type="text"
                   value={sceneWKT}
                   onChange={(e) => setSceneWKT(e.target.value)}
@@ -371,7 +386,7 @@ export default function Analytics() {
             <p className="text-sm text-muted mb-4">{t('analytics.sarCatalog.subtitle')}</p>
 
             {scenes.length === 0 && !sceneLoading && (
-              <p className="text-center text-muted py-6">{t('analytics.sarCatalog.empty')}</p>
+              <p className="text-center text-muted py-6" role="status">{t('analytics.sarCatalog.empty')}</p>
             )}
 
             <div className="overflow-x-auto">
