@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import { Camera, MapPin, Send, CheckCircle, AlertCircle, Loader2, Image, X, Map, Users, Shield, Wind, Flame, TreePine, Mountain, ThumbsUp, ThumbsDown } from 'lucide-react';
 
 const hazardTypes = [
@@ -18,7 +17,7 @@ const mockReports = [
   { id: 5, type: 'smoke', location: 'East Bay Hills', coords: '37.85°N, 122.18°W', description: 'Smoke drifting into residential areas', verified: false, reporter: 'Community Watch', time: '5 hours ago', votes: 7 },
 ];
 
-const tabButtonClass = (isActive, theme) => `
+const tabButtonClass = (isActive) => `
   px-6 py-3 rounded-xl font-medium transition-all ${isActive
     ? 'bg-accent-green text-primary-dark'
     : 'bg-card hover:bg-card-hover'
@@ -26,7 +25,6 @@ const tabButtonClass = (isActive, theme) => `
 
 export default function Report() {
   const { t } = useTranslation();
-  const { theme } = useTheme();
   const [activeTab, setActiveTab] = useState('submit');
   const [formData, setFormData] = useState({
     photo: null,
@@ -38,7 +36,28 @@ export default function Report() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
+  const [votes, setVotes] = useState(() =>
+    Object.fromEntries(mockReports.map(r => [r.id, { up: r.votes, down: 2, mine: null }]))
+  );
+  const [visibleCount, setVisibleCount] = useState(3);
   const fileInputRef = useRef(null);
+
+  const handleVote = (id, dir) => {
+    setVotes(prev => {
+      const cur = prev[id] || { up: 0, down: 0, mine: null };
+      if (cur.mine === dir) {
+        return { ...prev, [id]: { up: cur.up - (dir === 'up' ? 1 : 0), down: cur.down - (dir === 'down' ? 1 : 0), mine: null } };
+      }
+      return {
+        ...prev,
+        [id]: {
+          up: cur.up + (dir === 'up' ? 1 : 0) - (cur.mine === 'up' ? 1 : 0),
+          down: cur.down + (dir === 'down' ? 1 : 0) - (cur.mine === 'down' ? 1 : 0),
+          mine: dir,
+        },
+      };
+    });
+  };
 
   const handlePhotoUpload = (file) => {
     if (file && file.type.startsWith('image/')) {
@@ -82,17 +101,21 @@ export default function Report() {
     }
 
     setFormData(prev => ({ ...prev, location: t('common.loading') }));
+    const formatCoords = (latitude, longitude) =>
+      `${Math.abs(latitude).toFixed(6)}°${latitude >= 0 ? 'N' : 'S'}, ${Math.abs(longitude).toFixed(6)}°${longitude >= 0 ? 'E' : 'W'}`;
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        const coords = `${latitude.toFixed(6)}°N, ${Math.abs(longitude).toFixed(6)}°${longitude >= 0 ? 'E' : 'W'}`;
-        setFormData(prev => ({ ...prev, location: coords }));
+        setFormData(prev => ({ ...prev, location: formatCoords(latitude, longitude) }));
         setUserLocation({ lat: latitude, lng: longitude });
       },
       (error) => {
         setFormData(prev => ({ ...prev, location: '' }));
-        setSubmitStatus({ type: 'error', message: t('report.form.geolocationFailed') });
+        const message = error && error.code === error.PERMISSION_DENIED
+          ? t('report.form.geolocationDenied')
+          : t('report.form.geolocationFailed');
+        setSubmitStatus({ type: 'error', message });
       },
       { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
     );
@@ -155,7 +178,7 @@ export default function Report() {
         <div className="mb-8" role="tablist" aria-label="Report sections">
           <button
             onClick={() => setActiveTab('submit')}
-            className={tabButtonClass(activeTab === 'submit', theme)}
+            className={tabButtonClass(activeTab === 'submit')}
             role="tab"
             aria-selected={activeTab === 'submit'}
             aria-controls="submit-panel"
@@ -165,7 +188,7 @@ export default function Report() {
           </button>
           <button
             onClick={() => setActiveTab('feed')}
-            className={tabButtonClass(activeTab === 'feed', theme) + ' ms-2'}
+            className={tabButtonClass(activeTab === 'feed') + ' ms-2'}
             role="tab"
             aria-selected={activeTab === 'feed'}
             aria-controls="feed-panel"
@@ -244,7 +267,7 @@ export default function Report() {
                       <p className="text-secondary mb-1">{t('report.form.photoHint')}</p>
                       <p className="text-sm text-muted">{t('report.form.clickOrDrag')}</p>
                       <label htmlFor="photo-upload" className="mt-4 inline-block">
-                        <span className="btn-secondary">{t('common.upload') || 'Browse Files'}</span>
+                        <span className="btn-secondary">{t('common.upload')}</span>
                       </label>
                     </>
                   )}
@@ -365,8 +388,10 @@ export default function Report() {
               </div>
 
               <div className="space-y-4">
-                {mockReports.map(report => {
+                {mockReports.slice(0, visibleCount).map(report => {
                   const item = t(`report.communityFeed.items.${report.id}`, { returnObjects: true });
+                  if (!item || typeof item !== 'object') return null;
+                  const vote = votes[report.id] || { up: report.votes, down: 2, mine: null };
                   return (
                     <div
                       key={report.id}
@@ -393,20 +418,30 @@ export default function Report() {
                       </div>
                       <p className="text-secondary mb-3">{item.description}</p>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4 text-sm">
-                          <button className="flex items-center space-x-1 text-secondary hover:text-accent-green transition-colors">
+                        <div className="flex items-center space-x-4 text-sm" role="group" aria-label={t('report.communityFeed.title')}>
+                          <button
+                            onClick={() => handleVote(report.id, 'up')}
+                            aria-pressed={vote.mine === 'up'}
+                            aria-label={t('report.communityFeed.upvote')}
+                            className={`flex items-center space-x-1 transition-colors ${vote.mine === 'up' ? 'text-accent-green' : 'text-secondary hover:text-accent-green'}`}
+                          >
                             <ThumbsUp className="w-5 h-5" />
-                            <span>{report.votes}</span>
+                            <span>{vote.up}</span>
                           </button>
-                          <button className="flex items-center space-x-1 text-secondary hover:text-danger transition-colors">
+                          <button
+                            onClick={() => handleVote(report.id, 'down')}
+                            aria-pressed={vote.mine === 'down'}
+                            aria-label={t('report.communityFeed.downvote')}
+                            className={`flex items-center space-x-1 transition-colors ${vote.mine === 'down' ? 'text-danger' : 'text-secondary hover:text-danger'}`}
+                          >
                             <ThumbsDown className="w-5 h-5" />
-                            <span>2</span>
+                            <span>{vote.down}</span>
                           </button>
                         </div>
                         {!report.verified && (
-                          <button className="text-xs px-3 py-1.5 bg-accent-green/20 text-accent-green rounded-full hover:bg-accent-green/30 transition-colors">
-                            {t('report.communityFeed.verified')}?
-                          </button>
+                          <span className="text-xs px-3 py-1.5 bg-accent-green/20 text-accent-green rounded-full">
+                            {t('report.communityFeed.pending')}
+                          </span>
                         )}
                       </div>
                     </div>
@@ -414,11 +449,13 @@ export default function Report() {
                 })}
               </div>
 
-              <div className="mt-6 text-center">
-                <button className="btn-secondary">
-                  {t('common.loadMore')}
-                </button>
-              </div>
+              {visibleCount < mockReports.length && (
+                <div className="mt-6 text-center">
+                  <button className="btn-secondary" onClick={() => setVisibleCount(mockReports.length)}>
+                    {t('common.loadMore')}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

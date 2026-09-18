@@ -1,8 +1,7 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../context/ThemeContext';
 import { MapContainer, TileLayer, LayerGroup, CircleMarker, Popup } from 'react-leaflet';
-import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Layers, Flame, Wind, AlertTriangle, Shield, Truck, Cloud, RotateCcw } from 'lucide-react';
 
@@ -284,13 +283,32 @@ export default function Dashboard() {
               className="h-full w-full"
               attributionControl={false}
             >
-              <TileLayer
-                url={theme === 'dark'
-                  ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                  : 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-                }
-                attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
-              />
+              {mapLayers.sarBackscatter && (
+                <TileLayer
+                  url={theme === 'dark'
+                    ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+                    : 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
+                  }
+                  attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
+                />
+              )}
+
+              {activeRole === 'firefighter' && mapLayers.aiRiskHeatmap && (
+                <LayerGroup>
+                  {mockFireData.map(fire => (
+                    <CircleMarker
+                      key={`heat-${fire.id}`}
+                      center={[fire.lat, fire.lng]}
+                      radius={30 + fire.intensity * 25}
+                      pathOptions={{
+                        fillColor: '#ff4d4d',
+                        color: 'transparent',
+                        fillOpacity: 0.12,
+                      }}
+                    />
+                  ))}
+                </LayerGroup>
+              )}
 
               {activeRole === 'firefighter' && mapLayers.thermalPoints && (
                 <LayerGroup>
@@ -310,6 +328,18 @@ export default function Dashboard() {
             </MapContainer>
           </div>
 
+          {activeRole === 'firefighter' && (
+            <div className="absolute bottom-4 end-4 z-10">
+              <button
+                onClick={() => setShowControls(prev => !prev)}
+                className="p-2 rounded-xl bg-card hover:bg-card-hover text-secondary transition-colors"
+                aria-expanded={showControls}
+                aria-label={t('dashboard.firefighterView.mapLayers')}
+              >
+                <Layers className="w-5 h-5" />
+              </button>
+            </div>
+          )}
           {activeRole === 'firefighter' && showControls && (
             <div className="absolute top-4 end-4 z-10 flex flex-col gap-2">
               <LayerControl theme={theme} t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />

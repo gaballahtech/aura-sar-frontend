@@ -11,23 +11,25 @@ import { apiClient } from '../services/api';
 
 const generateBackscatterData = (locale) => {
   const data = [];
+  const totalDays = 5 * 365;
   const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - 12);
-  for (let i = 0; i < 365; i += 7) {
+  startDate.setDate(startDate.getDate() - totalDays);
+  for (let i = 0; i < totalDays; i += 7) {
     const date = new Date(startDate);
     date.setDate(date.getDate() + i);
     const seasonal = Math.sin(i / 365 * Math.PI * 2) * 3;
     const noise = (Math.random() - 0.5) * 2;
-    const trend = -0.01 * i;
-    const fireEvent = i > 180 && i < 220 ? -8 * Math.exp(-((i - 200) ** 2) / 200) : 0;
-    const recovery = i > 220 ? 2 * (1 - Math.exp(-(i - 220) / 100)) : 0;
+    const trend = -0.01 * (i / 7);
+    const fireCenter = totalDays - 300;
+    const fireEvent = i > fireCenter - 20 && i < fireCenter + 20 ? -8 * Math.exp(-((i - fireCenter) ** 2) / 200) : 0;
+    const recovery = i > fireCenter + 20 ? 2 * (1 - Math.exp(-(i - fireCenter - 20) / 100)) : 0;
     data.push({
       date: date.toLocaleDateString(locale, { month: 'short', day: 'numeric' }),
       timestamp: date.getTime(),
       backscatter: -12 + seasonal + noise + trend + fireEvent + recovery,
-      soilMoisture: 0.4 + Math.sin(i / 365 * Math.PI * 2) * 0.15 + (Math.random() - 0.5) * 0.1 + (i > 220 ? 0.15 * (1 - Math.exp(-(i - 220) / 100)) : 0),
-      fuelLoad: 0.7 + Math.sin(i / 365 * Math.PI * 2) * 0.1 + (Math.random() - 0.5) * 0.15 - (i > 180 && i < 220 ? 0.3 : 0) + (i > 220 ? 0.1 * (1 - Math.exp(-(i - 220) / 150)) : 0),
-      recovery: i > 220 ? Math.min(100, (i - 220) / 3) : 0,
+      soilMoisture: 0.4 + Math.sin(i / 365 * Math.PI * 2) * 0.15 + (Math.random() - 0.5) * 0.1 + (i > fireCenter + 20 ? 0.15 * (1 - Math.exp(-(i - fireCenter - 20) / 100)) : 0),
+      fuelLoad: 0.7 + Math.sin(i / 365 * Math.PI * 2) * 0.1 + (Math.random() - 0.5) * 0.15 - (i > fireCenter - 20 && i < fireCenter + 20 ? 0.3 : 0) + (i > fireCenter + 20 ? 0.1 * (1 - Math.exp(-(i - fireCenter - 20) / 150)) : 0),
+      recovery: i > fireCenter + 20 ? Math.min(100, (i - fireCenter - 20) / 3) : 0,
     });
   }
   return data;
@@ -81,13 +83,7 @@ export default function Analytics() {
 
   const filteredData = backscatterData.filter(d => {
     const now = Date.now();
-    const ranges = {
-      '6months': 6 * 30 * 24 * 60 * 60 * 1000,
-      '1year': 12 * 30 * 24 * 60 * 60 * 1000,
-      '3years': 36 * 30 * 24 * 60 * 60 * 1000,
-      '5years': 60 * 30 * 24 * 60 * 60 * 1000,
-    };
-    return now - d.timestamp <= ranges[timeRange];
+    return now - d.timestamp <= SAR_TIME_RANGES[timeRange];
   });
 
   const chartColors = {
@@ -129,9 +125,18 @@ export default function Analytics() {
     const el = chartRefs.current[id];
     if (!el) return;
     if (document.fullscreenElement) {
-      document.exitFullscreen?.();
+      document.exitFullscreen?.().catch(() => setShowFullscreen(null));
     } else {
-      el.requestFullscreen?.();
+      try {
+        const req = el.requestFullscreen?.();
+        if (req && typeof req.then === 'function') {
+          req.then(() => setShowFullscreen(id)).catch(() => setShowFullscreen(null));
+        } else {
+          setShowFullscreen(id);
+        }
+      } catch {
+        setShowFullscreen(null);
+      }
     }
   };
 
@@ -147,7 +152,9 @@ export default function Analytics() {
     const a = document.createElement('a');
     a.href = url;
     a.download = `aura-sar-${id}.csv`;
+    document.body.appendChild(a);
     a.click();
+    a.remove();
     URL.revokeObjectURL(url);
   };
 
@@ -157,15 +164,21 @@ export default function Analytics() {
     const endDate = new Date(now).toISOString();
     const wkt = wktRef.current.trim();
     setSceneLoading(true);
-    const res = await apiClient.searchSARScenes({
-      wkt: wkt || undefined,
-      startDate,
-      endDate,
-      maxResults: 12,
-    });
-    setScenes(res.data);
-    setSceneSource(res.message === 'mock-fallback' ? 'mock' : res.success ? 'live' : 'error');
-    setSceneLoading(false);
+    try {
+      const res = await apiClient.searchSARScenes({
+        wkt: wkt || undefined,
+        startDate,
+        endDate,
+        maxResults: 12,
+      });
+      setScenes(Array.isArray(res?.data) ? res.data : []);
+      setSceneSource(res?.message === 'mock-fallback' ? 'mock' : res?.success ? 'live' : 'error');
+    } catch {
+      setScenes([]);
+      setSceneSource('error');
+    } finally {
+      setSceneLoading(false);
+    }
   }, [timeRange]);
 
   useEffect(() => {

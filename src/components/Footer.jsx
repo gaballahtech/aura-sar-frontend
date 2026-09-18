@@ -25,13 +25,13 @@ export default function Footer() {
       { labelKey: 'communityLinks.github', href: 'https://github.com/gaballahtech/aura-sar-frontend', external: true },
       { labelKey: 'communityLinks.issues', href: 'https://github.com/gaballahtech/aura-sar-frontend/issues', external: true },
       { labelKey: 'communityLinks.contribute', href: 'https://github.com/gaballahtech/aura-sar-frontend/pulls', external: true },
-      { labelKey: 'communityLinks.documentation', href: '#', external: false },
+      { labelKey: 'communityLinks.documentation', href: 'https://github.com/gaballahtech/aura-sar-frontend', external: true },
     ],
     legal: [
-      { labelKey: 'legalLinks.privacy', href: '#' },
-      { labelKey: 'legalLinks.terms', href: '#' },
-      { labelKey: 'legalLinks.dataUsage', href: '#' },
-      { labelKey: 'legalLinks.disclaimer', href: '#' },
+      { labelKey: 'legalLinks.privacy' },
+      { labelKey: 'legalLinks.terms' },
+      { labelKey: 'legalLinks.dataUsage' },
+      { labelKey: 'legalLinks.disclaimer' },
     ],
   };
 
@@ -39,7 +39,6 @@ export default function Footer() {
     { icon: GitFork, href: 'https://github.com/gaballahtech/aura-sar-frontend', label: 'GitHub' },
     { icon: MessageSquare, href: 'https://spaceappschallenge.org/', label: 'Space Apps' },
     { icon: Users, href: 'https://linkedin.com/', label: 'LinkedIn' },
-    { icon: Globe, href: '#', label: 'Website' },
   ];
 
   const badges = [
@@ -141,12 +140,9 @@ export default function Footer() {
             <ul className="space-y-3">
               {footerLinks.legal.map((link, i) => (
                 <li key={i}>
-                  <a
-                    href={link.href}
-                    className="text-secondary hover:text-accent-green transition-colors text-sm"
-                  >
+                  <span className="text-muted text-sm cursor-default">
                     {t(`footer.${link.labelKey}`)}
-                  </a>
+                  </span>
                 </li>
               ))}
             </ul>

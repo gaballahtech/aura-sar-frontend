@@ -22,11 +22,11 @@ const scatteringMechanisms = [
 ];
 
 const nasaResourceKeys = [
-  { key: 'asf', icon: Satellite, url: 'https://vertex.daac.asf.alaska.edu/' },
-  { key: 'nisar', icon: Satellite, url: 'https://nisar.jpl.nasa.gov/' },
-  { key: 'uavsar', icon: Cloud, url: 'https://uavsar.jpl.nasa.gov/' },
-  { key: 'gee', icon: Cpu, url: 'https://earthengine.google.com/' },
-  { key: 'capella', icon: Database, url: 'https://capellaspace.com/' },
+  { key: 'asf', icon: Satellite, url: 'https://vertex.daac.asf.alaska.edu/', category: 'dataAccess' },
+  { key: 'nisar', icon: Satellite, url: 'https://nisar.jpl.nasa.gov/', category: 'mission' },
+  { key: 'uavsar', icon: Cloud, url: 'https://uavsar.jpl.nasa.gov/', category: 'airborne' },
+  { key: 'gee', icon: Cpu, url: 'https://earthengine.google.com/', category: 'platform' },
+  { key: 'capella', icon: Database, url: 'https://capellaspace.com/', category: 'commercial' },
 ];
 
 const decompositionItems = ['surface', 'doubleBounce', 'volume'];
@@ -218,7 +218,7 @@ export default function SarEdu() {
                     <div>
                       <div className="flex items-center space-x-2 mb-1">
                         <h4 className="font-bold text-lg group-hover:text-accent-green transition-colors">{t(`sarEdu.nasaResources.${resource.key}.title`)}</h4>
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-accent-green/20 text-accent-green">{t(`sarEdu.nasaResources.categories.${t(`sarEdu.nasaResources.${resource.key}.category`)}`)}</span>
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-accent-green/20 text-accent-green">{t(`sarEdu.nasaResources.categories.${resource.category}`)}</span>
                       </div>
                       <p className="text-secondary">{t(`sarEdu.nasaResources.${resource.key}.desc`)}</p>
                     </div>
@@ -310,12 +310,16 @@ export default function SarEdu() {
               </div>
               <p className="text-secondary text-sm mb-4">{t(`sarEdu.${col.block}.desc`)}</p>
               <ul className="space-y-2">
-                {t(`sarEdu.${col.block}.items`, { returnObjects: true }).map((item, j) => (
-                  <li key={j} className="flex items-center space-x-2 text-sm text-secondary">
-                    <ChevronRight className="w-4 h-4 text-accent-green/50 rtl:-scale-x-100" />
-                    <span>{item}</span>
-                  </li>
-                ))}
+                {(() => {
+                  const items = t(`sarEdu.${col.block}.items`, { returnObjects: true });
+                  if (!Array.isArray(items)) return null;
+                  return items.map((item, j) => (
+                    <li key={j} className="flex items-center space-x-2 text-sm text-secondary">
+                      <ChevronRight className="w-4 h-4 text-accent-green/50 rtl:-scale-x-100" />
+                      <span>{item}</span>
+                    </li>
+                  ));
+                })()}
               </ul>
             </Card>
           ))}

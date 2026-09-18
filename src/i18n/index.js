@@ -232,6 +232,7 @@ const en = {
       "photoTooLarge": "Photo exceeds the 10MB size limit.",
       "geolocationUnsupported": "Geolocation is not supported by your browser.",
       "geolocationFailed": "Unable to retrieve your location. Please enable location services or enter coordinates manually.",
+      "geolocationDenied": "Location permission was denied. Please allow location access or enter coordinates manually.",
       "fillRequired": "Please fill all required fields",
       "location": "GPS Location",
       "locationHint": "Auto-detected or manually enter coordinates",
@@ -257,6 +258,8 @@ const en = {
       "pending": "Pending Verification",
       "reportedBy": "Reported by",
       "timeAgo": "time ago",
+      "upvote": "Mark report as helpful",
+      "downvote": "Mark report as not helpful",
       "items": {
         "1": { "location": "Big Sur, CA", "coords": "36.27°N, 121.80°W", "description": "Active flames visible on ridge line, moving north", "reporter": "Fire Watcher #847", "time": "15 min ago" },
         "2": { "location": "Santa Cruz Mountains", "coords": "37.12°N, 122.05°W", "description": "Heavy smoke column rising, visibility < 1 mile", "reporter": "Local Resident", "time": "42 min ago" },
@@ -446,7 +449,8 @@ const en = {
     "print": "Print",
     "fullscreen": "Fullscreen",
     "exitFullscreen": "Exit Fullscreen",
-    "loadMore": "Load More Reports"
+    "loadMore": "Load More Reports",
+    "upload": "Browse Files"
   }
 };
 
@@ -681,6 +685,7 @@ const ar = {
       "photoTooLarge": "الصورة تتجاوز حد 10 ميجابايت.",
       "geolocationUnsupported": "تحديد الموقع غير مدعوم في متصفحك.",
       "geolocationFailed": "تعذر تحديد موقعك. يرجى تفعيل خدمات الموقع أو إدخال الإحداثيات يدوياً.",
+      "geolocationDenied": "تم رفض إذن الموقع. يرجى السماح بالوصول إلى الموقع أو إدخال الإحداثيات يدوياً.",
       "fillRequired": "يرجى ملء جميع الحقول المطلوبة",
       "location": "موقع نظام تحديد المواقع",
       "locationHint": "يتم اكتشافه تلقائياً أو أدخل الإحداثيات يدوياً",
@@ -706,6 +711,8 @@ const ar = {
       "pending": "قيد التحقق",
       "reportedBy": "أبلغ بواسطة",
       "timeAgo": "منذ",
+      "upvote": "وضع علامة على التقرير كمفيد",
+      "downvote": "وضع علامة على التقرير كغير مفيد",
       "items": {
         "1": { "location": "بيغ سور، كاليفورنيا", "coords": "36.27°شمالاً، 121.80°غرباً", "description": "لهب نشط ظاهر على خط التلال، يتحرك شمالاً", "reporter": "رقيب الحرائق #847", "time": "قبل 15 دقيقة" },
         "2": { "location": "جبال سانتا كروز", "coords": "37.12°شمالاً، 122.05°غرباً", "description": "عمود دخان كثيف يرتفع، الرؤية أقل من ميل واحد", "reporter": "ساكن محلي", "time": "قبل 42 دقيقة" },
@@ -895,7 +902,8 @@ const ar = {
     "print": "طباعة",
     "fullscreen": "ملء الشاشة",
     "exitFullscreen": "الخروج من ملء الشاشة",
-    "loadMore": "تحميل المزيد من التقارير"
+    "loadMore": "تحميل المزيد من التقارير",
+    "upload": "تصفح الملفات"
   }
 };
 
