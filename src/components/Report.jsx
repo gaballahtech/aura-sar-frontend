@@ -349,7 +349,7 @@ export default function Report() {
                       tabIndex={formData.hazardType === hazard.value ? 0 : -1}
                     >
                       <div className="flex items-center space-x-3">
-                        {hazard.icon && <hazard.icon className="w-8 h-8 text-accent-green" />}
+                        {hazard.icon && <hazard.icon className="w-6 h-6 text-accent-green" />}
                         <span className="font-medium text-primary">{t(hazard.labelKey)}</span>
                       </div>
                       {formData.hazardType === hazard.value && (
