@@ -4,6 +4,9 @@
   --color-primary-dark: #0A0F0A;
   --color-primary-navy: #143D1A;
   --color-accent-green: #39FF14;
+  --color-accent-green-bright: #8AFF5C;
+  --color-accent-green-dim: #1FBF08;
+  --color-accent-green-deep: #0E2A10;
   --color-accent-red: #ff4d4d;
 
   --font-sans: "JetBrains Mono", "Noto Sans Arabic", ui-monospace, monospace;
@@ -367,7 +370,7 @@
 }
 
 @utility text-gradient {
-  background: linear-gradient(90deg, var(--color-accent-green), #4ade80);
+  background: linear-gradient(90deg, var(--color-accent-green), var(--color-accent-green-bright));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -747,4 +750,99 @@
 .wkt-input {
   width: 17rem;
   max-width: 100%;
+}
+
+/* === Retro-Futurism (CRT / neon-green) system === */
+
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Global CRT scanlines */
+body::after {
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.16) 2px,
+    rgba(0, 0, 0, 0.16) 3px
+  );
+}
+
+/* Subtle vignette + top phosphor bloom */
+body::before {
+  background:
+    radial-gradient(ellipse at center, transparent 52%, rgba(0, 0, 0, 0.34) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(57, 255, 20, 0.06), transparent 60%);
+}
+
+@keyframes sweep {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes flicker {
+  0%, 93%, 100% { opacity: 1; }
+  94% { opacity: 0.55; }
+  96% { opacity: 0.9; }
+  98% { opacity: 0.4; }
+}
+
+@keyframes glitch-shift {
+  0%, 84%, 100% { transform: translate(0) skewX(0); }
+  86% { transform: translate(-2px, 1px) skewX(4deg); }
+  90% { transform: translate(2px, -1px) skewX(-3deg); }
+  93% { transform: translate(-1px, 0) skewX(2deg); }
+  96% { transform: translate(1px, 1px); }
+}
+
+.glitch-text {
+  position: relative;
+  animation: glitch-shift 3.2s steps(1) infinite;
+}
+
+.neon-green-text {
+  text-shadow:
+    0 0 6px rgba(57, 255, 20, 0.75),
+    0 0 18px rgba(57, 255, 20, 0.45),
+    0 0 44px rgba(57, 255, 20, 0.28);
+}
+
+.neon-panel {
+  background-color: rgba(6, 20, 9, 0.85);
+  border: 1px solid rgba(57, 255, 20, 0.4);
+  box-shadow:
+    0 0 0 1px rgba(57, 255, 20, 0.12),
+    0 0 32px rgba(57, 255, 20, 0.22),
+    inset 0 0 42px rgba(57, 255, 20, 0.1);
+}
+
+.scanlines {
+  background-image: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.24) 2px,
+    rgba(0, 0, 0, 0.24) 3px
+  );
+}
+
+.radar-sweep {
+  animation: sweep 4s linear infinite;
+}
+
+.terminal-blink {
+  animation: flicker 4s steps(1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text,
+  .radar-sweep,
+  .terminal-blink {
+    animation: none;
+  }
 }
