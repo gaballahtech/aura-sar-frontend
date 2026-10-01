@@ -249,7 +249,7 @@ export default function Dashboard() {
                   onKeyDown={(e) => handleRoleKeyDown(e, index)}
                   className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                     activeRole === role.value
-                      ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
+                      ? 'bg-accent-green text-primary-dark shadow-[0_0_20px_rgba(57,255,20,0.4)]'
                       : 'bg-card hover:bg-card-hover'
                   }`}
                   role="radio"
@@ -389,7 +389,6 @@ export default function Dashboard() {
 
           {activeRole === 'public' && (
           <div className="space-y-6">
-            {activeRole === 'public' && (
               <div className="bg-card p-6">
                 <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Cloud className="w-5 h-5 text-accent-green" />
@@ -412,11 +411,9 @@ export default function Dashboard() {
                   })}
                 </div>
               </div>
-            )}
 
-            {activeRole === 'public' && (
-              <div className="bg-card p-6">
-                <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
+            <div className="bg-card p-6">
+              <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
                   <Truck className="w-5 h-5 text-accent-green" />
                   <span>{t('dashboard.publicView.evacuationRoutes')}</span>
                 </h3>
@@ -435,7 +432,6 @@ export default function Dashboard() {
                   })}
                 </div>
               </div>
-            )}
           </div>
           )}
         </div>

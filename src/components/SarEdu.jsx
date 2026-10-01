@@ -277,7 +277,7 @@ export default function SarEdu() {
           <p className="section-subtitle">{t('sarEdu.subtitle')}</p>
         </div>
 
-        <div className="mb-8" role="tablist" aria-label="SAR Education sections">
+        <div className="mb-8" role="tablist" aria-label={t('sarEdu.title')}>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {tabs.map((tab, tIndex) => (
               <button

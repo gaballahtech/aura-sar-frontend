@@ -5,7 +5,7 @@ import {
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
   BarChart, Bar, Cell, ComposedChart
 } from 'recharts';
-import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, Satellite, MapPin, Ruler, RefreshCw, Database, ExternalLink } from 'lucide-react';
+import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, RefreshCw, Database, ExternalLink } from 'lucide-react';
 import { apiClient } from '../services/api';
 
 const generateBackscatterData = (locale) => {
@@ -202,14 +202,14 @@ export default function Analytics() {
         <div className="flex items-center space-x-1">
           <button
             onClick={() => toggleFullscreen(id)}
-            className="p-2 rounded-xl bg-glass hover:bg-glass-subtle text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary transition-colors"
             aria-label={t('analytics.controls.fullscreen')}
           >
             {showFullscreen === id ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
           <button
             onClick={() => downloadChartData(id)}
-            className="p-2 rounded-xl bg-glass hover:bg-glass-subtle text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary transition-colors"
             aria-label={t('analytics.controls.download')}
           >
             <Download className="w-4 h-4" />
@@ -255,7 +255,7 @@ export default function Analytics() {
                     className={`flex flex-col items-center space-x-2 px-4 py-3 rounded-xl transition-all ${
                       activeComparison === index
                         ? 'bg-accent-green/20 text-accent-green ring-2 ring-accent-green/50'
-                        : 'bg-glass hover:bg-glass-subtle'
+                        : 'bg-glass hover:bg-card-hover'
                     }`}
                     role="radio"
                     aria-checked={activeComparison === index}
@@ -266,39 +266,9 @@ export default function Analytics() {
                   </button>
                 ))}
               </div>
-              <div className="aspect-video relative rounded-xl overflow-hidden bg-gradient-to-br from-primary-navy to-primary-dark">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <Camera className="w-16 h-16 mx-auto mb-4 text-muted" />
-                    <p className="text-secondary text-lg">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.label`)} {t('analytics.sarSnapshot')}</p>
-                    <p className="text-muted text-sm mt-2">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.description`)}</p>
-                    <div className="mt-4 flex items-center justify-center space-x-4 text-xs text-subtle">
-                      <span className="flex items-center space-x-1">
-                        <Satellite className="w-3 h-3" />
-                        <span>{t('analytics.snapshotDetails.satellite')}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <MapPin className="w-3 h-3" />
-                        <span>{t('analytics.snapshotDetails.coords')}</span>
-                      </span>
-                      <span className="flex items-center space-x-1">
-                        <Ruler className="w-3 h-3" />
-                        <span>{t('analytics.snapshotDetails.resolution')}</span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                  <strong>{t('analytics.comparisonInfo.preFireLabel')}:</strong> {t('analytics.comparisonInfo.preFireDesc')}
-                </div>
-                <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                  <strong>{t('analytics.comparisonInfo.duringLabel')}:</strong> {t('analytics.comparisonInfo.duringDesc')}
-                </div>
-                <div className="bg-card px-4 py-2 rounded-lg text-sm">
-                  <strong>{t('analytics.comparisonInfo.recoveryLabel')}:</strong> {t('analytics.comparisonInfo.recoveryDesc')}
-                </div>
+              <div className="rounded-xl border border-subtle p-8 text-center">
+                <p className="text-secondary text-lg">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.label`)} {t('analytics.sarSnapshot')}</p>
+                <p className="text-muted text-sm mt-2">{t(`analytics.comparison.${comparisonImages[activeComparison].key}.description`)}</p>
               </div>
             </div>
           </div>
@@ -328,7 +298,7 @@ export default function Analytics() {
                 }}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   timeRange === range.value
-                    ? 'bg-accent-green text-primary-dark'
+                    ? 'bg-accent-green text-primary-dark shadow-[0_0_20px_rgba(57,255,20,0.4)]'
                     : 'bg-card hover:bg-card-hover'
                 }`}
                 role="radio"

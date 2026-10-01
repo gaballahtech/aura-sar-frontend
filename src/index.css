@@ -69,7 +69,7 @@
   }
 
   .text-subtle {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.48);
   }
 
   /* Theme-aware border utilities */
@@ -98,7 +98,7 @@
     background-color: rgba(255, 255, 255, 0.07);
     backdrop-filter: blur(16px) saturate(160%);
     -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(57, 255, 20, 0.16);
     border-radius: 1rem;
     box-shadow:
       0 10px 32px rgba(0, 0, 0, 0.25),
@@ -146,7 +146,7 @@
   /* Selection styling */
   ::selection {
     background: rgba(57, 255, 20, 0.3);
-    color: white;
+    color: var(--color-primary-dark);
   }
 
   /* Focus visible for keyboard navigation (intensified specular + z-elevation) */
@@ -207,7 +207,7 @@
   background-color: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(14px) saturate(160%);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.18);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
@@ -215,7 +215,7 @@
   padding: 0.75rem 1.5rem;
   border-radius: 0.75rem;
   font-weight: 600;
-  color: white;
+  color: var(--color-primary-dark);
   background-color: var(--color-accent-green);
   transition: all 0.2s ease;
   border: none;
@@ -227,8 +227,8 @@
   border-radius: 0.75rem;
   font-weight: 600;
   color: white;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(57, 255, 20, 0.08);
+  border: 1px solid rgba(57, 255, 20, 0.25);
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -237,8 +237,8 @@
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(57, 255, 20, 0.05);
+  border: 1px solid rgba(57, 255, 20, 0.2);
   color: white;
   transition: all 0.2s ease;
   -webkit-appearance: none;
@@ -250,8 +250,8 @@
   min-height: 120px;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(57, 255, 20, 0.05);
+  border: 1px solid rgba(57, 255, 20, 0.2);
   color: white;
   transition: all 0.2s ease;
   resize: vertical;
@@ -281,7 +281,7 @@
   background-color: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(18px) saturate(160%);
   -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.16);
   border-radius: 1.25rem;
   padding: 1.5rem;
   position: relative;
@@ -306,7 +306,7 @@
   background-color: rgba(18, 18, 18, 0.5);
   backdrop-filter: blur(20px) saturate(180%) brightness(1.08);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(57, 255, 20, 0.18);
   box-shadow:
     0 8px 40px rgba(0, 0, 0, 0.35),
     inset 0 1px 1px rgba(255, 255, 255, 0.55),
@@ -319,7 +319,7 @@
   background-color: rgba(255, 255, 255, 0.07);
   backdrop-filter: blur(20px) saturate(180%) brightness(1.06);
   -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(1.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(57, 255, 20, 0.18);
   box-shadow:
     0 12px 40px rgba(0, 0, 0, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.5),
@@ -478,13 +478,13 @@
 /* === Regular CSS for pseudo-classes and complex selectors === */
 
 .btn-primary:hover {
-  background-color: #22c55e;
+  background-color: #4CF21A;
   transform: translateY(-1px);
   box-shadow: 0 10px 28px rgba(57, 255, 20, 0.35);
 }
 
 .btn-primary:active {
-  background-color: #15803d;
+  background-color: #2BC91A;
   transform: translateY(0) scale(0.97);
 }
 

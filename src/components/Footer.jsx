@@ -68,9 +68,6 @@ export default function Footer() {
                 </span>
               ))}
             </div>
-            <p className="text-muted text-sm max-w-xs">
-              {t('footer.nasaChallenge')} — {t('footer.challengeTheme')}
-            </p>
           </div>
 
           <nav aria-label={t('footer.columnHeaders.product')}>
@@ -173,7 +170,7 @@ export default function Footer() {
 
         <div className="mt-8 text-center">
           <p className="text-muted text-sm">
-            {'\u2764\uFE0F'} {t('footer.builtWith')} — "Through the Radar Looking Glass"
+            {'\u2764\uFE0F'} {t('footer.builtWith')}
           </p>
         </div>
       </div>

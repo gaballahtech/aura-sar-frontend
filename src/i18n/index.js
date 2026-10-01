@@ -15,6 +15,7 @@ const en = {
   "hero": {
     "headline": "AI & Synthetic Aperture Radar Driven Wildfire Intelligence Platform",
     "subtitle": "Penetrating smoke, clouds, and darkness — SAR technology provides 24/7 wildfire monitoring and early warning capabilities for California and beyond.",
+    "badge": "System online · Uplink active",
     "liveStats": {
       "live": "Live",
       "regionLabel": "Live wildfire statistics",
@@ -23,7 +24,7 @@ const en = {
       "recoveryRate": "Forest Regrowth Recovery Rate"
     },
     "cta": {
-      "exploreMap": "Explore Live Map",
+      "exploreMap": "Launch Live Map",
       "submitReport": "Submit Field Report"
     }
   },
@@ -142,22 +143,6 @@ const en = {
       "3years": "3 Years",
       "5years": "5 Years",
       "label": "Time range"
-    },
-    "comparisonInfo": {
-      "preFireLabel": "Pre-Fire",
-      "duringLabel": "During",
-      "recoveryLabel": "Recovery",
-      "preFireDesc": "High VV backscatter (-8 dB), dense canopy",
-      "duringDesc": "VV drop to -18 dB, volume scattering loss",
-      "recoveryDesc": "VV at -11 dB, cross-pol increasing",
-      "preFireValue": "Pre-Fire: High VV backscatter (-8 dB), dense canopy",
-      "duringValue": "During: VV drop to -18 dB, volume scattering loss",
-      "recoveryValue": "Recovery: VV at -11 dB, cross-pol increasing"
-    },
-    "snapshotDetails": {
-      "satellite": "Sentinel-1 C-Band VV/VH",
-      "coords": "37.5°N, 119.5°W",
-      "resolution": "10m resolution"
     },
     "statLabels": {
       "backscatterMean": "VV Backscatter Mean",
@@ -363,7 +348,6 @@ const en = {
     "brand": "AURA SAR",
     "tagline": "AI & Ultra-Radar Analytics for Wildfire Safety",
     "nasaChallenge": "NASA Space Apps Challenge 2025",
-    "challengeTheme": "\"Through the Radar Looking Glass\"",
     "columnHeaders": {
       "product": "Product",
       "resources": "Resources",
@@ -449,6 +433,7 @@ const ar = {
   "hero": {
     "headline": "منصة ذكاء حرائق الغابات المدعومة بالذكاء الاصطناعي ورادار الفتحة التركيبية",
     "subtitle": "اختراق الدخان والغيوم والظلام — توفر تقنية رادار الفتحة التركيبية مراقبة حرائق الغابات على مدار الساعة وقدرات الإنذار المبكر لكاليفورنيا وما وراءها.",
+    "badge": "النظام يعمل · ارتباط الرفع نشط",
     "liveStats": {
       "live": "مباشر",
       "regionLabel": "إحصائيات حرائق الغابات المباشرة",
@@ -457,7 +442,7 @@ const ar = {
       "recoveryRate": "معدل تعافي نمو الغابات"
     },
     "cta": {
-      "exploreMap": "استكشاف الخريطة الحية",
+      "exploreMap": "إطلاق الخريطة الحية",
       "submitReport": "إرسال تقرير ميداني"
     }
   },
@@ -576,22 +561,6 @@ const ar = {
       "3years": "3 سنوات",
       "5years": "5 سنوات",
       "label": "الفترة الزمنية"
-    },
-    "comparisonInfo": {
-      "preFireLabel": "قبل الحريق",
-      "duringLabel": "أثناء",
-      "recoveryLabel": "التعافي",
-      "preFireDesc": "ارتداد VV عالي (-8 ديسيبيل)، مظلة كثيفة",
-      "duringDesc": "انخفاض VV إلى -18 ديسيبيل، فقدان الانتثار الحجمي",
-      "recoveryDesc": "VV عند -11 ديسيبيل، زيادة الاستقطاب المتقاطع",
-      "preFireValue": "قبل الحريق: ارتداد VV عالي (-8 ديسيبيل)، مظلة كثيفة",
-      "duringValue": "أثناء: انخفاض VV إلى -18 ديسيبيل، فقدان الانتثار الحجمي",
-      "recoveryValue": "التعافي: VV عند -11 ديسيبيل، زيادة الاستقطاب المتقاطع"
-    },
-    "snapshotDetails": {
-      "satellite": "سينتينل-1 النطاق C VV/VH",
-      "coords": "37.5°شمالاً، 119.5°غرباً",
-      "resolution": "دقة 10 متر"
     },
     "statLabels": {
       "backscatterMean": "متوسط ارتداد VV",
@@ -797,7 +766,6 @@ const ar = {
     "brand": "أورا سار",
     "tagline": "الذكاء الاصطناعي والتحليلات فائقة الرادار لسلامة حرائق الغابات",
     "nasaChallenge": "تحدي ناسا لتطبيقات الفضاء 2025",
-    "challengeTheme": "\"من خلال مرآة الرادار\"",
     "columnHeaders": {
       "product": "المنتج",
       "resources": "الموارد",

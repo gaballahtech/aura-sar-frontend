@@ -10,16 +10,16 @@ const hazardTypes = [
 ];
 
 const mockReports = [
-  { id: 1, type: 'activeFire', location: 'Big Sur, CA', coords: '36.27°N, 121.80°W', description: 'Active flames visible on ridge line, moving north', verified: true, reporter: 'Fire Watcher #847', time: '15 min ago', votes: 23 },
-  { id: 2, type: 'smoke', location: 'Santa Cruz Mountains', coords: '37.12°N, 122.05°W', description: 'Heavy smoke column rising, visibility < 1 mile', verified: true, reporter: 'Local Resident', time: '42 min ago', votes: 18 },
-  { id: 3, type: 'fallenTrees', location: 'Highway 17 Summit', coords: '37.15°N, 121.98°W', description: 'Multiple large trees blocking both lanes', verified: false, reporter: 'Commuter', time: '2 hours ago', votes: 12 },
-  { id: 4, type: 'landslide', location: 'Pacific Coast Highway', coords: '34.42°N, 119.70°W', description: 'Debris flow covering road after heavy rain', verified: true, reporter: 'Caltrans', time: '4 hours ago', votes: 31 },
-  { id: 5, type: 'smoke', location: 'East Bay Hills', coords: '37.85°N, 122.18°W', description: 'Smoke drifting into residential areas', verified: false, reporter: 'Community Watch', time: '5 hours ago', votes: 7 },
+  { id: 1, type: 'activeFire', verified: true, votes: 23 },
+  { id: 2, type: 'smoke', verified: true, votes: 18 },
+  { id: 3, type: 'fallenTrees', verified: false, votes: 12 },
+  { id: 4, type: 'landslide', verified: true, votes: 31 },
+  { id: 5, type: 'smoke', verified: false, votes: 7 },
 ];
 
 const tabButtonClass = (isActive) => `
   px-6 py-3 rounded-xl font-medium transition-all ${isActive
-    ? 'bg-accent-green text-primary-dark'
+    ? 'bg-accent-green text-primary-dark shadow-[0_0_20px_rgba(57,255,20,0.4)]'
     : 'bg-card hover:bg-card-hover'
   }`;
 
@@ -37,7 +37,7 @@ export default function Report() {
   const [submitStatus, setSubmitStatus] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
   const [votes, setVotes] = useState(() =>
-    Object.fromEntries(mockReports.map(r => [r.id, { up: r.votes, down: 2, mine: null }]))
+    Object.fromEntries(mockReports.map(r => [r.id, { up: r.votes, down: 0, mine: null }]))
   );
   const [visibleCount, setVisibleCount] = useState(3);
   const fileInputRef = useRef(null);
@@ -187,7 +187,7 @@ export default function Report() {
           <p className="section-subtitle">{t('report.subtitle')}</p>
         </div>
 
-        <div className="mb-8" role="tablist" aria-label="Report sections">
+        <div className="mb-8" role="tablist" aria-label={t('report.title')}>
           <button
             ref={el => (tabRefs.current[0] = el)}
             onClick={() => setActiveTab('submit')}
@@ -273,7 +273,7 @@ export default function Report() {
                       <button
                         type="button"
                         onClick={removePhoto}
-                        className="absolute top-2 end-2 p-2 bg-danger text-white rounded-full hover:bg-danger/80 transition-colors"
+                        className="absolute top-2 end-2 p-2 bg-danger text-primary-dark rounded-full hover:bg-danger/80 transition-colors"
                         aria-label={t('report.form.removePhoto')}
                       >
                         <X className="w-4 h-4" />
@@ -421,11 +421,11 @@ export default function Report() {
                 {mockReports.slice(0, visibleCount).map(report => {
                   const item = t(`report.communityFeed.items.${report.id}`, { returnObjects: true });
                   if (!item || typeof item !== 'object') return null;
-                  const vote = votes[report.id] || { up: report.votes, down: 2, mine: null };
+                  const vote = votes[report.id] || { up: report.votes, down: 0, mine: null };
                   return (
                     <div
                       key={report.id}
-                      className="p-6 rounded-xl border border-subtle transition-all bg-card-hover"
+                      className="p-6 rounded-xl border border-subtle transition-all bg-glass hover:bg-card-hover"
                     >
                       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-3">
                         <div className="flex items-center space-x-3">
@@ -469,7 +469,7 @@ export default function Report() {
                           </button>
                         </div>
                         {!report.verified && (
-                          <span className="text-xs px-3 py-1.5 bg-accent-green/20 text-accent-green rounded-full">
+                          <span className="text-xs px-3 py-1.5 bg-warning/20 text-warning rounded-full">
                             {t('report.communityFeed.pending')}
                           </span>
                         )}

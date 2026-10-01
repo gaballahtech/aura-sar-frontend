@@ -35,7 +35,7 @@ export default function Hero() {
             <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full liquid-surface border border-subtle mb-8">
               <span className="w-2 h-2 rounded-full bg-accent-green animate-pulse" aria-hidden="true" />
               <span className="text-xs font-medium text-secondary tracking-widest uppercase">
-                {t('footer.nasaChallenge')} 2025 — {t('footer.challengeTheme')}
+                {t('hero.badge')}
               </span>
             </div>
 
