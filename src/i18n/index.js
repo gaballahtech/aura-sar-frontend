@@ -10,9 +10,6 @@ const en = {
     "report": "Crowdsource Report",
     "about": "About SAR",
     "language": "Language",
-    "theme": "Theme",
-    "darkMode": "Dark Mode",
-    "lightMode": "Light Mode",
     "menuToggle": "Toggle navigation menu"
   },
   "hero": {
@@ -447,9 +444,6 @@ const ar = {
     "report": "التقارير المجتمعية",
     "about": "حول رادار الفتحة التركيبية",
     "language": "اللغة",
-    "theme": "السمة",
-    "darkMode": "الوضع الداكن",
-    "lightMode": "الوضع الفاتح",
     "menuToggle": "تبديل قائمة التنقل"
   },
   "hero": {

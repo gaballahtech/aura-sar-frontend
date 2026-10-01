@@ -1,10 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import { useLanguage } from '../context/LanguageContext';
-import { Menu, X, Sun, Moon } from 'lucide-react';
-const logoLight = '/images/Logo.png';
-const logoDark = '/images/Logo-Dark.png';
+import { Menu, X } from 'lucide-react';
+const logo = '/images/Logo-Dark.png';
 
 const navLinks = [
   { id: 'home', label: 'navbar.home' },
@@ -16,7 +14,6 @@ const navLinks = [
 
 export default function Navbar() {
   const { t } = useTranslation();
-  const { theme, toggleTheme } = useTheme();
   const { language, setLanguage } = useLanguage();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -67,7 +64,7 @@ export default function Navbar() {
     setIsMenuOpen(false);
   };
 
-  const currentLogo = theme === 'dark' ? logoDark : logoLight;
+  const currentLogo = logo;
 
   return (
     <header
@@ -130,16 +127,6 @@ export default function Navbar() {
               >
                 <span lang="ar">AR</span>
               </button>
-
-              <span className="w-px h-6 bg-subtle mx-1" aria-hidden="true" />
-
-              <button
-                onClick={toggleTheme}
-                className="p-2 rounded-full text-secondary hover:bg-glass transition-colors"
-                aria-label={theme === 'dark' ? t('navbar.lightMode') : t('navbar.darkMode')}
-              >
-                {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
             </div>
           </div>
 
@@ -199,22 +186,6 @@ export default function Navbar() {
                   <span lang="ar">AR</span>
                 </button>
               </div>
-              <button
-                onClick={toggleTheme}
-                className="btn-secondary w-full sm:w-auto"
-              >
-                {theme === 'dark' ? (
-                  <>
-                    <Sun className="w-4 h-4 me-2" />
-                    {t('navbar.lightMode')}
-                  </>
-                ) : (
-                  <>
-                    <Moon className="w-4 h-4 me-2" />
-                    {t('navbar.darkMode')}
-                  </>
-                )}
-              </button>
             </div>
           </div>
         </div>

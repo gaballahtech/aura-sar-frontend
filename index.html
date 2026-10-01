@@ -19,8 +19,7 @@
     <meta name="twitter:image" content="/images/Logo.png" />
     <link rel="apple-touch-icon" href="/images/Logo.png" />
     <meta name="theme-color" content="#0A0F0A" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f8fafc" />
-    <meta name="color-scheme" content="dark light" />
+    <meta name="color-scheme" content="dark" />
     <title>AURA SAR | NASA Space Apps Challenge 2025</title>
     <script>
       (function () {
@@ -30,13 +29,7 @@
             document.documentElement.setAttribute('lang', 'ar');
             document.documentElement.setAttribute('dir', 'rtl');
           }
-          var theme = localStorage.getItem('aura-sar-theme');
-          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-          if (theme === 'light' || (!theme && !prefersDark)) {
-            document.documentElement.classList.add('light');
-          } else {
-            document.documentElement.classList.add('dark');
-          }
+          document.documentElement.classList.add('dark');
         } catch (e) {}
       })();
     </script>

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import {
   Area, Line, XAxis, YAxis,
   CartesianGrid, Tooltip, Legend, ResponsiveContainer,
@@ -60,7 +59,6 @@ const formatBytes = (bytes) => {
 
 export default function Analytics() {
   const { t, i18n } = useTranslation();
-  const { theme } = useTheme();
   const [timeRange, setTimeRange] = useState('1year');
   const [activeComparison, setActiveComparison] = useState(0);
   const [showFullscreen, setShowFullscreen] = useState(null);
@@ -88,9 +86,9 @@ export default function Analytics() {
   });
 
   const chartColors = {
-    grid: theme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)',
-    text: theme === 'dark' ? '#ffffff' : '#1f2937',
-    axis: theme === 'dark' ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)',
+    grid: 'rgba(255,255,255,0.05)',
+    text: '#ffffff',
+    axis: 'rgba(255,255,255,0.3)',
     backscatter: '#39FF14',
     soilMoisture: '#3b82f6',
     fuelLoad: '#f59e0b',
@@ -268,7 +266,7 @@ export default function Analytics() {
                   </button>
                 ))}
               </div>
-              <div className={`aspect-video relative rounded-xl overflow-hidden ${theme === 'dark' ? 'bg-gradient-to-br from-primary-navy to-primary-dark' : 'bg-gradient-to-br from-gray-100 to-gray-200'}`}>
+              <div className="aspect-video relative rounded-xl overflow-hidden bg-gradient-to-br from-primary-navy to-primary-dark">
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="text-center p-8">
                     <Camera className="w-16 h-16 mx-auto mb-4 text-muted" />

@@ -1,10 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import { GitFork, MessageSquare, Users, Globe, Heart, Zap, Shield, Award } from 'lucide-react';
 
 export default function Footer() {
   const { t } = useTranslation();
-  const { theme } = useTheme();
 
   const currentYear = new Date().getFullYear();
 
@@ -55,7 +53,7 @@ export default function Footer() {
           <div className="sm:col-span-2 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img
-                src={theme === 'dark' ? '/images/Logo-Dark.png' : '/images/Logo.png'}
+                src="/images/Logo-Dark.png"
                 alt={t('footer.brand')}
                 className="h-10 w-auto"
               />

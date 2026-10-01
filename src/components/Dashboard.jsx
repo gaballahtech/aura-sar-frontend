@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import { MapContainer, TileLayer, LayerGroup, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Layers, Flame, Wind, AlertTriangle, Shield, Truck, Cloud, RotateCcw } from 'lucide-react';
@@ -77,7 +76,7 @@ const routeColors = {
   'advisory-high': { bg: 'bg-orange', text: 'text-orange' },
 };
 
-const SeverityLegend = ({ theme, t }) => {
+const SeverityLegend = ({ t }) => {
   const severities = [
     { label: t('dashboard.severity.critical'), className: severityColors.critical, dot: '#ff4d4d' },
     { label: t('dashboard.severity.high'), className: severityColors.high, dot: '#f59e0b' },
@@ -100,7 +99,7 @@ const SeverityLegend = ({ theme, t }) => {
   );
 };
 
-const LayerControl = ({ theme, t, mapLayers, toggleLayer }) => {
+const LayerControl = ({ t, mapLayers, toggleLayer }) => {
   const layers = [
     { key: 'sarBackscatter', label: t('dashboard.firefighterView.sarBackscatter'), icon: Wind },
     { key: 'aiRiskHeatmap', label: t('dashboard.firefighterView.aiRiskHeatmap'), icon: Flame },
@@ -131,13 +130,13 @@ const LayerControl = ({ theme, t, mapLayers, toggleLayer }) => {
   );
 };
 
-const FirePoint = ({ fire, theme, t }) => (
+const FirePoint = ({ fire, t }) => (
   <CircleMarker
     center={[fire.lat, fire.lng]}
     radius={12 + fire.intensity * 10}
     pathOptions={{
-      fillColor: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
-      color: theme === 'dark' ? (fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14') : (fire.intensity > 0.8 ? '#dc2626' : fire.intensity > 0.6 ? '#ea580c' : fire.intensity > 0.4 ? '#ca8a04' : '#16a34a'),
+      fillColor: fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14',
+      color: fire.intensity > 0.8 ? '#ff4d4d' : fire.intensity > 0.6 ? '#ff8c00' : fire.intensity > 0.4 ? '#ffd700' : '#39FF14',
       fillOpacity: 0.6,
       weight: 2,
       className: 'marker-pulse',
@@ -187,7 +186,6 @@ const SafeZoneMarker = ({ zone, t }) => (
 
 export default function Dashboard() {
   const { t } = useTranslation();
-  const { theme } = useTheme();
   const [activeRole, setActiveRole] = useState('firefighter');
   const [mapLayers, setMapLayers] = useState({
     sarBackscatter: true,
@@ -292,10 +290,7 @@ export default function Dashboard() {
             >
               {mapLayers.sarBackscatter && (
                 <TileLayer
-                  url={theme === 'dark'
-                    ? 'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-                    : 'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'
-                  }
+                  url="https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
                   attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
                 />
               )}
@@ -320,7 +315,7 @@ export default function Dashboard() {
               {activeRole === 'firefighter' && mapLayers.thermalPoints && (
                 <LayerGroup>
                   {mockFireData.map(fire => (
-                    <FirePoint key={fire.id} fire={fire} theme={theme} t={t} />
+                    <FirePoint key={fire.id} fire={fire} t={t} />
                   ))}
                 </LayerGroup>
               )}
@@ -349,8 +344,8 @@ export default function Dashboard() {
           )}
           {activeRole === 'firefighter' && showControls && (
             <div className="absolute top-4 end-4 z-[1200] flex flex-col gap-2 max-w-[calc(100vw-2rem)]">
-              <LayerControl theme={theme} t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />
-              <SeverityLegend theme={theme} t={t} />
+              <LayerControl t={t} mapLayers={mapLayers} toggleLayer={toggleLayer} />
+              <SeverityLegend t={t} />
             </div>
           )}
         </div>

@@ -1,5 +1,4 @@
 import { useEffect, Suspense, lazy } from 'react';
-import { ThemeProvider, useTheme } from './context/ThemeContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +25,6 @@ function LoadingFallback() {
 }
 
 function AppContent() {
-  const { theme } = useTheme();
   const { language } = useLanguage();
   const { t } = useTranslation();
 
@@ -35,7 +33,7 @@ function AppContent() {
   }, [language, t]);
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' ? 'dark' : 'light'}`}>
+    <div className="min-h-screen transition-colors duration-300 dark">
       <Navbar />
       <main id="main-content">
         <Hero />
@@ -51,15 +49,13 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <LanguageProvider>
-        <ErrorBoundary>
-          <Suspense fallback={<LoadingFallback />}>
-            <AppContent />
-          </Suspense>
-        </ErrorBoundary>
-      </LanguageProvider>
-    </ThemeProvider>
+    <LanguageProvider>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingFallback />}>
+          <AppContent />
+        </Suspense>
+      </ErrorBoundary>
+    </LanguageProvider>
   );
 }
 

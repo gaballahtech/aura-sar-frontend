@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../context/ThemeContext';
 import { ArrowRight, MapPin, Shield, TrendingUp, Sparkles } from 'lucide-react';
 
 const statsData = [
@@ -10,7 +9,6 @@ const statsData = [
 
 export default function Hero() {
   const { t } = useTranslation();
-  const { theme } = useTheme();
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
@@ -25,13 +23,9 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20"
       aria-labelledby="hero-title"
     >
-      <div className={`absolute inset-0 opacity-50 ${theme === 'dark' ? 'bg-grid-pattern' : 'bg-grid-pattern-light'}`} />
+      <div className="absolute inset-0 opacity-50 bg-grid-pattern" />
       <div className="absolute inset-0 bg-radar-rings" aria-hidden="true" />
-      {theme === 'dark' ? (
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
-      ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-gray-50 to-white" />
-      )}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-dark via-primary-navy to-primary-dark" />
       <div className="absolute top-1/4 left-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-accent-green/10 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 sm:w-96 sm:h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
 

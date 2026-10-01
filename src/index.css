@@ -52,75 +52,43 @@
     font-family: var(--font-arabic);
   }
 
-  .light body {
-    background-color: white;
-    color: #111827;
-  }
-
   /* Theme-aware text color utilities */
   .text-primary {
     color: white;
-  }
-  .light .text-primary {
-    color: #111827;
   }
 
   .text-secondary {
     color: rgba(255, 255, 255, 0.7);
   }
-  .light .text-secondary {
-    color: rgba(17, 24, 39, 0.7);
-  }
 
   .text-muted {
     color: rgba(255, 255, 255, 0.5);
   }
-  .light .text-muted {
-    color: rgba(17, 24, 39, 0.6);
-  }
 
   .text-subtle {
     color: rgba(255, 255, 255, 0.4);
-  }
-  .light .text-subtle {
-    color: rgba(17, 24, 39, 0.4);
   }
 
   /* Theme-aware border utilities */
   .border-subtle {
     border-color: rgba(255, 255, 255, 0.1);
   }
-  .light .border-subtle {
-    border-color: rgba(0, 0, 0, 0.1);
-  }
 
   /* Theme-aware background utilities */
   .bg-subtle {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  .light .bg-subtle {
-    background-color: rgba(0, 0, 0, 0.1);
-  }
 
   .bg-muted {
     background-color: rgba(255, 255, 255, 0.5);
-  }
-  .light .bg-muted {
-    background-color: rgba(17, 24, 39, 0.6);
   }
 
   .bg-glass {
     background-color: rgba(255, 255, 255, 0.05);
   }
-  .light .bg-glass {
-    background-color: rgba(255, 255, 255, 0.8);
-  }
 
   .bg-glass-subtle {
     background-color: rgba(255, 255, 255, 0.03);
-  }
-  .light .bg-glass-subtle {
-    background-color: rgba(0, 0, 0, 0.03);
   }
 
   .bg-card {
@@ -134,24 +102,10 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   }
-  .light .bg-card {
-    background-color: rgba(255, 255, 255, 0.76);
-    backdrop-filter: blur(16px) saturate(160%);
-    -webkit-backdrop-filter: blur(16px) saturate(160%);
-    border: 1px solid rgba(229, 229, 229, 0.6);
-    border-radius: 1rem;
-    box-shadow:
-      0 10px 32px rgba(0, 0, 0, 0.08),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95);
-  }
 
   .bg-card-hover:hover {
     background-color: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.2);
-  }
-  .light .bg-card-hover:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-color: rgba(229, 229, 229, 0.5);
   }
 
   /* Custom Scrollbar - Dark Theme */
@@ -186,34 +140,10 @@
     background: transparent;
   }
 
-  /* Light theme scrollbar */
-  .light * {
-    scrollbar-color: rgba(57, 255, 20, 0.4) rgba(0, 0, 0, 0.05);
-  }
-
-  .light *::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, rgba(57, 255, 20, 0.5), rgba(57, 255, 20, 0.2));
-    background-clip: content-box;
-  }
-
-  .light *::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, rgba(57, 255, 20, 0.7), rgba(57, 255, 20, 0.4));
-    background-clip: content-box;
-  }
-
-  .light *::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.03);
-  }
-
   /* Selection styling */
   ::selection {
     background: rgba(57, 255, 20, 0.3);
     color: white;
-  }
-
-  .light ::selection {
-    background: rgba(57, 255, 20, 0.2);
-    color: #111827;
   }
 
   /* Focus visible for keyboard navigation (intensified specular + z-elevation) */
@@ -226,11 +156,6 @@
   a:focus-visible,
   button:focus-visible {
     transform: translateY(-1px);
-  }
-
-  .light :focus-visible {
-    outline-color: var(--color-accent-green);
-    box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.2);
   }
 
   /* Disable default button styles */
@@ -281,12 +206,6 @@
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
-}
-
-.light .glass {
-  background-color: rgba(255, 255, 255, 0.78);
-  border-color: rgba(229, 229, 229, 0.6);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95);
 }
 
 @utility btn-primary {
@@ -348,19 +267,11 @@
   text-shadow: 0 0 18px rgba(57, 255, 20, 0.35);
 }
 
-.light .section-title {
-  text-shadow: none;
-}
-
 @utility section-subtitle {
   font-size: 1.125rem;
   color: rgba(255, 255, 255, 0.7);
   max-width: 48rem;
   margin-bottom: 2.5rem;
-}
-
-.light .section-subtitle {
-  color: rgba(17, 24, 39, 0.7);
 }
 
 @utility stat-card {
@@ -380,11 +291,6 @@
 @utility glow-border {
   position: relative;
 }
-
-/* === Liquid Glass surfaces (Apple-style) ===
-   Frosted base: heavy blur + saturation boost (blur drains chroma, saturate
-   restores it). Refractive rim: 1px light border + inset highlights. A
-   diagonal sheen pseudo-layer fakes the glossy specular highlight. */
 
 .liquid-glass,
 .liquid-surface {
@@ -446,36 +352,6 @@
   }
 }
 
-.light .liquid-glass {
-  background-color: rgba(255, 255, 255, 0.66);
-  border-color: rgba(255, 255, 255, 0.75);
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.12),
-    inset 0 1px 1px rgba(255, 255, 255, 0.95),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
-    inset 1px 0 1px rgba(255, 255, 255, 0.4),
-    inset -1px 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.light .liquid-surface {
-  background-color: rgba(255, 255, 255, 0.68);
-  border-color: rgba(255, 255, 255, 0.7);
-  box-shadow:
-    0 12px 40px rgba(0, 0, 0, 0.1),
-    inset 0 1px 1px rgba(255, 255, 255, 0.95),
-    inset 0 -1px 1px rgba(255, 255, 255, 0.5),
-    inset 1px 0 1px rgba(255, 255, 255, 0.4),
-    inset -1px 0 1px rgba(255, 255, 255, 0.4);
-}
-
-.light .liquid-glass::after,
-.light .liquid-surface::after {
-  background: linear-gradient(135deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.25) 26%,
-    rgba(255, 255, 255, 0) 55%);
-}
-
 @utility bg-radar-rings {
   background-image: repeating-radial-gradient(
     circle at 50% 45%,
@@ -501,13 +377,6 @@
   background-image: 
     linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-@utility bg-grid-pattern-light {
-  background-image: 
-    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
   background-size: 40px 40px;
 }
 
@@ -603,55 +472,6 @@
   border-color: var(--color-accent-red);
 }
 
-/* Light theme overrides for status colors */
-.light .text-success {
-  color: #16a34a;
-}
-
-.light .text-warning {
-  color: #ca8a04;
-}
-
-.light .text-danger {
-  color: #dc2626;
-}
-
-.light .text-info {
-  color: #2563eb;
-}
-
-.light .text-orange {
-  color: #ea580c;
-}
-
-.light .text-yellow {
-  color: #ca8a04;
-}
-
-.light .bg-success {
-  background-color: rgba(22, 163, 74, 0.1);
-}
-
-.light .bg-warning {
-  background-color: rgba(202, 138, 4, 0.1);
-}
-
-.light .bg-danger {
-  background-color: rgba(220, 38, 38, 0.1);
-}
-
-.light .bg-info {
-  background-color: rgba(37, 99, 235, 0.1);
-}
-
-.light .bg-orange {
-  background-color: rgba(234, 88, 12, 0.1);
-}
-
-.light .bg-yellow {
-  background-color: rgba(202, 138, 4, 0.1);
-}
-
 /* === Regular CSS for pseudo-classes and complex selectors === */
 
 .btn-primary:hover {
@@ -712,26 +532,12 @@
   border-color: rgba(255, 255, 255, 0.2);
 }
 
-.light .lang-toggle-inactive {
-  background-color: #f3f4f6;
-  color: #4b5563;
-  border-color: #e5e7eb;
-}
-
-.light .lang-toggle-inactive:hover {
-  background-color: #e5e7eb;
-}
-
 .glow-border {
   transition: box-shadow 0.3s ease;
 }
 
 .glow-border:hover {
   box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.35), 0 0 22px rgba(57, 255, 20, 0.35), 0 0 60px rgba(57, 255, 20, 0.18);
-}
-
-.light .glow-border:hover {
-  box-shadow: 0 0 0 1px rgba(57, 255, 20, 0.35), 0 0 18px rgba(57, 255, 20, 0.3), 0 0 45px rgba(57, 255, 20, 0.14);
 }
 
 /* Leaflet Map Styles */
@@ -768,21 +574,6 @@
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
 }
 
-.light .leaflet-popup-content-wrapper {
-  background-color: rgba(255, 255, 255, 0.82) !important;
-  backdrop-filter: blur(16px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
-  border: 1px solid rgba(229, 229, 229, 0.6) !important;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-}
-
-.light .leaflet-popup-tip {
-  background-color: rgba(255, 255, 255, 0.82) !important;
-  backdrop-filter: blur(16px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(160%) !important;
-  border: 1px solid rgba(229, 229, 229, 0.6) !important;
-}
-
 .leaflet-control-layers {
   background-color: rgba(255, 255, 255, 0.07) !important;
   backdrop-filter: blur(16px) saturate(160%) !important;
@@ -799,20 +590,6 @@
 .leaflet-control-layers-label {
   color: white !important;
   font-weight: 500 !important;
-}
-
-.light .leaflet-popup-content {
-  color: #111827 !important;
-}
-
-.light .leaflet-control-layers-label {
-  color: #111827 !important;
-}
-
-.light .leaflet-control-layers {
-  background-color: rgba(255, 255, 255, 0.82) !important;
-  border-color: rgba(229, 229, 229, 0.6) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
 }
 
 /* Glass zoom control (replaces the default white Leaflet bar) */
@@ -842,23 +619,6 @@
   color: white !important;
 }
 
-.light .leaflet-control-zoom {
-  background: rgba(255, 255, 255, 0.82) !important;
-  border-color: rgba(229, 229, 229, 0.6) !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12) !important;
-}
-
-.light .leaflet-bar a,
-.light .leaflet-control-zoom a {
-  color: #111827 !important;
-  border-bottom: 1px solid rgba(229, 229, 229, 0.6) !important;
-}
-
-.light .leaflet-control-zoom a:hover {
-  background-color: rgba(17, 24, 39, 0.06) !important;
-  color: #111827 !important;
-}
-
 /* Recharts custom tooltip */
 .recharts-tooltip-wrapper {
   outline: none;
@@ -874,12 +634,6 @@
   padding: 1rem !important;
 }
 
-.light .recharts-default-tooltip {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border: 1px solid rgba(229, 229, 229, 0.6) !important;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.15) !important;
-}
-
 /* Chart fullscreen */
 .fullscreen-card:fullscreen {
   display: flex;
@@ -892,10 +646,6 @@
   overflow: auto;
 }
 
-.light .fullscreen-card:fullscreen {
-  background-color: #f9fafb;
-}
-
 .fullscreen-card:fullscreen .chart-body {
   flex: 1;
   height: auto;
@@ -906,49 +656,6 @@
 .fullscreen-card:fullscreen .recharts-default-tooltip {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
-}
-
-/* === Light theme overrides for form controls & buttons === */
-
-.light .btn-secondary {
-  color: #111827;
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-}
-
-.light .btn-secondary:hover {
-  background-color: #e5e7eb;
-}
-
-.light .input-field {
-  background-color: white;
-  border-color: #d1d5db;
-  color: #111827;
-}
-
-.light .textarea-field {
-  background-color: white;
-  border-color: #d1d5db;
-  color: #111827;
-}
-
-.light .stat-card {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-color: rgba(229, 229, 229, 0.5);
-  box-shadow:
-    0 10px 34px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.95);
-}
-
-.light .text-gradient {
-  background: linear-gradient(90deg, #059669, #16a34a);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.light .text-accent-green {
-  color: #16a34a;
 }
 
 /* === Liquid Glass: accessibility & adaptive behavior === */
@@ -992,13 +699,6 @@
   .glass { background-color: #18181b; box-shadow: none; }
   .stat-card { background-color: #18181b; box-shadow: none; }
 
-  .light .liquid-glass { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
-  .light .liquid-surface { background-color: #ffffff; border-color: #e5e5ea; box-shadow: none; }
-  .light .bg-card { background-color: #ffffff; box-shadow: none; }
-  .light .bg-glass { background-color: #ffffff; }
-  .light .bg-glass-subtle { background-color: #f3f4f6; }
-  .light .glass { background-color: #ffffff; box-shadow: none; }
-  .light .stat-card { background-color: #ffffff; box-shadow: none; }
 }
 
 /* Performance: heavy blur is wasteful on small screens / GPUs */
