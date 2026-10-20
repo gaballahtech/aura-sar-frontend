@@ -1,6 +1,7 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Camera, MapPin, Send, CheckCircle, AlertCircle, Loader2, Image, X, Map, Users, Shield, Wind, Flame, TreePine, Mountain, ThumbsUp, ThumbsDown } from 'lucide-react';
+import { apiClient, isApiConfigured } from '../services/api';
 
 const hazardTypes = [
   { value: 'smoke', icon: Wind, labelKey: 'report.form.hazardTypes.smoke' },
@@ -9,17 +10,21 @@ const hazardTypes = [
   { value: 'landslide', icon: Mountain, labelKey: 'report.form.hazardTypes.landslide' },
 ];
 
-const mockReports = [
-  { id: 1, type: 'activeFire', verified: true, votes: 23 },
-  { id: 2, type: 'smoke', verified: true, votes: 18 },
-  { id: 3, type: 'fallenTrees', verified: false, votes: 12 },
-  { id: 4, type: 'landslide', verified: true, votes: 31 },
-  { id: 5, type: 'smoke', verified: false, votes: 7 },
-];
+// Offline-safe persistence: reports queue locally and POST once a backend exists.
+const QUEUED_KEY = 'aura_queued_reports';
+
+const loadQueued = () => {
+  try {
+    const raw = JSON.parse(localStorage.getItem(QUEUED_KEY) || '[]');
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+};
 
 const tabButtonClass = (isActive) => `
   px-6 py-3 rounded-xl font-medium transition-all ${isActive
-    ? 'bg-accent-green text-primary-dark shadow-[0_0_20px_rgba(57,255,20,0.4)]'
+    ? 'bg-accent text-black'
     : 'bg-card hover:bg-card-hover'
   }`;
 
@@ -36,13 +41,52 @@ export default function Report() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [userLocation, setUserLocation] = useState(null);
-  const [votes, setVotes] = useState(() =>
-    Object.fromEntries(mockReports.map(r => [r.id, { up: r.votes, down: 0, mine: null }]))
-  );
+  const [queuedReports, setQueuedReports] = useState(loadQueued);
+  const [liveReports, setLiveReports] = useState([]);
+  const [votes, setVotes] = useState({});
   const [visibleCount, setVisibleCount] = useState(3);
   const fileInputRef = useRef(null);
   const tabRefs = useRef([]);
   const reportTabs = ['submit', 'feed'];
+
+  // Real reports from the backend when it is connected.
+  useEffect(() => {
+    if (!isApiConfigured()) return;
+    apiClient.getReports(undefined, 50).then(res => {
+      if (res.success && Array.isArray(res.data)) setLiveReports(res.data);
+    });
+  }, []);
+
+  // Community feed = backend reports + queued (offline) reports. No filler samples.
+  const displayReports = [
+    ...liveReports.map(r => ({
+      id: r.id,
+      type: r.hazardType,
+      verified: !!r.verified,
+      votes: r.votes || 0,
+      location: r.location,
+      coords: r.coordinates ? `${r.coordinates[0]}, ${r.coordinates[1]}` : r.location,
+      reporter: r.reporter || '—',
+      description: r.description,
+      time: r.timestamp
+        ? new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : '—',
+    })),
+    ...queuedReports.map(r => ({
+      id: r.id,
+      user: true,
+      type: r.hazardType,
+      verified: false,
+      votes: r.votes || 0,
+      location: r.location,
+      coords: r.lat != null && r.lng != null ? `${r.lat}, ${r.lng}` : r.location,
+      reporter: t('report.communityFeed.you'),
+      description: r.description,
+      time: r.timestamp
+        ? new Date(r.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        : '—',
+    })),
+  ];
 
   const handleTabKeyDown = (e, index) => {
     if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
@@ -55,6 +99,9 @@ export default function Report() {
   };
 
   const handleVote = (id, dir) => {
+    if (isApiConfigured() && !String(id).startsWith('local-')) {
+      apiClient.voteReport(String(id), dir);
+    }
     setVotes(prev => {
       const cur = prev[id] || { up: 0, down: 0, mine: null };
       if (cur.mine === dir) {
@@ -91,16 +138,16 @@ export default function Report() {
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.add('border-accent-green', 'bg-accent-green/5');
+    e.currentTarget.classList.add('border-accent', 'bg-accent/5');
   };
 
   const handleDragLeave = (e) => {
-    e.currentTarget.classList.remove('border-accent-green', 'bg-accent-green/5');
+    e.currentTarget.classList.remove('border-accent', 'bg-accent/5');
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    e.currentTarget.classList.remove('border-accent-green', 'bg-accent-green/5');
+    e.currentTarget.classList.remove('border-accent', 'bg-accent/5');
     if (e.dataTransfer.files[0]) {
       handlePhotoUpload(e.dataTransfer.files[0]);
     }
@@ -143,10 +190,43 @@ export default function Report() {
     setIsSubmitting(true);
     setSubmitStatus(null);
 
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    const payload = {
+      hazardType: formData.hazardType,
+      description: formData.description.trim(),
+      location: formData.location,
+      lat: userLocation?.lat,
+      lng: userLocation?.lng,
+      photoName: formData.photo?.name || null,
+    };
+
+    // Try the real backend first; queue locally when it is unreachable.
+    let saved = false;
+    try {
+      const res = await apiClient.submitReport(payload);
+      saved = res?.success === true;
+    } catch {
+      saved = false;
+    }
+
+    if (!saved) {
+      const entry = {
+        ...payload,
+        id: `local-${Date.now()}`,
+        timestamp: Date.now(),
+        verified: false,
+        votes: 0,
+      };
+      const next = [entry, ...loadQueued()].slice(0, 50);
+      try {
+        localStorage.setItem(QUEUED_KEY, JSON.stringify(next));
+      } catch {
+        // storage full/private — report still confirmed below
+      }
+      setQueuedReports(next);
+    }
 
     setIsSubmitting(false);
-    setSubmitStatus({ type: 'success', message: t('report.form.success') });
+    setSubmitStatus({ type: 'success', message: saved ? t('report.form.success') : t('report.form.queuedOffline') });
 
     setFormData({
       photo: null,
@@ -170,7 +250,7 @@ export default function Report() {
         {hazard?.icon && <hazard.icon className="w-4 h-4" />}
         <span>{t(hazard?.labelKey || type)}</span>
         {verified && (
-          <span className="flex items-center space-x-0.5 text-accent-green">
+          <span className="flex items-center space-x-0.5 text-accent">
             <Shield className="w-3 h-3" />
             <span>{t('report.communityFeed.verified')}</span>
           </span>
@@ -240,14 +320,14 @@ export default function Report() {
               )}
               <div className="mb-6">
                 <label id="photo-upload-label" className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
-                  <Camera className="w-5 h-5 text-accent-green" />
+                  <Camera className="w-5 h-5 text-accent" />
                   <span>{t('report.form.photo')}</span>
                 </label>
                 <div
-                  className={`relative border-2 border-dashed rounded-2xl p-8 text-center transition-all ${
+                  className={`relative border-2 border-dashed p-5 sm:p-8 text-center transition-all ${
                     formData.photoPreview
                       ? 'border-transparent'
-                      : 'border-subtle hover:border-accent-green/50 hover:bg-accent-green/5'
+                      : 'border-subtle hover:border-accent/50 hover:bg-accent/5'
                   }`}
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
@@ -294,37 +374,39 @@ export default function Report() {
 
               <div className="mb-6">
                 <label htmlFor="report-location" className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
-                  <MapPin className="w-5 h-5 text-accent-green" />
+                  <MapPin className="w-5 h-5 text-accent" />
                   <span>{t('report.form.location')}</span>
                 </label>
-                <div className="relative">
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-end">
                   <input
                     id="report-location"
                     type="text"
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    placeholder={t('report.form.locationHint')}
-                    className="input-field pe-32"
+                    placeholder="34.05 -118.24"
+                    className="input-field flex-1 min-w-0 font-mono"
+                    dir="ltr"
                     disabled={isSubmitting}
                   />
                   <button
                     type="button"
                     onClick={getCurrentLocation}
-                    className="absolute end-2 top-1/2 -translate-y-1/2 px-3 py-2 bg-accent-green/20 text-accent-green rounded-xl text-sm font-medium hover:bg-accent-green/30 transition-colors disabled:opacity-50"
+                    className="btn-secondary flex items-center justify-center gap-2 whitespace-nowrap shrink-0"
                     disabled={isSubmitting}
                   >
-                    <MapPin className="w-4 h-4 me-1 inline" />
-                    {t('report.form.getLocation')}
+                    <MapPin className="w-4 h-4" aria-hidden="true" />
+                    <span>{t('report.form.getLocation')}</span>
                   </button>
                 </div>
+                <p className="text-xs text-muted mt-2 font-mono">{'> '}{t('report.form.locationHint')}</p>
               </div>
 
               <div className="mb-6">
                 <label className="block text-sm font-medium text-secondary mb-3 flex items-center space-x-2">
-                  <AlertCircle className="w-5 h-5 text-accent-green" />
+                  <AlertCircle className="w-5 h-5 text-accent" />
                   <span>{t('report.form.hazardType')}</span>
                 </label>
-                <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label={t('report.form.hazardType')}>
+                <div className="grid gap-3 grid-cols-1 sm:grid-cols-2" role="radiogroup" aria-label={t('report.form.hazardType')}>
                   {hazardTypes.map((hazard, hIndex) => (
                     <button
                       key={hazard.value}
@@ -341,7 +423,7 @@ export default function Report() {
                       id={`hazard-${hazard.value}`}
                       className={`relative p-4 rounded-xl text-start transition-all ${
                         formData.hazardType === hazard.value
-                          ? 'ring-2 ring-accent-green bg-accent-green/10'
+                          ? 'ring-2 ring-accent bg-accent/10'
                           : 'bg-card hover:bg-card-hover'
                       }`}
                       role="radio"
@@ -349,11 +431,11 @@ export default function Report() {
                       tabIndex={formData.hazardType === hazard.value ? 0 : -1}
                     >
                       <div className="flex items-center space-x-3">
-                        {hazard.icon && <hazard.icon className="w-6 h-6 text-accent-green" />}
+                        {hazard.icon && <hazard.icon className="w-6 h-6 text-accent" />}
                         <span className="font-medium text-primary">{t(hazard.labelKey)}</span>
                       </div>
                       {formData.hazardType === hazard.value && (
-                        <CheckCircle className="absolute top-2 end-2 w-5 h-5 text-accent-green" />
+                        <CheckCircle className="absolute top-2 end-2 w-5 h-5 text-accent" />
                       )}
                     </button>
                   ))}
@@ -402,24 +484,29 @@ export default function Report() {
             <div className="bg-card p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                 <h3 className="font-semibold text-lg flex items-center space-x-2">
-                  <Map className="w-5 h-5 text-accent-green" />
+                  <Map className="w-5 h-5 text-accent" />
                   <span className="text-primary">{t('report.communityFeed.title')}</span>
                 </h3>
                 <div className="flex items-center space-x-4 text-sm text-secondary">
                   <span className="flex items-center space-x-1">
-                    <Shield className="w-4 h-4 text-accent-green" />
-                    <span>{mockReports.filter(r => r.verified).length} {t('report.communityFeed.verified')}</span>
+                    <Shield className="w-4 h-4 text-accent" />
+                    <span>{displayReports.filter(r => r.verified).length} {t('report.communityFeed.verified')}</span>
                   </span>
                   <span className="flex items-center space-x-1 text-warning">
                     <AlertCircle className="w-4 h-4" />
-                    <span>{mockReports.filter(r => !r.verified).length} {t('report.communityFeed.pending')}</span>
+                    <span>{displayReports.filter(r => !r.verified).length} {t('report.communityFeed.pending')}</span>
                   </span>
                 </div>
               </div>
 
               <div className="space-y-4">
-                {mockReports.slice(0, visibleCount).map(report => {
-                  const item = t(`report.communityFeed.items.${report.id}`, { returnObjects: true });
+                {displayReports.length === 0 && (
+                  <p className="text-center text-xs font-mono text-muted py-10 border border-subtle bg-glass" dir="auto">
+                    [ {t('report.communityFeed.empty')} ]
+                  </p>
+                )}
+                {displayReports.slice(0, visibleCount).map(report => {
+                  const item = report.user ? report : t(`report.communityFeed.items.${report.id}`, { returnObjects: true });
                   if (!item || typeof item !== 'object') return null;
                   const vote = votes[report.id] || { up: report.votes, down: 0, mine: null };
                   return (
@@ -453,7 +540,7 @@ export default function Report() {
                             onClick={() => handleVote(report.id, 'up')}
                             aria-pressed={vote.mine === 'up'}
                             aria-label={t('report.communityFeed.upvote')}
-                            className={`flex items-center space-x-1 transition-colors ${vote.mine === 'up' ? 'text-accent-green' : 'text-secondary hover:text-accent-green'}`}
+                            className={`flex items-center space-x-1 transition-colors ${vote.mine === 'up' ? 'text-accent' : 'text-secondary hover:text-accent'}`}
                           >
                             <ThumbsUp className="w-5 h-5" />
                             <span>{vote.up}</span>
@@ -468,20 +555,25 @@ export default function Report() {
                             <span>{vote.down}</span>
                           </button>
                         </div>
-                        {!report.verified && (
+                        {report.user ? (
+                          <span className="text-xs px-3 py-1.5 bg-warning/20 text-warning rounded-full">
+                            {t('report.communityFeed.queued')}
+                          </span>
+                        ) : !report.verified && (
                           <span className="text-xs px-3 py-1.5 bg-warning/20 text-warning rounded-full">
                             {t('report.communityFeed.pending')}
                           </span>
-                        )}
+                        )
+                      }
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {visibleCount < mockReports.length && (
+              {visibleCount < displayReports.length && (
                 <div className="mt-6 text-center">
-                  <button className="btn-secondary" onClick={() => setVisibleCount(mockReports.length)}>
+                  <button className="btn-secondary" onClick={() => setVisibleCount(displayReports.length)}>
                     {t('common.loadMore')}
                   </button>
                 </div>

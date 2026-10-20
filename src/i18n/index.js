@@ -10,14 +10,25 @@ const en = {
     "report": "Crowdsource Report",
     "about": "About SAR",
     "language": "Language",
-    "menuToggle": "Toggle navigation menu"
+    "menuToggle": "Toggle navigation menu",
+    "team": "Team"
   },
   "hero": {
     "headline": "AI & Synthetic Aperture Radar Driven Wildfire Intelligence Platform",
     "subtitle": "Penetrating smoke, clouds, and darkness — SAR technology provides 24/7 wildfire monitoring and early warning capabilities for California and beyond.",
     "badge": "System online · Uplink active",
+    "panel": {
+      "subtitle": "Acquisition monitor",
+      "status": "Active",
+      "nextPass": "Next pass",
+      "revisit": "Revisit cycle",
+      "beamMode": "Beam mode",
+      "latency": "Data latency",
+      "coverage": "California coverage"
+    },
     "liveStats": {
       "live": "Live",
+      "awaiting": "Awaiting live data",
       "regionLabel": "Live wildfire statistics",
       "activeZones": "Active High-Risk Zones",
       "hazardIndex": "Real-Time Hazard Index",
@@ -28,8 +39,24 @@ const en = {
       "submitReport": "Submit Field Report"
     }
   },
+  "team": {
+    "title": "The Team",
+    "subtitle": "The team behind AURA SAR — built for the NASA Space Apps Challenge 2025",
+    "roles": {
+      "frontendLead": "Frontend Lead · Project Lead",
+      "backendDev": "Backend Developer",
+      "researcher": "Researcher",
+      "designer": "Logo & Visual Identity Designer"
+    },
+    "links": {
+      "portfolio": "Portfolio",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
   "dashboard": {
     "title": "Interactive Wildfire Dashboard",
+    "dataSource": { "live": "LIVE NASA DATA", "demo": "DEMO DATA", "sync": "SYNCING" },
     "subtitle": "Real-time SAR backscatter analysis, AI risk heatmaps, and thermal anomaly detection",
     "roleToggle": {
       "label": "Choose dashboard view",
@@ -117,6 +144,7 @@ const en = {
     }
   },
   "analytics": {
+    "seriesSource": { "backend": "LIVE SERVER DATA", "simulated": "SIMULATED SERIES (NO SERVER)" },
     "title": "Time-Series Analytics & Forest Recovery Tracker",
     "subtitle": "Multi-temporal SAR analysis for vegetation health and post-fire recovery monitoring",
     "comparisonSlider": {
@@ -214,6 +242,7 @@ const en = {
       "submit": "Submit Report",
       "submitting": "Submitting...",
       "success": "Report submitted successfully!",
+      "queuedOffline": "Report saved on this device — it will sync automatically once a server is reachable.",
       "error": "Failed to submit report. Please try again.",
       "getLocation": "Use Current Location",
       "removePhoto": "Remove photo"
@@ -222,6 +251,9 @@ const en = {
       "title": "Community Verified Reports",
       "verified": "Verified",
       "pending": "Pending Verification",
+      "queued": "Pending Sync",
+      "you": "You",
+      "empty": "NO COMMUNITY REPORTS YET — BE THE FIRST TO SUBMIT",
       "reportedBy": "Reported by",
       "timeAgo": "time ago",
       "upvote": "Mark report as helpful",
@@ -347,12 +379,11 @@ const en = {
   "footer": {
     "brand": "AURA SAR",
     "tagline": "AI & Ultra-Radar Analytics for Wildfire Safety",
-    "nasaChallenge": "NASA Space Apps Challenge 2025",
+    "nasaChallenge": "Based on NASA Space Apps Challenge 2025",
     "columnHeaders": {
       "product": "Product",
       "resources": "Resources",
-      "community": "Community",
-      "legal": "Legal"
+      "community": "Community"
     },
     "links": {
       "github": "GitHub Repository",
@@ -364,7 +395,8 @@ const en = {
       "dashboard": "Interactive Dashboard",
       "analytics": "Time-Series Analytics",
       "report": "Crowdsource Reports",
-      "sarEducation": "SAR Education"
+      "sarEducation": "SAR Education",
+      "team": "The Team"
     },
     "resourceLinks": {
       "spaceApps": "NASA Space Apps 2025",
@@ -378,15 +410,7 @@ const en = {
       "contribute": "Contribute",
       "documentation": "Documentation"
     },
-    "legalLinks": {
-      "privacy": "Privacy Policy",
-      "terms": "Terms of Service",
-      "dataUsage": "Data Usage",
-      "disclaimer": "Disclaimer"
-    },
-    "copyright": "© 2025 AURA SAR Team. Built for NASA Space Apps Challenge.",
-    "disclaimer": "Not for operational emergency use. Official alerts via local authorities.",
-    "builtWith": "Built with love for NASA Space Apps Challenge 2025"
+    "copyright": "© {{year}} AURA SAR Team"
   },
   "errorBoundary": {
     "title": "Something went wrong",
@@ -428,14 +452,25 @@ const ar = {
     "report": "التقارير المجتمعية",
     "about": "حول رادار الفتحة التركيبية",
     "language": "اللغة",
-    "menuToggle": "تبديل قائمة التنقل"
+    "menuToggle": "تبديل قائمة التنقل",
+    "team": "الفريق"
   },
   "hero": {
     "headline": "منصة ذكاء حرائق الغابات المدعومة بالذكاء الاصطناعي ورادار الفتحة التركيبية",
     "subtitle": "اختراق الدخان والغيوم والظلام — توفر تقنية رادار الفتحة التركيبية مراقبة حرائق الغابات على مدار الساعة وقدرات الإنذار المبكر لكاليفورنيا وما وراءها.",
     "badge": "النظام يعمل · ارتباط الرفع نشط",
+    "panel": {
+      "subtitle": "مراقبة الاقتناء",
+      "status": "نشط",
+      "nextPass": "المرور القادم",
+      "revisit": "دورة إعادة الزيارة",
+      "beamMode": "نمط التصوير",
+      "latency": "زمن وصول البيانات",
+      "coverage": "تغطية كاليفورنيا"
+    },
     "liveStats": {
       "live": "مباشر",
+      "awaiting": "بانتظار البيانات الحية",
       "regionLabel": "إحصائيات حرائق الغابات المباشرة",
       "activeZones": "مناطق عالية الخطورة النشطة",
       "hazardIndex": "مؤشر الخطر في الوقت الفعلي",
@@ -446,8 +481,24 @@ const ar = {
       "submitReport": "إرسال تقرير ميداني"
     }
   },
+  "team": {
+    "title": "فريق العمل",
+    "subtitle": "الفريق المشارك في بناء أورا سار — تحدي ناسا لتطبيقات الفضاء 2025",
+    "roles": {
+      "frontendLead": "مطور الواجهة الأمامية وقائد المشروع",
+      "backendDev": "مطور الواجهة الخلفية",
+      "researcher": "الباحثة",
+      "designer": "مصممة الشعار والهوية البصرية"
+    },
+    "links": {
+      "portfolio": "الموقع الشخصي",
+      "github": "GitHub",
+      "linkedin": "LinkedIn"
+    }
+  },
   "dashboard": {
     "title": "لوحة تحكم حرائق الغابات التفاعلية",
+    "dataSource": { "live": "بيانات ناسا الحية", "demo": "بيانات تجريبية", "sync": "جاري المزامنة" },
     "subtitle": "تحليل ارتداد رادار الفتحة التركيبية في الوقت الفعلي، وخرائط الحرارة لمخاطر الحرائق بالذكاء الاصطناعي، وكشف الشذوذ الحراري",
     "roleToggle": {
       "label": "اختر عرض لوحة التحكم",
@@ -632,6 +683,7 @@ const ar = {
       "submit": "إرسال التقرير",
       "submitting": "جاري الإرسال...",
       "success": "تم إرسال التقرير بنجاح!",
+      "queuedOffline": "تم حفظ التقرير على هذا الجهاز — سيتم مزامنته تلقائياً عند توفر خادم.",
       "error": "فشل إرسال التقرير. يرجى المحاولة مرة أخرى.",
       "getLocation": "استخدام الموقع الحالي",
       "removePhoto": "إزالة الصورة"
@@ -640,6 +692,9 @@ const ar = {
       "title": "تقارير المجتمع المُتحقق منها",
       "verified": "مُحقق",
       "pending": "قيد التحقق",
+      "queued": "بانتظار المزامنة",
+      "you": "أنت",
+      "empty": "لا توجد تقارير مجتمعية بعد — كن أول المرسلين",
       "reportedBy": "أبلغ بواسطة",
       "timeAgo": "منذ",
       "upvote": "وضع علامة على التقرير كمفيد",
@@ -765,12 +820,11 @@ const ar = {
   "footer": {
     "brand": "أورا سار",
     "tagline": "الذكاء الاصطناعي والتحليلات فائقة الرادار لسلامة حرائق الغابات",
-    "nasaChallenge": "تحدي ناسا لتطبيقات الفضاء 2025",
+    "nasaChallenge": "مبني على تحدي ناسا لتطبيقات الفضاء 2025",
     "columnHeaders": {
       "product": "المنتج",
       "resources": "الموارد",
-      "community": "المجتمع",
-      "legal": "قانوني"
+      "community": "المجتمع"
     },
     "links": {
       "github": "مستودع جيت هب",
@@ -782,7 +836,8 @@ const ar = {
       "dashboard": "لوحة التحكم التفاعلية",
       "analytics": "التحليلات الزمنية",
       "report": "التقارير المجتمعية",
-      "sarEducation": "التعليم الراداري"
+      "sarEducation": "التعليم الراداري",
+      "team": "فريق العمل"
     },
     "resourceLinks": {
       "spaceApps": "تحدي ناسا لتطبيقات الفضاء 2025",
@@ -796,15 +851,7 @@ const ar = {
       "contribute": "المساهمة",
       "documentation": "التوثيق"
     },
-    "legalLinks": {
-      "privacy": "سياسة الخصوصية",
-      "terms": "شروط الخدمة",
-      "dataUsage": "استخدام البيانات",
-      "disclaimer": "إخلاء المسؤولية"
-    },
-    "copyright": "© 2025 فريق أورا سار. تم تطويره لتحدي ناسا لتطبيقات الفضاء.",
-    "disclaimer": "غير مخصص للاستخدام التشغيلي في الطوارئ. التنبيهات الرسمية عبر السلطات المحلية.",
-    "builtWith": "تم تطويره بحب لتحدي ناسا لتطبيقات الفضاء 2025"
+    "copyright": "© {{year}} فريق أورا سار"
   },
   "errorBoundary": {
     "title": "حدث خطأ ما",

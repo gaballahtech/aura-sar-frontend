@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Zap, Waves, Radio, TreePine, Satellite, Database, Cloud, Cpu, ExternalLink, ChevronRight, BookOpen, Flame, Ruler, Building2, ArrowLeftRight, ArrowUpDown } from 'lucide-react';
 
 const frequencyBands = [
-  { key: 'xBand', icon: Zap, color: '#ef4444', missions: ['TerraSAR-X', 'COSMO-SkyMed', 'Capella Space'] },
-  { key: 'cBand', icon: Waves, color: '#3b82f6', missions: ['Sentinel-1', 'RADARSAT-2', 'NISAR (partial)'] },
-  { key: 'lBand', icon: TreePine, color: '#39FF14', missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'] },
+  { key: 'xBand', icon: Zap, color: '#ff3333', missions: ['TerraSAR-X', 'COSMO-SkyMed', 'Capella Space'] },
+  { key: 'cBand', icon: Waves, color: '#ffb000', missions: ['Sentinel-1', 'RADARSAT-2', 'NISAR (partial)'] },
+  { key: 'lBand', icon: TreePine, color: '#33ff00', missions: ['ALOS-2/PALSAR-2', 'UAVSAR', 'NISAR', 'SAOCOM'] },
 ];
 
 const polarizations = [
@@ -16,9 +16,9 @@ const polarizations = [
 ];
 
 const scatteringMechanisms = [
-  { key: 'surface', icon: Ruler, color: '#3b82f6' },
-  { key: 'doubleBounce', icon: Building2, color: '#f59e0b' },
-  { key: 'volume', icon: TreePine, color: '#39FF14' },
+  { key: 'surface', icon: Ruler, color: '#ffb000' },
+  { key: 'doubleBounce', icon: Building2, color: '#ff8800' },
+  { key: 'volume', icon: TreePine, color: '#33ff00' },
 ];
 
 const nasaResourceKeys = [
@@ -71,7 +71,7 @@ export default function SarEdu() {
 
   const tabButtonClass = (isActive) => `
     flex items-center space-x-2 px-6 py-3 rounded-xl font-medium transition-all ${isActive
-      ? 'bg-accent-green text-primary-dark shadow-lg shadow-accent-green/20'
+      ? 'bg-accent text-black'
       : 'bg-card hover:bg-card-hover'
     }`;
 
@@ -128,14 +128,14 @@ export default function SarEdu() {
             </p>
             <div className="grid sm:grid-cols-2 gap-6">
               {polarizations.map(pol => (
-                <Card key={pol.key} className="hover:border-accent-green/30 transition-colors">
+                <Card key={pol.key} className="hover:border-accent/30 transition-colors">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
-                      <div className="p-3 rounded-xl bg-accent-green/10">
-                        <pol.icon className="w-6 h-6 text-accent-green" />
+                      <div className="p-3 rounded-xl bg-accent/10">
+                        <pol.icon className="w-6 h-6 text-accent" />
                       </div>
                       <div>
-                        <h4 className="font-semibold text-lg text-accent-green">{pol.key.toUpperCase()} {t('sarEdu.polarizations.polarizationSuffix')}</h4>
+                        <h4 className="font-semibold text-lg text-accent">{pol.key.toUpperCase()} {t('sarEdu.polarizations.polarizationSuffix')}</h4>
                         <p className="text-sm text-secondary">{t(`sarEdu.polarizations.${pol.key}.desc`)}</p>
                       </div>
                     </div>
@@ -148,13 +148,13 @@ export default function SarEdu() {
             </div>
             <Card className="mt-4">
               <h4 className="font-semibold text-lg mb-4 flex items-center space-x-2">
-                <Radio className="w-5 h-5 text-accent-green" />
+                <Radio className="w-5 h-5 text-accent" />
                 <span>{t('sarEdu.polarizations.combinationsTitle')}</span>
               </h4>
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {(['vvVh', 'hhHv', 'quad']).map((key, i) => (
                   <div key={i} className="p-4 rounded-xl bg-glass">
-                    <code className="text-accent-green font-mono text-lg">{t(`sarEdu.polarizations.combinations.${key}.combo`)}</code>
+                    <code className="text-accent font-mono text-lg">{t(`sarEdu.polarizations.combinations.${key}.combo`)}</code>
                     <p className="text-sm text-secondary mt-1">{t(`sarEdu.polarizations.combinations.${key}.use`)}</p>
                   </div>
                 ))}
@@ -189,7 +189,7 @@ export default function SarEdu() {
             </div>
             <Card>
               <h4 className="font-semibold text-lg mb-4 flex items-center space-x-2">
-                <Zap className="w-5 h-5 text-accent-green" />
+                <Zap className="w-5 h-5 text-accent" />
                 <span>{t('sarEdu.scattering.decompositionTitle')}</span>
               </h4>
               <p className="text-secondary mb-4">
@@ -198,7 +198,7 @@ export default function SarEdu() {
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {decompositionItems.map((key, i) => (
                   <div key={i} className="p-4 rounded-xl bg-glass">
-                    <div className="text-2xl font-bold text-accent-green">{t(`sarEdu.scattering.decomposition.${key}.value`)}</div>
+                    <div className="text-2xl font-bold text-accent">{t(`sarEdu.scattering.decomposition.${key}.value`)}</div>
                     <div className="text-sm font-medium text-primary">{t(`sarEdu.scattering.decomposition.${key}.label`)}</div>
                     <div className="text-xs text-muted mt-1">{t(`sarEdu.scattering.decomposition.${key}.desc`)}</div>
                   </div>
@@ -216,15 +216,15 @@ export default function SarEdu() {
             </p>
             <div className="space-y-4">
               {nasaResourceKeys.map(resource => (
-                <Card key={resource.key} className="flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:border-accent-green/30 transition-colors">
+                <Card key={resource.key} className="flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:border-accent/30 transition-colors">
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 rounded-xl bg-accent-green/10">
-                      <resource.icon className="w-6 h-6 text-accent-green" />
+                    <div className="p-3 rounded-xl bg-accent/10">
+                      <resource.icon className="w-6 h-6 text-accent" />
                     </div>
                     <div>
                       <div className="flex items-center space-x-2 mb-1">
-                        <h4 className="font-semibold text-lg group-hover:text-accent-green transition-colors">{t(`sarEdu.nasaResources.${resource.key}.title`)}</h4>
-                        <span className="px-2 py-0.5 text-xs rounded-full bg-accent-green/20 text-accent-green">{t(`sarEdu.nasaResources.categories.${resource.category}`)}</span>
+                        <h4 className="font-semibold text-lg group-hover:text-accent transition-colors">{t(`sarEdu.nasaResources.${resource.key}.title`)}</h4>
+                        <span className="px-2 py-0.5 text-xs rounded-full bg-accent/20 text-accent">{t(`sarEdu.nasaResources.categories.${resource.category}`)}</span>
                       </div>
                       <p className="text-secondary">{t(`sarEdu.nasaResources.${resource.key}.desc`)}</p>
                     </div>
@@ -233,7 +233,7 @@ export default function SarEdu() {
                     href={resource.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center space-x-1 px-4 py-2 rounded-xl bg-accent-green/10 text-accent-green hover:bg-accent-green/20 transition-colors whitespace-nowrap"
+                    className="flex items-center space-x-1 px-4 py-2 rounded-xl bg-accent/10 text-accent hover:bg-accent/20 transition-colors whitespace-nowrap"
                   >
                     <span className="text-sm font-medium">{t('sarEdu.nasaResources.explore')}</span>
                     <ExternalLink className="w-4 h-4" />
@@ -252,12 +252,14 @@ export default function SarEdu() {
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {sarApplications.map((app, i) => (
-                <Card key={i} className="group hover:border-accent-green/30 transition-colors">
-                  <div className="p-3 rounded-xl bg-accent-green/10 mb-4">
-                    <app.icon className="w-6 h-6 text-accent-green" />
+                <Card key={i} className="group hover:border-accent/30 transition-colors">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="p-2.5 bg-accent/10 shrink-0">
+                      <app.icon className="w-5 h-5 text-accent" />
+                    </div>
+                    <h4 className="font-bold text-sm leading-snug">{t(app.titleKey)}</h4>
                   </div>
-                  <h4 className="font-semibold text-lg mb-2">{t(app.titleKey)}</h4>
-                  <p className="text-secondary text-sm">{t(app.descKey)}</p>
+                  <p className="text-secondary text-xs leading-relaxed">{t(app.descKey)}</p>
                 </Card>
               ))}
             </div>
@@ -311,8 +313,8 @@ export default function SarEdu() {
           ].map((col, i) => (
             <Card key={i}>
               <div className="flex items-center space-x-3 mb-4">
-                <div className="p-3 rounded-xl bg-accent-green/10">
-                  <col.icon className="w-6 h-6 text-accent-green" />
+                <div className="p-3 rounded-xl bg-accent/10">
+                  <col.icon className="w-6 h-6 text-accent" />
                 </div>
                 <h4 className="font-semibold text-lg">{t(`sarEdu.${col.block}.title`)}</h4>
               </div>
@@ -323,7 +325,7 @@ export default function SarEdu() {
                   if (!Array.isArray(items)) return null;
                   return items.map((item, j) => (
                     <li key={j} className="flex items-center space-x-2 text-sm text-secondary">
-                      <ChevronRight className="w-4 h-4 text-accent-green/50 rtl:-scale-x-100" />
+                      <ChevronRight className="w-4 h-4 text-accent/50 rtl:-scale-x-100" />
                       <span>{item}</span>
                     </li>
                   ));

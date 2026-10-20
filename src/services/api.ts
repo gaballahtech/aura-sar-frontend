@@ -308,6 +308,15 @@ class ApiClient {
 
 export const apiClient = new ApiClient();
 
+/**
+ * True only when a backend base URL is explicitly configured via VITE_API_BASE_URL.
+ * Without it, the app skips server calls entirely (no console errors) and uses
+ * the public real-data services with demo fallback.
+ */
+export function isApiConfigured(): boolean {
+  return Boolean(API_BASE && API_BASE !== '/api');
+}
+
 // React Query keys for caching
 export const queryKeys = {
   fires: ['fires'] as const,

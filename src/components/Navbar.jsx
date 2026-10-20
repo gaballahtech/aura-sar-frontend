@@ -10,6 +10,7 @@ const navLinks = [
   { id: 'analytics', label: 'navbar.analytics' },
   { id: 'report', label: 'navbar.report' },
   { id: 'about', label: 'navbar.about' },
+  { id: 'team', label: 'navbar.team' },
 ];
 
 export default function Navbar() {
@@ -68,7 +69,7 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 liquid-glass liquid-edge border-b border-subtle transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-[2100] liquid-glass liquid-edge border-b border-subtle transition-transform duration-300 ${
         hideNav ? '-translate-y-full' : 'translate-y-0'
       } ${isScrolled ? 'shadow-2xl' : ''}`}
       role="banner"
@@ -100,8 +101,8 @@ export default function Navbar() {
                 aria-current={activeSection === link.id ? 'location' : undefined}
                 className={`relative text-sm font-medium transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:transition-all after:duration-300 ${
                   activeSection === link.id
-                    ? 'text-accent-green after:w-full after:bg-accent-green'
-                    : 'text-secondary hover:text-accent-green after:w-0 after:bg-accent-green hover:after:w-full'
+                    ? 'text-accent after:w-full after:bg-accent'
+                    : 'text-secondary hover:text-accent after:w-0 after:bg-accent hover:after:w-full'
                 }`}
               >
                 {t(link.label)}
@@ -158,13 +159,14 @@ export default function Navbar() {
                 href={`#${link.id}`}
                 onClick={(e) => { e.preventDefault(); scrollToSection(link.id); }}
                 aria-current={activeSection === link.id ? 'location' : undefined}
-                className={`block px-4 py-3 rounded-xl transition-colors ${
+                className={`flex items-center gap-2.5 px-4 py-3.5 transition-colors ${
                   activeSection === link.id
-                    ? 'text-accent-green bg-glass'
-                    : 'text-secondary hover:text-accent-green hover:bg-glass'
+                    ? 'text-accent bg-glass'
+                    : 'text-secondary hover:text-accent hover:bg-glass'
                 }`}
               >
-                {t(link.label)}
+                <span className="text-accent text-xs font-bold" aria-hidden="true">{activeSection === link.id ? '>' : '·'}</span>
+                <span>{t(link.label)}</span>
               </a>
             ))}
             <div className="pt-4 border-t border-subtle flex flex-wrap items-center justify-center gap-4">

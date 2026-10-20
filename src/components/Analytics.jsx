@@ -6,7 +6,7 @@ import {
   BarChart, Bar, Cell, ComposedChart
 } from 'recharts';
 import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, RefreshCw, Database, ExternalLink } from 'lucide-react';
-import { apiClient } from '../services/api';
+import { apiClient, isApiConfigured } from '../services/api';
 
 const generateBackscatterData = (locale) => {
   const data = [];
@@ -41,8 +41,9 @@ const comparisonImages = [
 ];
 
 const trendColors = {
-  up: { bg: 'bg-success', text: 'text-success' },
-  down: { bg: 'bg-danger', text: 'text-danger' },
+  up: '#33ff00',
+  down: '#ff3333',
+  flat: '#ffb000',
 };
 
 const SAR_TIME_RANGES = {
@@ -75,24 +76,69 @@ export default function Analytics() {
     wktRef.current = sceneWKT;
   }, [sceneWKT]);
 
-  const backscatterData = useMemo(
-    () => generateBackscatterData(i18n.language === 'ar' ? 'ar-EG' : 'en-US'),
-    [i18n.language]
-  );
+  const [seriesData, setSeriesData] = useState([]);
+  const [seriesSource, setSeriesSource] = useState('simulated');
 
-  const filteredData = backscatterData.filter(d => {
+  useEffect(() => {
+    setSeriesData(generateBackscatterData(i18n.language === 'ar' ? 'ar-EG' : 'en-US'));
+  }, [i18n.language]);
+
+  // Backend time-series preferred; the local generator stays as a labeled fallback.
+  useEffect(() => {
+    if (!isApiConfigured()) return;
+    let cancelled = false;
+    const months = { '6months': 6, '1year': 12, '3years': 36, '5years': 60 }[timeRange] || 12;
+    const end = new Date();
+    const start = new Date(end.getTime() - months * 30 * 86400000);
+    apiClient
+      .getTimeSeries(37.5, -119.5, start.toISOString().slice(0, 10), end.toISOString().slice(0, 10))
+      .then(res => {
+        if (cancelled || !res.success || !Array.isArray(res.data) || res.data.length === 0) return;
+        const locale = i18n.language === 'ar' ? 'ar-EG' : 'en-US';
+        setSeriesData(res.data.map(d => ({
+          date: new Date(d.date).toLocaleDateString(locale, { month: 'short', year: '2-digit' }),
+          timestamp: new Date(d.date).getTime(),
+          backscatter: d.backscatter,
+          soilMoisture: d.soilMoisture,
+          fuelLoad: d.fuelLoad,
+          recovery: d.recovery,
+        })));
+        setSeriesSource('backend');
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [timeRange, i18n.language]);
+
+  const filteredData = seriesData.filter(d => {
     const now = Date.now();
     return now - d.timestamp <= SAR_TIME_RANGES[timeRange];
   });
 
+  // Stat cards computed from the actual series (last sample vs previous), not hardcoded.
+  const seriesStat = (metric, digits, unit) => {
+    const last = filteredData[filteredData.length - 1];
+    const prev = filteredData[Math.max(0, filteredData.length - 2)];
+    const pct = 100;
+    if (!last || typeof last[metric] !== 'number') return { value: '—', change: '—', trend: 'flat', unit };
+    const change = prev && typeof prev[metric] === 'number' ? last[metric] - prev[metric] : 0;
+    return {
+      value: unit === 'dB' ? `${last[metric].toFixed(digits)} dB` : last[metric].toFixed(digits),
+      change: `${Math.abs(change).toFixed(digits)}${unit ? ` ${unit}` : ''}`,
+      trend: change > 0 ? 'up' : change < 0 ? 'down' : 'flat',
+      pct,
+    };
+  };
+
   const chartColors = {
-    grid: 'rgba(255,255,255,0.05)',
-    text: '#ffffff',
-    axis: 'rgba(255,255,255,0.3)',
-    backscatter: '#39FF14',
-    soilMoisture: '#3b82f6',
-    fuelLoad: '#f59e0b',
-    recovery: '#8b5cf6',
+    grid: 'rgba(51, 255, 0, 0.07)',
+    text: '#33ff00',
+    axis: 'rgba(51, 255, 0, 0.35)',
+    backscatter: '#33ff00',
+    soilMoisture: '#ffb000',
+    fuelLoad: '#ff8800',
+    recovery: '#ffd700',
   };
 
   const CustomTooltip = ({ active, payload, label }) => {
@@ -196,20 +242,20 @@ export default function Analytics() {
     <div ref={el => (chartRefs.current[id] = el)} className={`bg-card p-6 ${className} relative fullscreen-card`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg flex items-center space-x-2">
-          <Icon className="w-5 h-5 text-accent-green" />
+          <Icon className="w-5 h-5 text-accent" />
           <span>{title}</span>
         </h3>
         <div className="flex items-center space-x-1">
           <button
             onClick={() => toggleFullscreen(id)}
-            className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-accent/10 text-secondary transition-colors"
             aria-label={t('analytics.controls.fullscreen')}
           >
             {showFullscreen === id ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
           <button
             onClick={() => downloadChartData(id)}
-            className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary transition-colors"
+            className="p-2 rounded-xl bg-glass hover:bg-accent/10 text-secondary transition-colors"
             aria-label={t('analytics.controls.download')}
           >
             <Download className="w-4 h-4" />
@@ -233,7 +279,7 @@ export default function Analytics() {
         <div className="mb-8">
           <div className="bg-card p-6 rounded-xl">
             <h3 className="font-semibold text-lg mb-4 flex items-center space-x-2">
-              <Camera className="w-5 h-5 text-accent-green" />
+              <Camera className="w-5 h-5 text-accent" />
               <span>{t('analytics.comparisonSlider.title')}</span>
             </h3>
             <div className="relative">
@@ -254,7 +300,7 @@ export default function Analytics() {
                     }}
                     className={`flex flex-col items-center space-x-2 px-4 py-3 rounded-xl transition-all ${
                       activeComparison === index
-                        ? 'bg-accent-green/20 text-accent-green ring-2 ring-accent-green/50'
+                        ? 'bg-accent/20 text-accent ring-2 ring-accent/50'
                         : 'bg-glass hover:bg-card-hover'
                     }`}
                     role="radio"
@@ -275,7 +321,7 @@ export default function Analytics() {
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
-          <div className="flex items-center space-x-2" role="radiogroup" aria-label={t('analytics.timeRange.label')}>
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label={t('analytics.timeRange.label')}>
             {[
               { value: '6months', label: t('analytics.timeRange.6months') },
               { value: '1year', label: t('analytics.timeRange.1year') },
@@ -298,7 +344,7 @@ export default function Analytics() {
                 }}
                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
                   timeRange === range.value
-                    ? 'bg-accent-green text-primary-dark shadow-[0_0_20px_rgba(57,255,20,0.4)]'
+                    ? 'bg-accent text-black'
                     : 'bg-card hover:bg-card-hover'
                 }`}
                 role="radio"
@@ -315,7 +361,7 @@ export default function Analytics() {
           <div className="bg-card p-6">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <h3 className="font-semibold text-lg flex items-center space-x-2">
-                <Database className="w-5 h-5 text-accent-green" />
+                <Database className="w-5 h-5 text-accent" />
                 <span>{t('analytics.sarCatalog.title')}</span>
                 {sceneSource === 'live' && (
                   <span className="text-xs px-2 py-1 rounded-full bg-success text-success flex items-center space-x-1">
@@ -388,7 +434,7 @@ export default function Analytics() {
                           href={scene.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center space-x-1 text-accent-green hover:text-accent-green/80 transition-colors"
+                          className="inline-flex items-center space-x-1 text-accent hover:text-accent/80 transition-colors"
                           aria-label={`${t('analytics.sarCatalog.download')} ${scene.sceneName}`}
                         >
                           <span>{t('analytics.sarCatalog.download')}</span>
@@ -410,6 +456,9 @@ export default function Analytics() {
             id="backscatter"
             className="lg:col-span-2"
           >
+            <div className="mb-2 text-[10px] uppercase tracking-widest" style={{ color: seriesSource === 'backend' ? '#33ff00' : '#ffb000' }}>
+              [ {seriesSource === 'backend' ? t('analytics.seriesSource.backend') : t('analytics.seriesSource.simulated')} ]
+            </div>
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={filteredData}>
                 <CartesianGrid strokeDasharray="3 3" stroke={chartColors.grid} />
@@ -429,7 +478,7 @@ export default function Analytics() {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ color: chartColors.text }} />
                 <Area
-                  type="monotone"
+                  type="linear"
                   dataKey="backscatter"
                   stroke={chartColors.backscatter}
                   fill={chartColors.backscatter}
@@ -464,7 +513,7 @@ export default function Analytics() {
                 <Tooltip content={<CustomTooltip />} />
                 <Legend wrapperStyle={{ color: chartColors.text }} />
                 <Area
-                  type="monotone"
+                  type="linear"
                   dataKey="soilMoisture"
                   stroke={chartColors.soilMoisture}
                   fill={chartColors.soilMoisture}
@@ -473,7 +522,7 @@ export default function Analytics() {
                   name={t('analytics.series.soilMoisture')}
                 />
                 <Line
-                  type="monotone"
+                  type="linear"
                   dataKey="fuelLoad"
                   stroke={chartColors.fuelLoad}
                   strokeWidth={2}
@@ -503,7 +552,7 @@ export default function Analytics() {
                   label={{ value: t('analytics.axisLabels.recovery'), angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="recovery" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="recovery" radius={0}>
                   {filteredData.slice(-52).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.recovery > 0 ? chartColors.recovery : 'transparent'} />
                   ))}
@@ -514,16 +563,24 @@ export default function Analytics() {
         </div>
 
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[
-            { label: t('analytics.statLabels.backscatterMean'), value: '-11.2 dB', change: '+2.1 dB', trend: 'up', description: t('analytics.statDescriptions.backscatterMean') },
-            { label: t('analytics.statLabels.soilMoisture'), value: '0.58', change: '+0.12', trend: 'up', description: t('analytics.statDescriptions.soilMoisture') },
-            { label: t('analytics.statLabels.fuelLoad'), value: '0.42', change: '-0.18', trend: 'down', description: t('analytics.statDescriptions.fuelLoad') },
-          ].map((stat, i) => (
+          {(() => {
+            const bs = seriesStat('backscatter', 2, 'dB');
+            const sm = seriesStat('soilMoisture', 2, '');
+            const fl = seriesStat('fuelLoad', 2, '');
+            return [
+              { label: t('analytics.statLabels.backscatterMean'), value: bs.value, change: bs.change, trend: bs.trend, description: t('analytics.statDescriptions.backscatterMean') },
+              { label: t('analytics.statLabels.soilMoisture'), value: sm.value, change: sm.change, trend: sm.trend, description: t('analytics.statDescriptions.soilMoisture') },
+              { label: t('analytics.statLabels.fuelLoad'), value: fl.value, change: fl.change, trend: fl.trend, description: t('analytics.statDescriptions.fuelLoad') },
+            ];
+          })().map((stat, i) => (
             <div key={i} className="bg-card glow-border p-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-muted">{stat.label}</span>
-                <span className={`text-xs px-2 py-1 rounded-full ${trendColors[stat.trend].bg} ${trendColors[stat.trend].text}`}>
-                  {stat.trend === 'up' ? '+' : ''}{stat.change}
+                <span
+                  className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 shrink-0"
+                  style={{ backgroundColor: trendColors[stat.trend], color: '#0a0a0a' }}
+                >
+                  [ {stat.trend === 'up' ? '+' : ''}{stat.change} ]
                 </span>
               </div>
               <div className="text-3xl font-bold text-gradient mb-1">{stat.value}</div>

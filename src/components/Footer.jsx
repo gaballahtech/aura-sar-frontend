@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { GitFork, MessageSquare, Users, Globe, Heart, Zap, Shield, Award } from 'lucide-react';
+import { GitFork, MessageSquare, Globe, Heart, Zap, Shield, Award } from 'lucide-react';
 
 export default function Footer() {
   const { t } = useTranslation();
@@ -12,6 +12,7 @@ export default function Footer() {
       { labelKey: 'productLinks.analytics', href: '#analytics' },
       { labelKey: 'productLinks.report', href: '#report' },
       { labelKey: 'productLinks.sarEducation', href: '#about' },
+      { labelKey: 'productLinks.team', href: '#team' },
     ],
     resources: [
       { labelKey: 'resourceLinks.spaceApps', href: 'https://www.spaceappschallenge.org/', external: true },
@@ -23,24 +24,16 @@ export default function Footer() {
       { labelKey: 'communityLinks.github', href: 'https://github.com/gaballahtech/aura-sar-frontend', external: true },
       { labelKey: 'communityLinks.issues', href: 'https://github.com/gaballahtech/aura-sar-frontend/issues', external: true },
       { labelKey: 'communityLinks.contribute', href: 'https://github.com/gaballahtech/aura-sar-frontend/pulls', external: true },
-      { labelKey: 'communityLinks.documentation', href: 'https://github.com/gaballahtech/aura-sar-frontend', external: true },
-    ],
-    legal: [
-      { labelKey: 'legalLinks.privacy' },
-      { labelKey: 'legalLinks.terms' },
-      { labelKey: 'legalLinks.dataUsage' },
-      { labelKey: 'legalLinks.disclaimer' },
     ],
   };
 
   const socialLinks = [
     { icon: GitFork, href: 'https://github.com/gaballahtech/aura-sar-frontend', label: 'GitHub' },
     { icon: MessageSquare, href: 'https://spaceappschallenge.org/', label: 'Space Apps' },
-    { icon: Users, href: 'https://linkedin.com/', label: 'LinkedIn' },
   ];
 
   const badges = [
-    { icon: Award, text: 'NASA Space Apps 2025', color: 'text-warning' },
+    { icon: Award, text: 'Based on NASA Space Apps 2025', color: 'text-warning' },
     { icon: Zap, text: 'SAR Technology', color: 'text-info' },
     { icon: Shield, text: 'Wildfire Safety', color: 'text-success' },
     { icon: Heart, text: 'Open Source', color: 'text-danger' },
@@ -49,7 +42,7 @@ export default function Footer() {
   return (
     <footer className="bg-card border-t border-subtle" role="contentinfo">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-6 gap-6 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
           <div className="sm:col-span-2 lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img
@@ -83,7 +76,7 @@ export default function Footer() {
                         document.getElementById(link.href.slice(1))?.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="text-secondary hover:text-accent-green transition-colors text-sm"
+                    className="text-secondary hover:text-accent transition-colors text-sm"
                   >
                     {t(`footer.${link.labelKey}`)}
                   </a>
@@ -101,7 +94,7 @@ export default function Footer() {
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
+                    className="text-secondary hover:text-accent transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{t(`footer.${link.labelKey}`)}</span>
                     {link.external && <Globe className="w-3 h-3" aria-hidden="true" />}
@@ -120,7 +113,7 @@ export default function Footer() {
                     href={link.href}
                     target={link.external ? '_blank' : undefined}
                     rel={link.external ? 'noopener noreferrer' : undefined}
-                    className="text-secondary hover:text-accent-green transition-colors text-sm flex items-center space-x-1"
+                    className="text-secondary hover:text-accent transition-colors text-sm flex items-center space-x-1"
                   >
                     <span>{t(`footer.${link.labelKey}`)}</span>
                     {link.external && <Globe className="w-3 h-3" aria-hidden="true" />}
@@ -130,18 +123,6 @@ export default function Footer() {
             </ul>
           </nav>
 
-          <nav aria-label={t('footer.columnHeaders.legal')}>
-            <h4 className="font-semibold text-primary mb-4">{t('footer.columnHeaders.legal')}</h4>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link, i) => (
-                <li key={i}>
-                  <span className="text-muted text-sm cursor-default">
-                    {t(`footer.${link.labelKey}`)}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </nav>
         </div>
 
         <div className="pt-8 border-t border-subtle">
@@ -153,7 +134,7 @@ export default function Footer() {
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-xl bg-glass hover:bg-accent-green/10 text-secondary hover:text-accent-green transition-colors"
+                  className="p-2 rounded-xl bg-glass hover:bg-accent/10 text-secondary hover:text-accent transition-colors"
                   aria-label={social.label}
                 >
                   <social.icon className="w-5 h-5" />
@@ -162,16 +143,9 @@ export default function Footer() {
             </div>
 
             <div className="flex flex-col items-center lg:items-end space-y-2 text-sm text-muted">
-              <p>{t('footer.copyright')}</p>
-              <p className="text-xs">{t('footer.disclaimer')}</p>
+              <p>{t('footer.copyright', { year: currentYear })}</p>
             </div>
           </div>
-        </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-muted text-sm">
-            {'\u2764\uFE0F'} {t('footer.builtWith')}
-          </p>
         </div>
       </div>
     </footer>

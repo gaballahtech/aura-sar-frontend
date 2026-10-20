@@ -6,6 +6,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Report from './components/Report';
 import SarEdu from './components/SarEdu';
+import Team from './components/Team';
 import Footer from './components/Footer';
 import './index.css';
 
@@ -16,9 +17,9 @@ function LoadingFallback() {
   const { t } = useTranslation();
   return (
     <div className="min-h-screen flex items-center justify-center bg-card">
-      <div className="flex flex-col items-center space-y-4 text-primary">
-        <div className="w-12 h-12 border-4 border-accent-green border-t-transparent rounded-full animate-spin" />
-        <p className="text-muted">{t('common.loading')}</p>
+      <div className="flex flex-col items-center space-y-4 text-accent">
+        <span className="text-4xl font-mono animate-blink" aria-hidden="true">█</span>
+        <p className="text-muted text-sm uppercase tracking-widest">{t('common.loading')}</p>
       </div>
     </div>
   );
@@ -41,6 +42,7 @@ function AppContent() {
         <Analytics />
         <Report />
         <SarEdu />
+        <Team />
       </main>
       <Footer />
     </div>
