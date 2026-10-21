@@ -349,6 +349,7 @@ export default function Report() {
                         src={formData.photoPreview}
                         alt="Uploaded photo preview"
                         className="w-full h-64 object-cover rounded-xl"
+                        decoding="async"
                       />
                       <button
                         type="button"
@@ -384,6 +385,7 @@ export default function Report() {
                     value={formData.location}
                     onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
                     placeholder="34.05 -118.24"
+                    maxLength={120}
                     className="input-field flex-1 min-w-0 font-mono"
                     dir="ltr"
                     disabled={isSubmitting}
@@ -451,6 +453,7 @@ export default function Report() {
                   value={formData.description}
                   onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
                   placeholder={t('report.form.descriptionPlaceholder')}
+                  maxLength={500}
                   rows={4}
                   className="textarea-field resize-none"
                   disabled={isSubmitting}

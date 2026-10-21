@@ -23,26 +23,48 @@ export default function Navbar() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const y = window.scrollY;
-      setIsScrolled(y > 20);
-      setHideNav((prev) => {
-        if (y > 120 && y > lastScrollY.current) return true;
-        if (y < lastScrollY.current) return false;
-        return prev;
-      });
+    // Passive + rAF-throttled: one layout read batch per frame, and setState
+    // only when a value actually changed (prevents re-render per scroll frame
+    // — with backdrop-filter on the header this alone froze scrolling).
+    let ticking = false;
+    let latestVisibleY = 0;
+
+    const flush = () => {
+      ticking = false;
+      const y = latestVisibleY;
+
+      const nextScrolled = y > 20;
+      setIsScrolled(prev => (prev === nextScrolled ? prev : nextScrolled));
+
+      let hid = false;
+      if (y > 120 && y > lastScrollY.current) hid = true;
+      else if (y < lastScrollY.current) hid = false;
+      setHideNav(prev => (prev === hid ? prev : hid));
       lastScrollY.current = y;
 
-      const sections = navLinks
-        .map((link) => document.getElementById(link.id))
-        .filter(Boolean);
-      const current = sections.find((section) => {
+      // Cheap section detection: reading rects in one batch is fine — no writes interleaved.
+      let current = null;
+      for (const link of navLinks) {
+        const section = document.getElementById(link.id);
+        if (!section) continue;
         const rect = section.getBoundingClientRect();
-        return rect.top <= 120 && rect.bottom > 120;
-      });
-      if (current) setActiveSection(current.id);
+        if (rect.top <= 120 && rect.bottom > 120) {
+          current = link.id;
+          break;
+        }
+      }
+      if (current) setActiveSection(prev => (prev === current ? prev : current));
     };
-    window.addEventListener('scroll', handleScroll);
+
+    const handleScroll = () => {
+      latestVisibleY = window.scrollY;
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(flush);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -86,6 +108,7 @@ export default function Navbar() {
               src={currentLogo}
               alt={t('navbar.brand')}
               className="h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+              decoding="async"
             />
             <span className="hidden sm:block font-display text-sm text-gradient">
               AURA SAR

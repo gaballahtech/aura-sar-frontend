@@ -233,7 +233,30 @@ export default function Dashboard() {
     typeof window !== 'undefined' && window.innerWidth >= 640
   );
   const roleRefs = useRef([]);
+  const mapWrapRef = useRef(null);
+  const [mapMounted, setMapMounted] = useState(
+    () => typeof IntersectionObserver === 'undefined'
+  );
   const dataLive = fireSource !== 'demo' || aqiSource !== 'demo';
+
+  // Chart/leaflet engines are heavy: mount the Leaflet map only when its
+  // wrapper approaches the viewport (layout stays identical, tiles +
+  // ~154KB JS + tile fetches were pure cost for users who never scrolled).
+  useEffect(() => {
+    const el = mapWrapRef.current;
+    if (!el || mapMounted) return undefined;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setMapMounted(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '500px 0px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [mapMounted]);
 
   // Real-data load: NASA EONET wildfires + Open-Meteo AQI. Falls back to bundled demo data.
   const loadLiveData = useCallback(async () => {
@@ -312,9 +335,21 @@ export default function Dashboard() {
     loadLiveData();
   }, [loadLiveData]);
 
+  // Pause data polling while the tab is hidden (no hidden-tab RAM/CPU churn),
+  // and refresh immediately when the user comes back.
   useEffect(() => {
-    if (!autoRefresh) return;
+    if (!autoRefresh) return undefined;
+    const onVisibility = () => {
+      if (!document.hidden && !loading) loadLiveData();
+    };
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, [autoRefresh, loadLiveData, loading]);
+
+  useEffect(() => {
+    if (!autoRefresh) return undefined;
     const interval = setInterval(() => {
+      if (document.hidden) return;
       loadLiveData();
     }, 60000);
     return () => clearInterval(interval);
@@ -383,17 +418,18 @@ export default function Dashboard() {
         </div>
 
         <div className="relative" role="region" aria-label={t('dashboard.title')}>
-          <div className="relative h-[380px] sm:h-[420px] md:h-[520px] rounded-2xl overflow-hidden">
-            <MapContainer
-              center={CALIFORNIA_CENTER}
-              zoom={7}
-              maxBounds={CALIFORNIA_BOUNDS}
-              maxZoom={12}
-              minZoom={6}
-              className="h-full w-full"
-              zoomControl={false}
-              attributionControl={false}
-            >
+          <div ref={mapWrapRef} className="relative h-[380px] sm:h-[420px] md:h-[520px] rounded-2xl overflow-hidden bg-grid-pattern">
+            {mapMounted ? (
+              <MapContainer
+                center={CALIFORNIA_CENTER}
+                zoom={7}
+                maxBounds={CALIFORNIA_BOUNDS}
+                maxZoom={12}
+                minZoom={6}
+                className="h-full w-full"
+                zoomControl={false}
+                attributionControl={false}
+              >
               <ZoomControl position="bottomleft" />
               {mapLayers.sarBackscatter && (
                 <TileLayer
@@ -426,6 +462,11 @@ export default function Dashboard() {
                 </LayerGroup>
               )}
             </MapContainer>
+            ) : (
+              <div className="h-full w-full flex items-center justify-center text-xs text-muted font-mono">
+                [ {t('common.loading')} ]
+              </div>
+            )}
           </div>
 
           {activeRole === 'firefighter' && (

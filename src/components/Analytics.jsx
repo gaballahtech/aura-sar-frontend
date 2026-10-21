@@ -7,6 +7,7 @@ import {
 } from 'recharts';
 import { Camera, RotateCcw, TrendingUp, Download, Maximize2, Minimize2, RefreshCw, Database, ExternalLink } from 'lucide-react';
 import { apiClient, isApiConfigured } from '../services/api';
+import LazyMount from './LazyMount';
 
 const generateBackscatterData = (locale) => {
   const data = [];
@@ -403,7 +404,8 @@ export default function Analytics() {
               <p className="text-center text-muted py-6" role="status">{t('analytics.sarCatalog.empty')}</p>
             )}
 
-            <div className="overflow-x-auto">
+            <LazyMount minHeight={280}>
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <caption className="sr-only">{t('analytics.sarCatalog.title')}</caption>
                 <thead>
@@ -445,13 +447,15 @@ export default function Analytics() {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </LazyMount>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
-          <ChartCard
-            title={t('analytics.charts.backscatter')}
+        <LazyMount className="mb-8" minHeight={420}>
+          <div className="grid lg:grid-cols-2 gap-6">
+            <ChartCard
+              title={t('analytics.charts.backscatter')}
             icon={TrendingUp}
             id="backscatter"
             className="lg:col-span-2"
@@ -479,6 +483,7 @@ export default function Analytics() {
                 <Legend wrapperStyle={{ color: chartColors.text }} />
                 <Area
                   type="linear"
+                  isAnimationActive={false}
                   dataKey="backscatter"
                   stroke={chartColors.backscatter}
                   fill={chartColors.backscatter}
@@ -489,9 +494,11 @@ export default function Analytics() {
               </ComposedChart>
             </ResponsiveContainer>
           </ChartCard>
-        </div>
+          </div>
+        </LazyMount>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <LazyMount minHeight={700}>
+          <div className="grid lg:grid-cols-2 gap-6">
           <ChartCard title={t('analytics.charts.soilMoisture')} icon={RotateCcw} id="soilMoisture">
             <ResponsiveContainer width="100%" height="100%">
               <ComposedChart data={filteredData}>
@@ -514,6 +521,7 @@ export default function Analytics() {
                 <Legend wrapperStyle={{ color: chartColors.text }} />
                 <Area
                   type="linear"
+                  isAnimationActive={false}
                   dataKey="soilMoisture"
                   stroke={chartColors.soilMoisture}
                   fill={chartColors.soilMoisture}
@@ -523,6 +531,7 @@ export default function Analytics() {
                 />
                 <Line
                   type="linear"
+                  isAnimationActive={false}
                   dataKey="fuelLoad"
                   stroke={chartColors.fuelLoad}
                   strokeWidth={2}
@@ -552,7 +561,7 @@ export default function Analytics() {
                   label={{ value: t('analytics.axisLabels.recovery'), angle: -90, position: 'insideLeft', fill: chartColors.text, dy: -40 }}
                 />
                 <Tooltip content={<CustomTooltip />} />
-                <Bar dataKey="recovery" radius={0}>
+                <Bar dataKey="recovery" radius={0} isAnimationActive={false}>
                   {filteredData.slice(-52).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.recovery > 0 ? chartColors.recovery : 'transparent'} />
                   ))}
@@ -560,7 +569,8 @@ export default function Analytics() {
               </BarChart>
             </ResponsiveContainer>
           </ChartCard>
-        </div>
+          </div>
+        </LazyMount>
 
         <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {(() => {

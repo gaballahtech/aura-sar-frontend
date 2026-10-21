@@ -49,6 +49,8 @@ export default function Footer() {
                 src="/images/Logo-Dark.png"
                 alt={t('footer.brand')}
                 className="h-10 w-auto"
+                loading="lazy"
+                decoding="async"
               />
               <span className="font-display text-sm text-gradient">AURA SAR</span>
             </div>
