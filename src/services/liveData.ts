@@ -31,6 +31,13 @@ async function fetchJson(url: string, timeoutMs = 15000): Promise<unknown> {
 
 const EONET_URL = 'https://eonet.gsfc.nasa.gov/api/v3/events?status=open&category=wildfires';
 
+// EONET "open" returns thousands of events worldwide (prescribed burns in
+// Kentucky/Texas/Florida...). This platform tracks California — the map is
+// bounded to it, so out-of-bounds events would render thousands of glowing
+// markers the user can never see (device freeze + gigabytes of DOM/GPU).
+const CA_BOUNDS = { minLat: 32.5, maxLat: 42.0, minLng: -124.5, maxLng: -114.0 };
+const MAX_MAP_FIRES = 60;
+
 interface EonetGeometry {
   type: string;
   coordinates: unknown;
@@ -90,6 +97,8 @@ export async function fetchWildfires(): Promise<LiveData<FireDataPoint[]>> {
         }
       }
       if (lat === null || lng === null || !Number.isFinite(lat) || !Number.isFinite(lng)) return;
+      // only events inside the bounded California viewport
+      if (lat < CA_BOUNDS.minLat || lat > CA_BOUNDS.maxLat || lng < CA_BOUNDS.minLng || lng > CA_BOUNDS.maxLng) return;
 
       // fresher detections burn hotter: 0-96h -> 1.0-0.35 normalized intensity
       const when = geometry.date ? new Date(geometry.date).getTime() : NaN;
@@ -109,7 +118,9 @@ export async function fetchWildfires(): Promise<LiveData<FireDataPoint[]>> {
     });
 
     if (fires.length === 0) throw new Error('EONET returned no open wildfires');
-    return { data: fires, source: 'live' };
+    // freshest/hottest first, hard cap as a safety net for extreme days
+    fires.sort((a, b) => b.intensity - a.intensity);
+    return { data: fires.slice(0, MAX_MAP_FIRES), source: 'live' };
   } catch {
     return { data: [], source: 'demo' };
   }
