@@ -107,10 +107,10 @@ export default function Navbar() {
             <img
               src={currentLogo}
               alt={t('navbar.brand')}
-              className="h-10 w-auto transition-opacity duration-300 group-hover:opacity-80"
+              className="h-12 sm:h-14 w-auto transition-opacity duration-300 group-hover:opacity-80"
               decoding="async"
             />
-            <span className="hidden sm:block font-display text-sm text-gradient">
+            <span className="hidden sm:block font-display text-base sm:text-lg text-gradient">
               AURA SAR
             </span>
           </a>
