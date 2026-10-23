@@ -215,6 +215,7 @@
   line-height: 1.4;
   color: #33ff00;
   text-shadow: 0 0 6px rgba(51, 255, 0, 0.45);
+  text-align: center;
 
   &::before {
     content: "// ";
@@ -232,7 +233,9 @@
   font-size: 1rem;
   color: rgba(51, 255, 0, 0.7);
   max-width: 48rem;
+  margin-inline: auto;
   margin-bottom: 2.5rem;
+  text-align: center;
 }
 
 @utility stat-card {
